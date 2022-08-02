@@ -1,0 +1,11 @@
+.sidebar{
+    margin-top: 48px;
+}
+.offcanvas{
+    transition: transform .1s ease-in-out;
+}
+.offcanvas.offcanvas-end {
+    top: 48px;
+    left: 0;
+    transform: translateX(-100%);
+}
