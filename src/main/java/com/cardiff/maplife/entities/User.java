@@ -6,10 +6,12 @@ import javax.persistence.*;
 @Table(name = "user")
 
 public class User {
+
+
     public User() {
 
     }
-    public User(Long id, String username, String password, String email, boolean userType, int coins, int views) {
+    public User(Long id, String username, String password, String email, boolean userType, int coins, int views, String icon) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -17,6 +19,7 @@ public class User {
         this.userType = userType;
         this.coins = coins;
         this.views = views;
+        this.icon = icon;
     }
 
     @Id
@@ -41,6 +44,9 @@ public class User {
 
     @Column(name = "views")
     private int views;
+
+    @Column(name = "icon")
+    private String icon;
 
     public Long getId() {
         return id;
@@ -98,5 +104,11 @@ public class User {
         this.views = views;
     }
 
+    public String getIcon() {
+        return icon;
+    }
 
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
 }

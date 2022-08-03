@@ -17,6 +17,7 @@ public class UserController {
    public UserController(UserService userService){
        this.userService=userService;
    }
+   //sign up
    @PostMapping("/addUser")
     private ResponseEntity<User> addUser(@RequestBody User user){
        try{
@@ -28,7 +29,7 @@ public class UserController {
        }
    }
 
-
+    //login in
     @PostMapping("/userLogin")
    public Object userLogin(HttpServletResponse response,@RequestBody User user) {
         String usernameFromUser = user.getUsername();
