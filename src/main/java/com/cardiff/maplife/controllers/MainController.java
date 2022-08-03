@@ -23,7 +23,7 @@ public class MainController {
 
     @GetMapping("/")
     public ModelAndView showMapPage(ModelAndView modelAndView) {
-        modelAndView = new ModelAndView("/login/login");
+        modelAndView = new ModelAndView("/navigator/bars");
         return modelAndView;
     }
 

@@ -21,6 +21,7 @@ public class UserController {
    @PostMapping("/addUser")
     private ResponseEntity<User> addUser(@RequestBody User user){
        try{
+           user.setIcon("default icon.png");
            User savedUser=userService.saveUser(user);
            return new ResponseEntity<>(savedUser, HttpStatus.OK);
        }
