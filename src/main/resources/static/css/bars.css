@@ -15,15 +15,19 @@
 .d-flex {
     width: 30%;
 }
+.navbar{
+    --bs-navbar-padding-y: 0.313rem;
+}
+.navbar-nav{
+    flex-direction: row;
+}
 .nav-item{
     margin: 0 0.5rem 0 0.5rem;
 }
 .user-icon{
     margin-left: 1rem;
 }
-.navbar-nav{
-    flex-direction: row;
-}
+
 .bg-light {
     --bs-bg-opacity: 1;
     background-color: rgba(var(--bs-white-rgb), var(--bs-bg-opacity)) !important;
@@ -41,16 +45,22 @@
     /*--bs-btn-hover-bg: #da510c;*/
 }
 .signup-btn:hover{
-    background-color: #da510c;
+    background-color: #dd4a00;
     color: white;
 }
+.signup-btn:focus{
+    background-color: #dd4a00;
+    color: white;
+    box-shadow: 0 0 0 0.25rem rgb(222 91 25 / 50%);
+}
 .form-control{
-    line-height: 1rem;
+    line-height: 0rem;
     border: 2px solid #8c8c8c;
+    font-size: 0.925rem;
 }
 .form-control:focus{
     border-color: #de5b19;
-    box-shadow: 0 0 0 0.25rem rgb(222 91 25 / 50%);
+    box-shadow: 0 0 0 0;
 }
 .input-group>.form-floating:not(:first-child)>.form-control, .input-group>.form-floating:not(:first-child)>.form-select, .input-group>:not(:first-child):not(.dropdown-menu):not(.form-floating):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
     margin-left: 0px;
