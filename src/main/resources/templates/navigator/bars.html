@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="no-js" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" class="no-js" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head th:fragment="common-header(title, link)">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -21,25 +21,30 @@
 <header>
     <nav class="navbar navbar-expand-lg bg-light fixed-top">
         <div class="container-fluid">
-            <a class="navbar-brand" th:href="@{/}">MapLife</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <a class="navbar-brand" th:href="@{/}">
+                <span>MAP</span>
+                <span>LIFE</span>
+            </a>
+            <form th:action="@{/projects/?keyword=}" class="d-flex" role="search">
+                <div class="input-group">
+                    <input type="search" id="searchbar" class="form-control" placeholder="Explore Your Life..." name="keyword">
+                    <button class="btn btn-sm btn-outline-secondary" type="submit">
+                    </button>
+                </div>
+            </form>
+
+            <div id="header-button">
+                <ul class="navbar-nav me-auto mb-lg-0">
                     <li class="nav-item">
                         <button class="btn btn-sm btn-outline-secondary" type="button">Log In</button>
                     </li>
                     <li class="nav-item">
-                        <button class="btn btn-sm btn-outline-secondary" type="button">Sign Up</button>
+                        <button class="btn btn-sm signup-btn" type="button">Sign Up</button>
                     </li>
-
+                    <li class="nav-item user-icon">
+                        <img src="https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u259.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762">
+                    </li>
                 </ul>
-
-                <form class="d-flex" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">Search</button>
-                </form>
             </div>
         </div>
     </nav>
