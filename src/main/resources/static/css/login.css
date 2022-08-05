@@ -1,0 +1,162 @@
+/*#popLayer{*/
+/*    display:none;*/
+/*    left:0;*/
+/*    top:0;*/
+/*    z-index:10;*/
+/*    background:#DCDBDC;*/
+/*    -moz-opacity: 0.8;*/
+/*    opacity:.80;*/
+/*    filter: alpha(opacity=80);!* 只支持IE6、7、8、9 *!*/
+/*}*/
+
+.clearfix::before,
+.clearfix::after{
+    content: '';
+    display: block;
+    clear: both;
+}
+
+#loginbox-content{
+    border-radius: 10px;
+    width: 27rem;
+    /*height: 60rem;*/
+    border: 0.1rem solid #cccccc;
+    margin: 5rem auto;
+}
+
+#loginbox-content .loginbox-content-header{
+    border-bottom: 1.5px solid;
+    color: #D7D7D7;
+    width: 80%;
+    margin: -1px auto;
+}
+#loginbox-content .loginbox-content-header .loginbox-title h1{
+    margin: 20px auto;
+    position: relative;
+    font-family: 'Arial', sans-serif;
+    font-weight: 800;
+    font-style: normal;
+    font-size: 20px;
+    text-align: center;
+    color: #333333;
+}
+
+#loginbox-content .loginbox-content-header a{
+    height: 2rem;
+    width: 5rem;
+    color: #333333;
+    float: left;
+    text-align: center;
+    font-family: 'Arial Bold', 'Arial', sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    text-decoration: none;
+}
+/* selected show css*/
+#loginbox-content .loginbox-content-header .current{
+    border-bottom: 2px solid #DE5B19;
+}
+
+
+
+#loginbox-content .loginbox-content-body{
+    margin-left: 40px;
+    margin-top: 30px;
+}
+#loginbox-content .loginbox-content-body .dom-login{
+    width: 100%;
+    display: none;
+}
+#loginbox-content .loginbox-content-body .dom-login .s1{
+    /*background-color: red;*/
+    margin-bottom: 1.5rem;
+}
+#loginbox-content .loginbox-content-body .dom-login .s1 h4{
+    color: black;
+    font-family: 'Roboto', sans-serif;
+    font-size: inherit;
+    font-weight: 500;
+    margin-bottom: 0rem;
+}
+#loginbox-content .loginbox-content-body .dom-login .s1 input{
+    width: 90%;
+    height: 1.8rem;
+    margin-top: 0.5rem;
+    padding-left: 0.5rem;
+    border-radius: 4px;
+    border: 0px;
+    background-color: #F5F5F5;
+    font-size: small;
+}
+#loginbox-content .loginbox-content-body .dom-login .s2{
+    margin-bottom: 2rem;
+    color: black;
+    font-size: 1.4rem;
+}
+#loginbox-content .loginbox-content-body .dom-login .btn{
+    width: 90%;
+    height: 2.3rem;
+    border: none;
+    background-color: #DE5B19;
+    color: white;
+    font-size: 14px;
+    margin-bottom: 2rem;
+    text-align: center;
+    border-radius: 5px;
+    margin-top: 1rem;
+}
+
+
+
+#loginbox-content .loginbox-content-body .dom-signup{
+width: 100%;
+display: none;
+}
+#loginbox-content .loginbox-content-body .dom-signup .s1{
+/*background-color: red;*/
+    margin-bottom: 1.5rem;
+}
+#loginbox-content .loginbox-content-body .dom-signup .s1 h4{
+    color: black;
+    font-family: 'Roboto', sans-serif;
+    font-size: inherit;
+    font-weight: 500;
+    margin-bottom: 0rem;
+}
+#loginbox-content .loginbox-content-body .dom-signup .s1 input{
+    width: 90%;
+    height: 1.8rem;
+    margin-top: 0.5rem;
+    padding-left: 0.5rem;
+    border-radius: 4px;
+    border: 0px;
+    background-color: #F5F5F5;
+    font-size: small;
+}
+#loginbox-content .loginbox-content-body .dom-signup .s2{
+    margin-bottom: 2rem;
+    color: black;
+    font-size: 1.4rem;
+}
+#loginbox-content .loginbox-content-body .dom-signup .btn{
+    width: 90%;
+    height: 2.3rem;
+    border: none;
+    background-color: #DE5B19;
+    color: white;
+    font-size: 14px;
+    margin-bottom: 2rem;
+    text-align: center;
+    border-radius: 5px;
+    margin-top: 1rem;
+}
+/*#content .content-body .dom .dom-footer{*/
+/*    background-color: red;*/
+/*}*/
+#loginbox-content .loginbox-content-body .dom-login .dom-footer .login-another a{
+    text-decoration: none;
+    color: #DE5B19;
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+}
+
