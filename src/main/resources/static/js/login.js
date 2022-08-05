@@ -6,12 +6,8 @@ let signupPassword=null;
 let signupEmail=null;
 let loginButtonInput=null;
 let signupButtonInput=null;
-
-
-
-
-
-
+let tabLoginButtonInput=null;
+let tabSignupButtonInput=null;
 
 
 
@@ -27,10 +23,7 @@ const captureUserInput = function (e) {
         loginPassword = userInput;
     }
 }
-const captureUserInputForN = function (e) {
-    signupButtonInput = e.target.id
-    loginButtonInput = e.target.id;
-}
+
 const loginUser = async function (e) {
     e.preventDefault();
     if (loginUsername != null && loginPassword != null) {
@@ -84,51 +77,32 @@ const signupUser = async function (e) {
     }
 }
 
-//click the login button show loginbox
-let as=document.getElementsByClassName('loginbox-content-header')[0].getElementsByTagName('a');
-let contents=document.getElementsByClassName("dom");
-const showLoginbox = function (){
-    if (loginButtonInput==="login-button" && signupButtonInput ==="login-button"){
 
-        as[0].className="";
-        as[1].className='current';
-
-        contents[0].style.display="none";
-        // 当前div可见
-        contents[1].style.display='block';
-        // switchTab()
-    }
-    else if(signupButtonInput === "signup-button" && loginButtonInput ==="signup-button"){
-        // loginbox.style.display="block";
-        as[1].className="";
-        as[0].className="current";
-
-        contents[1].style.display="none";
-        // 当前div可见
-        contents[0].style.display='block';
-        // switchTab()
-    }
+//show the login and signup box
+const showLoginbox = function (e){
+    signupButtonInput = e.target.id
+    loginButtonInput = e.target.id;
+    tabLoginButtonInput = e.target.id
+    tabSignupButtonInput = e.target.id;
     loginbox.style.display="block";
-}
-// const switchTab = function () {
-    for (let i = 0; i < as.length; i++) {
-        let a = as[i];
-        a.id = i;
-        // 设置每个a标签的onclick事件
-        a.onclick = function () {
-            // 清楚所有标签的css设置，隐藏dom标签
-            for (let j = 0; j < as.length; j++) {
-                as[j].className = "";
-                contents[j].style.display = "none";
-            }
-            // 设置当前标签样式及当前标签下的所有dom标签可见
-            this.className = 'current';
-            // 当前div可见
-            contents[this.id].style.display = 'block';
-        }
+    if(loginButtonInput==="login-button" || tabLoginButtonInput==="login-a"){
+        document.getElementById("signup-a").className="";
+        document.getElementById("login-a").className="current";
+        document.getElementById("dom-login").style.display="block";
+        document.getElementById("dom-signup").style.display="none";
     }
-// }
-//switch login or sign up panel
+    else if(signupButtonInput==="signup-button" || tabSignupButtonInput==="signup-a"){
+        document.getElementById("login-a").className="";
+        document.getElementById("signup-a").className="current";
+        document.getElementById("dom-login").style.display="none";
+        document.getElementById("dom-signup").style.display="block";
+
+    }
+}
+
+
+
+
 
 
 
@@ -141,6 +115,8 @@ const emailInputForS=document.getElementById("signupEmail");
 const signupButton = document.getElementById("signupBtn");
 const headerLoginButton =document.getElementById("login-button")
 const headerSignupButton =document.getElementById("signup-button")
+const tabLoginButton =document.getElementById("login-a")
+const tabSignupButton =document.getElementById("signup-a")
 
 usernameInput.addEventListener("change", captureUserInput);
 passwordInput.addEventListener("change", captureUserInput);
@@ -149,5 +125,7 @@ usernameInputForS.addEventListener("change", captureUserInputForS)
 passwordInputForS.addEventListener("change", captureUserInputForS)
 emailInputForS.addEventListener("change", captureUserInputForS)
 signupButton.addEventListener("click", signupUser);
-headerLoginButton.addEventListener("click", captureUserInputForN);
-headerSignupButton.addEventListener("click",captureUserInputForN);
+headerLoginButton.addEventListener("click", showLoginbox);
+headerSignupButton.addEventListener("click",showLoginbox);
+tabLoginButton.addEventListener("click", showLoginbox);
+tabSignupButton.addEventListener("click",showLoginbox);
