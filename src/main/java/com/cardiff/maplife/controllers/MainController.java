@@ -23,4 +23,9 @@ public class MainController {
         modelAndView = new ModelAndView("/navigator/bars");
         return modelAndView;
     }
+    @GetMapping("/stream")
+    public ModelAndView showStreamPage(ModelAndView modelAndView) {
+        modelAndView = new ModelAndView("/Streaming.html");
+        return modelAndView;
+    }
 }

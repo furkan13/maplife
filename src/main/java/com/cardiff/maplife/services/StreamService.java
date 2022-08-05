@@ -1,7 +1,7 @@
 package com.cardiff.maplife.services;
 
+import com.cardiff.maplife.entities.Event;
 import com.cardiff.maplife.repositories.StreamRepository;
-import com.cardiff.maplife.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -11,4 +11,7 @@ public class StreamService {
         this.streamRepository=streamRepository;
     }
 
+    public Event saveEvent(Event event){
+        return streamRepository.save(event);
+    }
 }
