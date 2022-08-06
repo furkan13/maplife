@@ -9,7 +9,7 @@ let loginButtonInput=null;
 let signupButtonInput=null;
 let tabLoginButtonInput=null;
 let tabSignupButtonInput=null;
-let popupLayerInput=null;
+
 
 
 //capture login user input
@@ -102,10 +102,7 @@ const showLoginbox = function (e){
 }
 //click popupLayer to close the loginBox
 const closeLoginBox =function(e){
-    popupLayerInput = e.target.id;
-    if(popupLayerInput==="popLayer"){
         loginbox.style.display="none";
-    }
 }
 
 
@@ -124,7 +121,7 @@ const headerLoginButton =document.getElementById("login-button")
 const headerSignupButton =document.getElementById("signup-button")
 const tabLoginButton =document.getElementById("login-a")
 const tabSignupButton =document.getElementById("signup-a")
-const layer=document.getElementById("popLayer")
+
 
 usernameInput.addEventListener("change", captureUserInput);
 passwordInput.addEventListener("change", captureUserInput);
@@ -137,4 +134,3 @@ headerLoginButton.addEventListener("click", showLoginbox);
 headerSignupButton.addEventListener("click",showLoginbox);
 tabLoginButton.addEventListener("click", showLoginbox);
 tabSignupButton.addEventListener("click",showLoginbox);
-layer.addEventListener("click",closeLoginBox);

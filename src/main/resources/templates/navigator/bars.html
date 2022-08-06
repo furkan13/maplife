@@ -97,6 +97,7 @@
         <div id="popLayer"  class="popLayer" onclick="closeLoginBox()"></div>
         <section id="loginbox-content">
             <div class="loginbox-content-header clearfix">
+
                 <div class="loginbox-title">
                     <h1>Join MAP LIFE</h1>
                 </div>
@@ -111,37 +112,37 @@
             <div class="loginbox-content-body">
                 <div class="dom-login"  id="dom-login">
                     <form action="/processFormPost" method="post">
-                        <div class="s1">
+                        <div class="boxInput">
                             <h4>username</h4>
-                            <input type="text" name="username" placeholder="input username" id="loginUsername">
+                            <input class="form-control" type="text" name="username" placeholder="input username" id="loginUsername">
                         </div>
-                        <div class="s1">
+                        <div class="boxInput">
                             <h4>password</h4>
-                            <input type="text" name="password" placeholder="input password" id="loginPassword">
+                            <input class="form-control" type="text" name="password" placeholder="input password" id="loginPassword">
                         </div>
                         <div class="dom-footer">
                             <div class="login-another">
                                 <a href="#">forgot my password</a>
                             </div>
                         </div>
-                        <input type="submit" value="Login" class="btn" name="loginBtn" id="loginBtn">
+                        <input type="submit" value="Login" class="AccessBtn" name="loginBtn" id="loginBtn">
                     </form>
                 </div>
                 <div class="dom-signup" id="dom-signup" >
                     <form action="/processFormPost" method="post">
-                        <div class="s1">
+                        <div class="boxInput">
                             <h4>username</h4>
-                            <input type="text" name="username" placeholder="input username" id="signupUsername" >
+                            <input class="form-control" type="text" name="username" placeholder="input username" id="signupUsername" >
                         </div>
-                        <div class="s1">
+                        <div class="boxInput">
                             <h4>password</h4>
-                            <input type="password" name="password" placeholder="input password" id="signupPassword">
+                            <input class="form-control" type="password" name="password" placeholder="input password" id="signupPassword">
                         </div>
-                        <div class="s1">
+                        <div class="boxInput">
                             <h4>email</h4>
-                            <input type="email" name="email" placeholder="input email" id="signupEmail">
+                            <input class="form-control" type="email" name="email" placeholder="input email" id="signupEmail">
                         </div>
-                        <input type="submit" value="sign up" class="btn" id="signupBtn">
+                        <input type="submit" value="sign up" class="AccessBtn" id="signupBtn">
                     </form>
                 </div>
 
