@@ -1,3 +1,7 @@
+body{
+    background-image: url("../../static/image/birds.jfif");
+    background-size: cover;
+}
 .container-fluid{
     --bs-gutter-x: 2rem;
 }
@@ -77,13 +81,14 @@
     background-image: url("https://d1icd6shlvmxi6.cloudfront.net/gsc/CQTZ48/eb/c7/d9/ebc7d925a90b4a339ec4087124b7875a/images/test/search_u2.svg?pageId=4780b999-ebe7-4eea-b174-45c2fa4bf142");
 }
 .sidebar{
-    margin-top: 46px;
+    margin-top: 45px;
     position: fixed;
 }
 .sidebar-collapse{
     width: 70px;
     min-height: 100vh;
     padding: 0.5rem 0;
+    background-color: white;
 }
 .sidebar-collapse ul{
     flex-direction: column;
@@ -91,8 +96,11 @@
 .sidebar-collapse ul li{
     margin-bottom: 0.5rem;
 }
-.sidebar-collapse a{
-    text-align: center;
+.sidebar-collapse ul a{
+    border-radius: 5px;
+}
+.sidebar-collapse a:hover{
+    background-color: #e7e7e7;
 }
 .sub-avatar{
     margin: 1rem 0;
@@ -103,16 +111,27 @@
 }
 .setting-icon{
     position: absolute;
-    top: 57rem;
+    top: 58rem;
     margin: auto 20px;
+}
+.setting-icon:hover{
+    background-color: transparent !important;
 }
 .navbar-toggler {
     background-color: transparent;
     border: 0px;
     padding: 0.5rem 0.75rem;
+    border-radius: 5px;
+}
+.navbar-toggler:focus{
+    box-shadow: unset;
+}
+.navbar-toggler:hover{
+    background-color: #e7e7e7;
 }
 .offcanvas{
     transition: transform .1s ease-in-out;
+    width: 288px !important;
 }
 .offcanvas.offcanvas-end {
     top: 50px;
@@ -121,4 +140,39 @@
 }
 .offcanvas-backdrop.show {
     opacity: 0;
+}
+.offcanvas-title{
+    font-family: 'Arial Bold', 'Arial', sans-serif;
+    font-weight: 700;
+    color: #333333;
+}
+.offcanvas ul{
+    flex-direction: column;
+}
+.offcanvas-body{
+    padding: 0;
+}
+.btn-close{
+    background-image: url("https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u252.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762");
+    background-size: 100%;
+    padding: 0.25em 0.25em !important;
+    margin: inherit !important;
+    color: #333;
+    opacity: 1;
+}
+.btn-close:focus{
+    box-shadow: unset;
+}
+.nav-link-container{
+    text-align: center;
+    width: 3rem;
+    /*display: flex;*/
+    /*align-items: center;*/
+}
+.nav-link span{
+    font-family: sans-serif;
+    font-weight: 400;
+}
+.nav-link{
+    text-align: center;
 }
