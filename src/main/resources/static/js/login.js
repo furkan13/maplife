@@ -1,4 +1,5 @@
-let loginbox=document.getElementById("loginbox-content")
+let loginbox=document.getElementById("login-box")
+let popupLayer=document.getElementById("popLayer")
 let loginUsername=null;
 let loginPassword=null;
 let signupUsername=null;
@@ -8,7 +9,7 @@ let loginButtonInput=null;
 let signupButtonInput=null;
 let tabLoginButtonInput=null;
 let tabSignupButtonInput=null;
-
+let popupLayerInput=null;
 
 
 //capture login user input
@@ -80,11 +81,12 @@ const signupUser = async function (e) {
 
 //show the login and signup box
 const showLoginbox = function (e){
-    signupButtonInput = e.target.id
+    signupButtonInput = e.target.id;
     loginButtonInput = e.target.id;
     tabLoginButtonInput = e.target.id
     tabSignupButtonInput = e.target.id;
     loginbox.style.display="block";
+    popupLayer.style.display="block";
     if(loginButtonInput==="login-button" || tabLoginButtonInput==="login-a"){
         document.getElementById("signup-a").className="";
         document.getElementById("login-a").className="current";
@@ -96,10 +98,15 @@ const showLoginbox = function (e){
         document.getElementById("signup-a").className="current";
         document.getElementById("dom-login").style.display="none";
         document.getElementById("dom-signup").style.display="block";
-
     }
 }
-
+//click popupLayer to close the loginBox
+const closeLoginBox =function(e){
+    popupLayerInput = e.target.id;
+    if(popupLayerInput==="popLayer"){
+        loginbox.style.display="none";
+    }
+}
 
 
 
@@ -117,6 +124,7 @@ const headerLoginButton =document.getElementById("login-button")
 const headerSignupButton =document.getElementById("signup-button")
 const tabLoginButton =document.getElementById("login-a")
 const tabSignupButton =document.getElementById("signup-a")
+const layer=document.getElementById("popLayer")
 
 usernameInput.addEventListener("change", captureUserInput);
 passwordInput.addEventListener("change", captureUserInput);
@@ -129,3 +137,4 @@ headerLoginButton.addEventListener("click", showLoginbox);
 headerSignupButton.addEventListener("click",showLoginbox);
 tabLoginButton.addEventListener("click", showLoginbox);
 tabSignupButton.addEventListener("click",showLoginbox);
+layer.addEventListener("click",closeLoginBox);
