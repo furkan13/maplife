@@ -19,7 +19,6 @@
 </head>
 
 <body th:fragment="common-body(body,sider,script)">
-<!--<div id="popLayer"  class="popLayer"></div>-->
     <!-- Creating the header -->
 <header>
     <nav class="navbar navbar-expand-lg bg-light fixed-top">
@@ -87,66 +86,69 @@
 <!--                    </ul>-->
 <!--                    <form class="d-flex" role="search">-->
 <!--                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->
-<!--                        <button class="btn btn-outline-success" type="submit">Search</button>-->
+<!--                         <button class="btn btn-outline-success" type="submit">Search</button>-->
 <!--                    </form>-->
 <!--                </div>-->
 <!--            </div>-->
 <!--        </div>-->
 <!--    </nav>-->
 <!--</sidebar>-->
+    <div class="login-box" id="login-box">
+        <div id="popLayer"  class="popLayer" onclick="closeLoginBox()"></div>
+        <section id="loginbox-content">
+            <div class="loginbox-content-header clearfix">
 
-    <section id="loginbox-content" style="display: none">
-        <div class="loginbox-content-header clearfix">
-            <div class="loginbox-title">
-                <h1>Join MAP LIFE</h1>
+                <div class="loginbox-title">
+                    <h1>Join MAP LIFE</h1>
+                </div>
+                <div class="login-bar">
+                    <a id="login-a" >Login</a>
+                </div>
+                <div class="signup-bar">
+                    <a id="signup-a" >Sign up</a>
+                </div>
             </div>
-            <div class="login-bar">
-                <a id="login-a" >Login</a>
-            </div>
-            <div class="signup-bar">
-                <a id="signup-a" >Sign up</a>
-            </div>
-        </div>
 
-        <div class="loginbox-content-body">
-            <div class="dom-login"  id="dom-login">
-                <form action="/processFormPost" method="post">
-                    <div class="s1">
-                        <h4>username</h4>
-                        <input type="text" name="username" placeholder="input username" id="loginUsername">
-                    </div>
-                    <div class="s1">
-                        <h4>password</h4>
-                        <input type="text" name="password" placeholder="input password" id="loginPassword">
-                    </div>
-                    <div class="dom-footer">
-                        <div class="login-another">
-                            <a href="#">forgot my password</a>
+            <div class="loginbox-content-body">
+                <div class="dom-login"  id="dom-login">
+                    <form action="/processFormPost" method="post">
+                        <div class="boxInput">
+                            <h4>username</h4>
+                            <input class="form-control" type="text" name="username" placeholder="input username" id="loginUsername">
                         </div>
-                    </div>
-                    <input type="submit" value="Login" class="btn" name="loginBtn" id="loginBtn">
-                </form>
-            </div>
-            <div class="dom-signup" id="dom-signup" >
-                <form action="/processFormPost" method="post">
-                    <div class="s1">
-                        <h4>username</h4>
-                        <input type="text" name="username" placeholder="input username" id="signupUsername" >
-                    </div>
-                    <div class="s1">
-                        <h4>password</h4>
-                        <input type="password" name="password" placeholder="input password" id="signupPassword">
-                    </div>
-                    <div class="s1">
-                        <h4>email</h4>
-                        <input type="email" name="email" placeholder="input email" id="signupEmail">
-                    </div>
-                    <input type="submit" value="sign up" class="btn" id="signupBtn">
-                </form>
-            </div>
+                        <div class="boxInput">
+                            <h4>password</h4>
+                            <input class="form-control" type="text" name="password" placeholder="input password" id="loginPassword">
+                        </div>
+                        <div class="dom-footer">
+                            <div class="login-another">
+                                <a href="#">forgot my password</a>
+                            </div>
+                        </div>
+                        <input type="submit" value="Login" class="AccessBtn" name="loginBtn" id="loginBtn">
+                    </form>
+                </div>
+                <div class="dom-signup" id="dom-signup" >
+                    <form action="/processFormPost" method="post">
+                        <div class="boxInput">
+                            <h4>username</h4>
+                            <input class="form-control" type="text" name="username" placeholder="input username" id="signupUsername" >
+                        </div>
+                        <div class="boxInput">
+                            <h4>password</h4>
+                            <input class="form-control" type="password" name="password" placeholder="input password" id="signupPassword">
+                        </div>
+                        <div class="boxInput">
+                            <h4>email</h4>
+                            <input class="form-control" type="email" name="email" placeholder="input email" id="signupEmail">
+                        </div>
+                        <input type="submit" value="sign up" class="AccessBtn" id="signupBtn">
+                    </form>
+                </div>
 
-        </div>
-    </section>
+            </div>
+        </section>
+    </div>
 
 
 
