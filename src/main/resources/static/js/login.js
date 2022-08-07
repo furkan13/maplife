@@ -1,5 +1,6 @@
 let loginbox=document.getElementById("login-box")
 let popupLayer=document.getElementById("popLayer")
+let loginMsg=document.getElementById("login-msg")
 let loginUsername=null;
 let loginPassword=null;
 let signupUsername=null;
@@ -12,7 +13,8 @@ let tabSignupButtonInput=null;
 
 
 
-//capture login user input
+/*capture login user input
+* verify user password, show wrong password message*/
 const captureUserInput = function (e) {
     const userInput = e.target.value;
     const elementName = e.target.name;
@@ -32,15 +34,22 @@ const loginUser = async function (e) {
             username: loginUsername,
             password: loginPassword,
         }
+
         const response = await fetch("/userLogin", {
             method: "POST",
             headers: {
                 "Content-type": "application/json"
             },
             body: JSON.stringify(userObject),
-        })
-        // window.location.href="/"
-        loginbox.style.display="none"
+        });
+        if (response.status == "200") {
+            const data = await response.json();
+            console.log(data);
+            loginbox.style.display = "none"
+        } else {
+            loginMsg.style.display="block";
+        }
+
     }
 }
 
@@ -73,8 +82,15 @@ const signupUser = async function (e) {
             },
             body: JSON.stringify(userObject),
         })
+        if (response.status == "200") {
+            const data = await response.json();
+            console.log(data);
+            loginbox.style.display="none"
+        } else {
+            window.alert("Exsit Username");
+        }
         // window.location.href="/"
-        loginbox.style.display="none"
+
     }
 }
 
@@ -103,6 +119,7 @@ const showLoginbox = function (e){
 //click popupLayer to close the loginBox
 const closeLoginBox =function(e){
         loginbox.style.display="none";
+        loginMsg.style.display="none";
 }
 
 

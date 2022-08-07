@@ -111,6 +111,12 @@
     border: 2px solid #DE5B19 !important;
 }
 
+
+#login-msg{
+    color: red;
+    display: none;
+}
+
 /*login and sign up button*/
 .AccessBtn{
     width: 90%;
