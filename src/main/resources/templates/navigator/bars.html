@@ -110,7 +110,126 @@
                 </div>
                 <a class="nav-link setting-icon" href="bars.html"><img src="https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u183.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762"></a>
             </div>
+<!--<sidebar>-->
+<!--    <nav class="navbar bg-light sidebar">-->
+<!--        <div class="container-fluid">-->
+<!--            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">-->
+<!--                <span class="navbar-toggler-icon"></span>-->
+<!--            </button>-->
+<!--            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">-->
+<!--                <div class="offcanvas-header">-->
+<!--                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>-->
+<!--                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>-->
+<!--                </div>-->
+<!--                <div class="offcanvas-body">-->
+<!--                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">-->
+<!--                        <li class="nav-item">-->
+<!--                            <a class="nav-link active" aria-current="page" href="#">Home</a>-->
+<!--                        </li>-->
+<!--                        <li class="nav-item">-->
+<!--                            <a class="nav-link" href="#">Link</a>-->
+<!--                        </li>-->
+<!--                        <li class="nav-item dropdown">-->
+<!--                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">-->
+<!--                                Dropdown-->
+<!--                            </a>-->
+<!--                            <ul class="dropdown-menu">-->
+<!--                                <li><a class="dropdown-item" href="#">Action</a></li>-->
+<!--                                <li><a class="dropdown-item" href="#">Another action</a></li>-->
+<!--                                <li>-->
+<!--                                    <hr class="dropdown-divider">-->
+<!--                                </li>-->
+<!--                                <li><a class="dropdown-item" href="#">Something else here</a></li>-->
+<!--                            </ul>-->
+<!--                        </li>-->
+<!--                    </ul>-->
+<!--                    <form class="d-flex" role="search">-->
+<!--                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->
+<!--                         <button class="btn btn-outline-success" type="submit">Search</button>-->
+<!--                    </form>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </nav>-->
+<!--</sidebar>-->
 
+    <div class="login-box" id="login-box">
+        <div class="auth-form-container" >
+            <div id="popLayer"  class="popLayer"onclick="closeLoginBox()" ></div>
+
+            <section id="loginbox-content">
+                <div class="loginbox-content-header clearfix">
+
+                    <div class="loginbox-title">
+                        <h1>Join MAP LIFE</h1>
+                    </div>
+                    <div class="login-bar">
+                        <a id="login-a" >Login</a>
+                    </div>
+                    <div class="signup-bar">
+                        <a id="signup-a" >Sign up</a>
+                    </div>
+                </div>
+
+                <div class="loginbox-content-body">
+                    <div class="dom-login"  id="dom-login">
+                        <form action="/processFormPost" method="post">
+                            <div class="boxInput">
+                                <h4>username</h4>
+                                <input class="form-control" type="text" name="username" id="loginUsername">
+                            </div>
+                            <div class="boxInput">
+                                <h4>password</h4>
+                                <input class="form-control" type="password" name="password"  id="loginPassword">
+                                <p id="login-msg">*Wrong username or password</p>
+                            </div>
+                            <div class="dom-footer">
+                                <div class="login-another">
+                                    <a href="#">forgot my password</a>
+                                </div>
+                            </div>
+                            <input type="submit" value="Login" class="AccessBtn" name="loginBtn" id="loginBtn">
+                        </form>
+                    </div>
+                    <div class="dom-signup" id="dom-signup" >
+                        <form action="/processFormPost" method="post">
+                            <div class="boxInput">
+                                <h4>username</h4>
+                                <input class="form-control" type="text" name="username"  id="signupUsername" >
+                                <p id="signup-username">*Usernames must be less than 20 characters.</p>
+                                <p id="signup-username2">*This username is unavailable.</p>
+                            </div>
+                            <div class="boxInput">
+                                <h4>password</h4>
+                                <input class="form-control" type="password" name="password"  id="signupPassword">
+                                <p id="signup-password">*Password needs to be at least 8 characters.</p>
+                            </div>
+                            <div class="boxInput">
+                                <h4>Confirm password</h4>
+                                <input class="form-control" type="password" name="confirmPassword"  id="signupConfirmPassword">
+                                <p id="signup-comfirmPassword">*Password needs to be at least 8 characters.</p>
+                                <p id="signup-comfirmPassword2">*Password doesn't match.</p>
+                            </div>
+                            <div class="boxInput">
+                                <h4>email</h4>
+                                <input class="form-control" type="email" name="email" id="signupEmail">
+                            </div>
+                            <div class="terms">
+<!--                                <input type="checkbox" class="signup-checkBox">-->
+                                <h4>By clicking Sign Up, you are agreeing to MAP LIFE's </h4>
+                                <a>Terms of Service</a>
+                                <h4> and are acknowledging our </h4>
+                                <a>Privacy Notice</a>
+                                <h4> applies.</h4>
+                            </div>
+                            <input type="submit" value="sign up" class="AccessBtn" id="signupBtn">
+                        </form>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+    </div>
             <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
                 <div class="offcanvas-header">
                     <h5 class="offcanvas-title" id="offcanvasNavbarLabel">LIVE THE LIFE</h5>
@@ -287,53 +406,7 @@
 <!--        <section id="loginbox-content">-->
 <!--            <div class="loginbox-content-header clearfix">-->
 
-<!--                <div class="loginbox-title">-->
-<!--                    <h1>Join MAP LIFE</h1>-->
-<!--                </div>-->
-<!--                <div class="login-bar">-->
-<!--                    <a id="login-a" >Login</a>-->
-<!--                </div>-->
-<!--                <div class="signup-bar">-->
-<!--                    <a id="signup-a" >Sign up</a>-->
-<!--                </div>-->
-<!--            </div>-->
 
-<!--            <div class="loginbox-content-body">-->
-<!--                <div class="dom-login"  id="dom-login">-->
-<!--                    <form action="/processFormPost" method="post">-->
-<!--                        <div class="boxInput">-->
-<!--                            <h4>username</h4>-->
-<!--                            <input class="form-control" type="text" name="username" placeholder="input username" id="loginUsername">-->
-<!--                        </div>-->
-<!--                        <div class="boxInput">-->
-<!--                            <h4>password</h4>-->
-<!--                            <input class="form-control" type="text" name="password" placeholder="input password" id="loginPassword">-->
-<!--                        </div>-->
-<!--                        <div class="dom-footer">-->
-<!--                            <div class="login-another">-->
-<!--                                <a href="#">forgot my password</a>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <input type="submit" value="Login" class="AccessBtn" name="loginBtn" id="loginBtn">-->
-<!--                    </form>-->
-<!--                </div>-->
-<!--                <div class="dom-signup" id="dom-signup" >-->
-<!--                    <form action="/processFormPost" method="post">-->
-<!--                        <div class="boxInput">-->
-<!--                            <h4>username</h4>-->
-<!--                            <input class="form-control" type="text" name="username" placeholder="input username" id="signupUsername" >-->
-<!--                        </div>-->
-<!--                        <div class="boxInput">-->
-<!--                            <h4>password</h4>-->
-<!--                            <input class="form-control" type="password" name="password" placeholder="input password" id="signupPassword">-->
-<!--                        </div>-->
-<!--                        <div class="boxInput">-->
-<!--                            <h4>email</h4>-->
-<!--                            <input class="form-control" type="email" name="email" placeholder="input email" id="signupEmail">-->
-<!--                        </div>-->
-<!--                        <input type="submit" value="sign up" class="AccessBtn" id="signupBtn">-->
-<!--                    </form>-->
-<!--                </div>-->
 
 <!--            </div>-->
 <!--        </section>-->
