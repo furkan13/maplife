@@ -4,6 +4,10 @@ package com.cardiff.maplife.controllers;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 public class MainController {
 
@@ -27,4 +31,7 @@ public class MainController {
         modelAndView = new ModelAndView("subscription/subscriptions");
         return modelAndView;
     }
+
+
+
 }

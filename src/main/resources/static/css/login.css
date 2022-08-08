@@ -1,0 +1,136 @@
+.login-box{
+    position: fixed;
+    z-index: 1800;
+    width: 100%;
+    display: none;
+}
+/*click loginBox, other place become grey */
+#popLayer{
+    position: fixed;
+    display: none;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    background: #858585;
+    width: 100%;
+    height: 100%;
+    -moz-opacity: 0.5;
+    opacity: .50;
+
+}
+
+.clearfix::before,
+.clearfix::after{
+    content: '';
+    display: block;
+    clear: both;
+}
+
+#loginbox-content{
+    border-radius: 10px;
+    width: 27rem;
+    /*height: 60rem;*/
+    border: 0.1rem solid #cccccc;
+    margin: 5rem auto;
+    position: relative;
+    background-color: white;
+
+}
+
+.loginbox-content-header{
+    border-bottom: 1.5px solid;
+    color: #D7D7D7;
+    width: 80%;
+    margin: -1px auto;
+}
+.loginbox-title h1{
+    margin: 20px auto;
+    position: relative;
+    font-family: 'Arial', sans-serif;
+    font-weight: 800;
+    font-style: normal;
+    font-size: 20px;
+    text-align: center;
+    color: #333333;
+}
+
+.loginbox-content-header a{
+    height: 2rem;
+    width: 5rem;
+    color: #333333;
+    float: left;
+    text-align: center;
+    font-family: 'Arial Bold', 'Arial', sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    text-decoration: none;
+}
+/* selected show css*/
+.loginbox-content-header .current{
+    border-bottom: 2px solid #DE5B19;
+}
+
+.loginbox-content-body{
+    margin-left: 40px;
+    margin-top: 30px;
+}
+.dom-login{
+    width: 100%;
+    display: none;
+}
+.dom-signup{
+    width: 100%;
+    display: none;
+}
+
+/* login and sign up input box*/
+
+.boxInput{
+    /*background-color: red;*/
+    margin-bottom: 1.5rem;
+}
+.boxInput h4{
+    color: black;
+    font-family: 'Roboto', sans-serif;
+    font-size: inherit;
+    font-weight: 500;
+    margin-bottom: 0rem;
+}
+.boxInput input{
+    width: 90%;
+    height: 1.8rem;
+    margin-top: 0.5rem;
+    padding-left: 0.5rem;
+    border-radius: 4px;
+    border: 0px solid white !important;
+
+    background-color: #F5F5F5;
+    font-size: small;
+}
+.boxInput input:focus {
+    border: 2px solid #DE5B19 !important;
+}
+
+/*login and sign up button*/
+.AccessBtn{
+    width: 90%;
+    height: 2.3rem;
+    border: none;
+    background-color: #DE5B19;
+    color: white;
+    font-size: 14px;
+    margin-bottom: 2rem;
+    text-align: center;
+    border-radius: 5px;
+    margin-top: 1rem;
+}
+
+
+/*forgot password*/
+.login-another a{
+    text-decoration: none;
+    color: #DE5B19;
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+}
+
