@@ -1,5 +1,4 @@
 let loginbox=document.getElementById("login-box")
-let popupLayer=document.getElementById("popLayer")
 let loginMsg=document.getElementById("login-msg")
 let signupUsernameMsg=document.getElementById("signup-username")
 let signupUsernameMsg2=document.getElementById("signup-username2")
@@ -11,17 +10,27 @@ let signupUsername=null;
 let signupPassword=null;
 let signupConfirmPassword=null;
 let signupEmail=null;
-let loginButtonInput=null;
-let signupButtonInput=null;
-let tabLoginButtonInput=null;
-let tabSignupButtonInput=null;
+let headerButton = GetQueryString("button")
+let tabLoginButton =document.getElementById("login-a")
+let tabSignupButton =document.getElementById("signup-a")
+
+
 window.onload = function (){
     document.getElementById("signupUsername").value="";
     document.getElementById("signupPassword").value="";
     document.getElementById("signupConfirmPassword").value="";
     document.getElementById("signupEmail").value="";
 }
-
+function GetQueryString(name) {
+    let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    let r = window.location.search.substr(1).match(reg); // get the parameters behind ?
+    let context = "";
+    if (r != null)
+        context = decodeURIComponent(r[2]);
+    reg = null;
+    r = null;
+    return context == null || context == "" || context == "undefined" ? "" : context;
+}
 /*capture login user input
 * verify user password, show wrong password message*/
 const captureUserInput = function (e) {
@@ -39,8 +48,6 @@ const captureUserInput = function (e) {
 const captureUserInputForS = function (e) {
     const userInputForS = e.target.value;
     const elementNameForS = e.target.name;
-
-
     if (elementNameForS === "username") {
         if (userInputForS !== null) {
             const validated = validate(elementNameForS, userInputForS);
@@ -60,27 +67,19 @@ const captureUserInputForS = function (e) {
         }
     }
     else if (elementNameForS === "confirmPassword") {
-        // const validated = validate(elementNameForS, userInputForS);
         const matching=matchPassword(signupPassword,userInputForS)
-        // signupConfirmPassword = userInputForS;
         if(matching){
             signupComfirmPasswordMsg.style.display="none";
             signupConfirmPassword = userInputForS;
         }
         else {
-            // signupConfirmPassword = null;
             signupConfirmPassword=null;
             signupComfirmPasswordMsg.style.display="block";
         }
-
-        // signupEmail = userInputForS;
     }
     else if (elementNameForS === "email") {
         const validated = validate(elementNameForS, userInputForS);
-        // if(validated){
             signupEmail = userInputForS;
-        // }
-        // signupEmail = userInputForS;
     }
 
 };
@@ -102,11 +101,14 @@ const loginUser = async function (e) {
         if (response.status == "200") {
             const data = await response.json();
             console.log(data);
-            loginbox.style.display = "none"
+            window.location.href="/"
         } else {
             loginMsg.style.display="block";
         }
 
+    }
+    else {
+        loginMsg.style.display="block";
     }
 }
 // Function to validate the userInputs
@@ -117,7 +119,6 @@ const validate = function (elementNameForS, userInputForS) {
             validated = true;
             signupPasswordMsg.style.display="none";
         } else {
-            // validated=false
             signupPasswordMsg.style.display="block";
         }
     }
@@ -126,13 +127,11 @@ const validate = function (elementNameForS, userInputForS) {
             validated = true;
             signupUsernameMsg.style.display="none";
         } else {
-            // validated =false
             signupUsernameMsg.style.display="block";
         }
     }
     return validated;
 };
-
 
 const matchPassword = function (password, confirmPassword) {
     let matching = false;
@@ -141,8 +140,6 @@ const matchPassword = function (password, confirmPassword) {
     }
     return matching;
 };
-
-
 
 const signupUser = async function (e) {
     e.preventDefault();
@@ -162,45 +159,50 @@ const signupUser = async function (e) {
         if (response.status == "200") {
             const data = await response.json();
             console.log(data);
-            loginbox.style.display="none";
+            window.location.href="/"
         } else {
             signupComfirmPasswordMsg.style.display="none";
             signupUsernameMsg2.style.display="block";
         }
-        // window.location.href="/"
+    }
+    else{
+        signupUsernameMsg.style.display="block";
+        signupPasswordMsg.style.display="block";
+        signupComfirmPasswordMsg.style.display="block";
 
     }
 }
 
 
 //show the login and signup box
-const showLoginbox = function (e){
-
-    signupButtonInput = e.target.id;
-    loginButtonInput = e.target.id;
-    tabLoginButtonInput = e.target.id
-    tabSignupButtonInput = e.target.id;
+const showLoginbox = function (){
     loginbox.style.display="block";
-    popupLayer.style.display="block";
-    if(loginButtonInput==="login-button" || tabLoginButtonInput==="login-a"){
-        document.getElementById("signup-a").className="";
-        document.getElementById("login-a").className="current";
+    if(headerButton==="login-button"){
+        tabSignupButton.className="";
+        tabLoginButton.className="current";
         document.getElementById("dom-login").style.display="block";
         document.getElementById("dom-signup").style.display="none";
     }
-    else if(signupButtonInput==="signup-button" || tabSignupButtonInput==="signup-a"){
-        document.getElementById("login-a").className="";
-        document.getElementById("signup-a").className="current";
+    else if(headerButton==="signup-button"){
+        tabLoginButton.className="";
+        tabSignupButton.className="current";
         document.getElementById("dom-login").style.display="none";
         document.getElementById("dom-signup").style.display="block";
     }
 }
-//click popupLayer to close the loginBox
-const closeLoginBox =function(e){
-        loginbox.style.display="none";
-        loginMsg.style.display="none";
-}
-
+showLoginbox()
+const loginTab = function (){
+        tabSignupButton.className="";
+        tabLoginButton.className="current";
+        document.getElementById("dom-login").style.display="block";
+        document.getElementById("dom-signup").style.display="none";
+    }
+const signupTab = function (){
+        tabLoginButton.className="";
+        tabSignupButton.className="current";
+        document.getElementById("dom-login").style.display="none";
+        document.getElementById("dom-signup").style.display="block";
+    }
 
 const usernameInput = document.getElementById("loginUsername");
 const passwordInput = document.getElementById("loginPassword");
@@ -210,11 +212,6 @@ const passwordInputForS=document.getElementById("signupPassword");
 const confirmPasswordInputForS=document.getElementById("signupConfirmPassword");
 const emailInputForS=document.getElementById("signupEmail");
 const signupButton = document.getElementById("signupBtn");
-const headerLoginButton =document.getElementById("login-button")
-const headerSignupButton =document.getElementById("signup-button")
-const tabLoginButton =document.getElementById("login-a")
-const tabSignupButton =document.getElementById("signup-a")
-
 
 usernameInput.addEventListener("change", captureUserInput);
 passwordInput.addEventListener("change", captureUserInput);
@@ -224,7 +221,5 @@ passwordInputForS.addEventListener("change", captureUserInputForS)
 confirmPasswordInputForS.addEventListener("change", captureUserInputForS)
 emailInputForS.addEventListener("change", captureUserInputForS)
 signupButton.addEventListener("click", signupUser);
-headerLoginButton.addEventListener("click", showLoginbox);
-headerSignupButton.addEventListener("click",showLoginbox);
-tabLoginButton.addEventListener("click", showLoginbox);
-tabSignupButton.addEventListener("click",showLoginbox);
+tabLoginButton.addEventListener("click", loginTab);
+tabSignupButton.addEventListener("click",signupTab);
