@@ -15,8 +15,12 @@ let loginButtonInput=null;
 let signupButtonInput=null;
 let tabLoginButtonInput=null;
 let tabSignupButtonInput=null;
-
-
+window.onload = function (){
+    document.getElementById("signupUsername").value="";
+    document.getElementById("signupPassword").value="";
+    document.getElementById("signupConfirmPassword").value="";
+    document.getElementById("signupEmail").value="";
+}
 
 /*capture login user input
 * verify user password, show wrong password message*/
@@ -36,20 +40,26 @@ const captureUserInputForS = function (e) {
     const userInputForS = e.target.value;
     const elementNameForS = e.target.name;
 
+
     if (elementNameForS === "username") {
-        signupUsernameMsg2.style.display="none";
-        const validated = validate(elementNameForS, userInputForS);
-        if(validated){
-            signupUsername=userInputForS;
+        if (userInputForS !== null) {
+            const validated = validate(elementNameForS, userInputForS);
+            if (validated === true) {
+                signupUsername = userInputForS;
+            }
+        }
+        else {
+            signupUsernameMsg2.style.display="none";
         }
     }
-    if (elementNameForS === "password") {
+    else if (elementNameForS === "password") {
+        signupPasswordMsg.style.display="none";
         const validated = validate(elementNameForS, userInputForS);
         if(validated){
             signupPassword = userInputForS;
         }
     }
-    if (elementNameForS === "confirmPassword") {
+    else if (elementNameForS === "confirmPassword") {
         // const validated = validate(elementNameForS, userInputForS);
         const matching=matchPassword(signupPassword,userInputForS)
         // signupConfirmPassword = userInputForS;
@@ -65,7 +75,7 @@ const captureUserInputForS = function (e) {
 
         // signupEmail = userInputForS;
     }
-    if (elementNameForS === "email") {
+    else if (elementNameForS === "email") {
         const validated = validate(elementNameForS, userInputForS);
         // if(validated){
             signupEmail = userInputForS;
@@ -102,21 +112,22 @@ const loginUser = async function (e) {
 // Function to validate the userInputs
 const validate = function (elementNameForS, userInputForS) {
     let validated = false;
-    if (elementNameForS === "username") {
-        if (userInputForS.length < 20) {
-            validated = true;
-            signupUsernameMsg.style.display="none";
-        } else {
-            signupUsernameMsg.style.display="block";
-        }
-
-    }
     if (elementNameForS === "password") {
         if (userInputForS.length > 7) {
             validated = true;
             signupPasswordMsg.style.display="none";
         } else {
+            // validated=false
             signupPasswordMsg.style.display="block";
+        }
+    }
+    else if (elementNameForS === "username") {
+        if (userInputForS.length < 20) {
+            validated = true;
+            signupUsernameMsg.style.display="none";
+        } else {
+            // validated =false
+            signupUsernameMsg.style.display="block";
         }
     }
     return validated;
@@ -164,6 +175,7 @@ const signupUser = async function (e) {
 
 //show the login and signup box
 const showLoginbox = function (e){
+
     signupButtonInput = e.target.id;
     loginButtonInput = e.target.id;
     tabLoginButtonInput = e.target.id
@@ -188,10 +200,6 @@ const closeLoginBox =function(e){
         loginbox.style.display="none";
         loginMsg.style.display="none";
 }
-
-
-
-
 
 
 const usernameInput = document.getElementById("loginUsername");

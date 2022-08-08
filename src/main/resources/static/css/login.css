@@ -101,6 +101,29 @@
     font-weight: 500;
     margin-bottom: 0rem;
 }
+.terms{
+    width: 90%;
+}
+.signup-checkBox{
+
+}
+.terms h4{
+    color: black;
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 0rem;
+    display: inline;
+}
+.terms a{
+    color: #DE5B19 !important;
+    font-family: 'Roboto', sans-serif ;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 0rem;
+    display: inline;
+
+}
 .boxInput input{
     width: 90%;
     height: 1.8rem;
