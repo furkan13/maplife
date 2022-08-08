@@ -1,18 +1,29 @@
 let loginbox=document.getElementById("login-box")
 let popupLayer=document.getElementById("popLayer")
+let loginMsg=document.getElementById("login-msg")
+let signupUsernameMsg=document.getElementById("signup-username")
+let signupUsernameMsg2=document.getElementById("signup-username2")
+let signupPasswordMsg=document.getElementById("signup-password")
+let signupComfirmPasswordMsg=document.getElementById("signup-comfirmPassword2")
 let loginUsername=null;
 let loginPassword=null;
 let signupUsername=null;
 let signupPassword=null;
+let signupConfirmPassword=null;
 let signupEmail=null;
 let loginButtonInput=null;
 let signupButtonInput=null;
 let tabLoginButtonInput=null;
 let tabSignupButtonInput=null;
+window.onload = function (){
+    document.getElementById("signupUsername").value="";
+    document.getElementById("signupPassword").value="";
+    document.getElementById("signupConfirmPassword").value="";
+    document.getElementById("signupEmail").value="";
+}
 
-
-
-//capture login user input
+/*capture login user input
+* verify user password, show wrong password message*/
 const captureUserInput = function (e) {
     const userInput = e.target.value;
     const elementName = e.target.name;
@@ -24,7 +35,55 @@ const captureUserInput = function (e) {
         loginPassword = userInput;
     }
 }
+//capture signup user input
+const captureUserInputForS = function (e) {
+    const userInputForS = e.target.value;
+    const elementNameForS = e.target.name;
 
+
+    if (elementNameForS === "username") {
+        if (userInputForS !== null) {
+            const validated = validate(elementNameForS, userInputForS);
+            if (validated === true) {
+                signupUsername = userInputForS;
+            }
+        }
+        else {
+            signupUsernameMsg2.style.display="none";
+        }
+    }
+    else if (elementNameForS === "password") {
+        signupPasswordMsg.style.display="none";
+        const validated = validate(elementNameForS, userInputForS);
+        if(validated){
+            signupPassword = userInputForS;
+        }
+    }
+    else if (elementNameForS === "confirmPassword") {
+        // const validated = validate(elementNameForS, userInputForS);
+        const matching=matchPassword(signupPassword,userInputForS)
+        // signupConfirmPassword = userInputForS;
+        if(matching){
+            signupComfirmPasswordMsg.style.display="none";
+            signupConfirmPassword = userInputForS;
+        }
+        else {
+            // signupConfirmPassword = null;
+            signupConfirmPassword=null;
+            signupComfirmPasswordMsg.style.display="block";
+        }
+
+        // signupEmail = userInputForS;
+    }
+    else if (elementNameForS === "email") {
+        const validated = validate(elementNameForS, userInputForS);
+        // if(validated){
+            signupEmail = userInputForS;
+        // }
+        // signupEmail = userInputForS;
+    }
+
+};
 const loginUser = async function (e) {
     e.preventDefault();
     if (loginUsername != null && loginPassword != null) {
@@ -32,35 +91,62 @@ const loginUser = async function (e) {
             username: loginUsername,
             password: loginPassword,
         }
+
         const response = await fetch("/userLogin", {
             method: "POST",
             headers: {
                 "Content-type": "application/json"
             },
             body: JSON.stringify(userObject),
-        })
-        // window.location.href="/"
-        loginbox.style.display="none"
+        });
+        if (response.status == "200") {
+            const data = await response.json();
+            console.log(data);
+            loginbox.style.display = "none"
+        } else {
+            loginMsg.style.display="block";
+        }
+
     }
 }
-
-
-//capture signup user input
-const captureUserInputForS = function (e) {
-    const userInputForS = e.target.value;
-    const elementNameForS = e.target.name;
-    if (elementNameForS === "username") {
-        signupUsername=userInputForS;
-    } else if (elementNameForS === "password") {
-        signupPassword = userInputForS;
-    }else if (elementNameForS === "email") {
-        signupEmail = userInputForS;
+// Function to validate the userInputs
+const validate = function (elementNameForS, userInputForS) {
+    let validated = false;
+    if (elementNameForS === "password") {
+        if (userInputForS.length > 7) {
+            validated = true;
+            signupPasswordMsg.style.display="none";
+        } else {
+            // validated=false
+            signupPasswordMsg.style.display="block";
+        }
     }
+    else if (elementNameForS === "username") {
+        if (userInputForS.length < 20) {
+            validated = true;
+            signupUsernameMsg.style.display="none";
+        } else {
+            // validated =false
+            signupUsernameMsg.style.display="block";
+        }
+    }
+    return validated;
 };
+
+
+const matchPassword = function (password, confirmPassword) {
+    let matching = false;
+    if (password === confirmPassword) {
+        matching = true;
+    }
+    return matching;
+};
+
+
 
 const signupUser = async function (e) {
     e.preventDefault();
-    if (signupUsername != null && signupPassword != null && signupEmail != null) {
+    if (signupUsername != null && signupPassword != null && signupConfirmPassword !=null && signupEmail != null) {
         const userObject = {
             username: signupUsername,
             password: signupPassword,
@@ -73,14 +159,23 @@ const signupUser = async function (e) {
             },
             body: JSON.stringify(userObject),
         })
+        if (response.status == "200") {
+            const data = await response.json();
+            console.log(data);
+            loginbox.style.display="none";
+        } else {
+            signupComfirmPasswordMsg.style.display="none";
+            signupUsernameMsg2.style.display="block";
+        }
         // window.location.href="/"
-        loginbox.style.display="none"
+
     }
 }
 
 
 //show the login and signup box
 const showLoginbox = function (e){
+
     signupButtonInput = e.target.id;
     loginButtonInput = e.target.id;
     tabLoginButtonInput = e.target.id
@@ -103,11 +198,8 @@ const showLoginbox = function (e){
 //click popupLayer to close the loginBox
 const closeLoginBox =function(e){
         loginbox.style.display="none";
+        loginMsg.style.display="none";
 }
-
-
-
-
 
 
 const usernameInput = document.getElementById("loginUsername");
@@ -115,6 +207,7 @@ const passwordInput = document.getElementById("loginPassword");
 const loginButton = document.getElementById("loginBtn");
 const usernameInputForS=document.getElementById("signupUsername");
 const passwordInputForS=document.getElementById("signupPassword");
+const confirmPasswordInputForS=document.getElementById("signupConfirmPassword");
 const emailInputForS=document.getElementById("signupEmail");
 const signupButton = document.getElementById("signupBtn");
 const headerLoginButton =document.getElementById("login-button")
@@ -128,6 +221,7 @@ passwordInput.addEventListener("change", captureUserInput);
 loginButton.addEventListener("click", loginUser);
 usernameInputForS.addEventListener("change", captureUserInputForS)
 passwordInputForS.addEventListener("change", captureUserInputForS)
+confirmPasswordInputForS.addEventListener("change", captureUserInputForS)
 emailInputForS.addEventListener("change", captureUserInputForS)
 signupButton.addEventListener("click", signupUser);
 headerLoginButton.addEventListener("click", showLoginbox);

@@ -2,7 +2,12 @@
     position: fixed;
     z-index: 1800;
     width: 100%;
+    height: 100%;
     display: none;
+}
+.auth-form-container{
+    overflow-y: auto;
+    height: 100%;
 }
 /*click loginBox, other place become grey */
 #popLayer{
@@ -10,7 +15,6 @@
     display: none;
     left: 0;
     top: 0;
-    z-index: -1;
     background: #858585;
     width: 100%;
     height: 100%;
@@ -31,7 +35,7 @@
     width: 27rem;
     /*height: 60rem;*/
     border: 0.1rem solid #cccccc;
-    margin: 5rem auto;
+    margin: 5% auto;
     position: relative;
     background-color: white;
 
@@ -88,6 +92,7 @@
 .boxInput{
     /*background-color: red;*/
     margin-bottom: 1.5rem;
+
 }
 .boxInput h4{
     color: black;
@@ -95,6 +100,29 @@
     font-size: inherit;
     font-weight: 500;
     margin-bottom: 0rem;
+}
+.terms{
+    width: 90%;
+}
+.signup-checkBox{
+
+}
+.terms h4{
+    color: black;
+    font-family: 'Roboto', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 0rem;
+    display: inline;
+}
+.terms a{
+    color: #DE5B19 !important;
+    font-family: 'Roboto', sans-serif ;
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 0rem;
+    display: inline;
+
 }
 .boxInput input{
     width: 90%;
@@ -110,6 +138,53 @@
 .boxInput input:focus {
     border: 2px solid #DE5B19 !important;
 }
+
+/*Msg for login and signup*/
+#login-msg{
+    color: red;
+    display: none;
+    font-size: 0.8rem;
+    font-family: 'Roboto', sans-serif;
+    margin-top: 8px;
+    /*animation-delay:2s;*/
+    /*transition: translate 10s ease-in;*/
+}
+#signup-username{
+    color: red;
+    display: none;
+    font-size: 0.8rem;
+    font-family: 'Roboto', sans-serif;
+    margin-top: 8px;
+}
+#signup-username2{
+    color: red;
+    display: none;
+    font-size: 0.8rem;
+    font-family: 'Roboto', sans-serif;
+    margin-top: 8px;
+}
+#signup-password{
+    color: red;
+    display: none;
+    font-size: 0.8rem;
+    font-family: 'Roboto', sans-serif;
+    margin-top: 8px;
+}
+#signup-comfirmPassword{
+    color: red;
+    display: none;
+    font-size: 0.8rem;
+    font-family: 'Roboto', sans-serif;
+    margin-top: 8px;
+}
+#signup-comfirmPassword2{
+    color: red;
+    display: none;
+    font-size: 0.8rem;
+    font-family: 'Roboto', sans-serif;
+    margin-top: 8px;
+}
+
 
 /*login and sign up button*/
 .AccessBtn{
