@@ -282,110 +282,64 @@
         </div>
     </nav>
 </sidebar>
+<!--<div class="login-box" id="login-box">-->
+<!--        <div id="popLayer"  class="popLayer" onclick="closeLoginBox()"></div>-->
+<!--        <section id="loginbox-content">-->
+<!--            <div class="loginbox-content-header clearfix">-->
 
-<th:block th:replace="${script}"/>
-<!--<sidebar>-->
-<!--    <nav class="navbar bg-light sidebar">-->
-<!--        <div class="container-fluid">-->
-<!--            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">-->
-<!--                <span class="navbar-toggler-icon"></span>-->
-<!--            </button>-->
-<!--            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">-->
-<!--                <div class="offcanvas-header">-->
-<!--                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>-->
-<!--                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>-->
+<!--                <div class="loginbox-title">-->
+<!--                    <h1>Join MAP LIFE</h1>-->
 <!--                </div>-->
-<!--                <div class="offcanvas-body">-->
-<!--                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link active" aria-current="page" href="#">Home</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="#">Link</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item dropdown">-->
-<!--                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">-->
-<!--                                Dropdown-->
-<!--                            </a>-->
-<!--                            <ul class="dropdown-menu">-->
-<!--                                <li><a class="dropdown-item" href="#">Action</a></li>-->
-<!--                                <li><a class="dropdown-item" href="#">Another action</a></li>-->
-<!--                                <li>-->
-<!--                                    <hr class="dropdown-divider">-->
-<!--                                </li>-->
-<!--                                <li><a class="dropdown-item" href="#">Something else here</a></li>-->
-<!--                            </ul>-->
-<!--                        </li>-->
-<!--                    </ul>-->
-<!--                    <form class="d-flex" role="search">-->
-<!--                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->
-<!--                         <button class="btn btn-outline-success" type="submit">Search</button>-->
-<!--                    </form>-->
+<!--                <div class="login-bar">-->
+<!--                    <a id="login-a" >Login</a>-->
+<!--                </div>-->
+<!--                <div class="signup-bar">-->
+<!--                    <a id="signup-a" >Sign up</a>-->
 <!--                </div>-->
 <!--            </div>-->
-<!--        </div>-->
-<!--    </nav>-->
-<!--</sidebar>-->
-    <div class="login-box" id="login-box">
-        <div id="popLayer"  class="popLayer" onclick="closeLoginBox()"></div>
-        <section id="loginbox-content">
-            <div class="loginbox-content-header clearfix">
 
-                <div class="loginbox-title">
-                    <h1>Join MAP LIFE</h1>
-                </div>
-                <div class="login-bar">
-                    <a id="login-a" >Login</a>
-                </div>
-                <div class="signup-bar">
-                    <a id="signup-a" >Sign up</a>
-                </div>
-            </div>
+<!--            <div class="loginbox-content-body">-->
+<!--                <div class="dom-login"  id="dom-login">-->
+<!--                    <form action="/processFormPost" method="post">-->
+<!--                        <div class="boxInput">-->
+<!--                            <h4>username</h4>-->
+<!--                            <input class="form-control" type="text" name="username" placeholder="input username" id="loginUsername">-->
+<!--                        </div>-->
+<!--                        <div class="boxInput">-->
+<!--                            <h4>password</h4>-->
+<!--                            <input class="form-control" type="text" name="password" placeholder="input password" id="loginPassword">-->
+<!--                        </div>-->
+<!--                        <div class="dom-footer">-->
+<!--                            <div class="login-another">-->
+<!--                                <a href="#">forgot my password</a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                        <input type="submit" value="Login" class="AccessBtn" name="loginBtn" id="loginBtn">-->
+<!--                    </form>-->
+<!--                </div>-->
+<!--                <div class="dom-signup" id="dom-signup" >-->
+<!--                    <form action="/processFormPost" method="post">-->
+<!--                        <div class="boxInput">-->
+<!--                            <h4>username</h4>-->
+<!--                            <input class="form-control" type="text" name="username" placeholder="input username" id="signupUsername" >-->
+<!--                        </div>-->
+<!--                        <div class="boxInput">-->
+<!--                            <h4>password</h4>-->
+<!--                            <input class="form-control" type="password" name="password" placeholder="input password" id="signupPassword">-->
+<!--                        </div>-->
+<!--                        <div class="boxInput">-->
+<!--                            <h4>email</h4>-->
+<!--                            <input class="form-control" type="email" name="email" placeholder="input email" id="signupEmail">-->
+<!--                        </div>-->
+<!--                        <input type="submit" value="sign up" class="AccessBtn" id="signupBtn">-->
+<!--                    </form>-->
+<!--                </div>-->
 
-            <div class="loginbox-content-body">
-                <div class="dom-login"  id="dom-login">
-                    <form action="/processFormPost" method="post">
-                        <div class="boxInput">
-                            <h4>username</h4>
-                            <input class="form-control" type="text" name="username" placeholder="input username" id="loginUsername">
-                        </div>
-                        <div class="boxInput">
-                            <h4>password</h4>
-                            <input class="form-control" type="text" name="password" placeholder="input password" id="loginPassword">
-                        </div>
-                        <div class="dom-footer">
-                            <div class="login-another">
-                                <a href="#">forgot my password</a>
-                            </div>
-                        </div>
-                        <input type="submit" value="Login" class="AccessBtn" name="loginBtn" id="loginBtn">
-                    </form>
-                </div>
-                <div class="dom-signup" id="dom-signup" >
-                    <form action="/processFormPost" method="post">
-                        <div class="boxInput">
-                            <h4>username</h4>
-                            <input class="form-control" type="text" name="username" placeholder="input username" id="signupUsername" >
-                        </div>
-                        <div class="boxInput">
-                            <h4>password</h4>
-                            <input class="form-control" type="password" name="password" placeholder="input password" id="signupPassword">
-                        </div>
-                        <div class="boxInput">
-                            <h4>email</h4>
-                            <input class="form-control" type="email" name="email" placeholder="input email" id="signupEmail">
-                        </div>
-                        <input type="submit" value="sign up" class="AccessBtn" id="signupBtn">
-                    </form>
-                </div>
+<!--            </div>-->
+<!--        </section>-->
+<!--    </div>-->
 
-            </div>
-        </section>
-    </div>
-
-
-
-</body>
+<th:block th:replace="${script}"/>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
 <script type="text/javascript" src="../../static/js/login.js"></script>
 <script type="text/javascript" th:src="@{/js/login.js}"></script>
