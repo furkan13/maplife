@@ -1,7 +1,6 @@
 package com.cardiff.maplife.controllers;
 
 
-import org.hibernate.annotations.SourceType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -23,7 +22,13 @@ public class MainController {
 
     @GetMapping("/")
     public ModelAndView showMapPage(ModelAndView modelAndView) {
-        modelAndView = new ModelAndView("/navigator/bars");
+        modelAndView = new ModelAndView("landing/map");
+        return modelAndView;
+    }
+
+    @GetMapping("/subscriptions")
+    public ModelAndView showSubscriptionPage(ModelAndView modelAndView) {
+        modelAndView = new ModelAndView("subscription/subscriptions");
         return modelAndView;
     }
 

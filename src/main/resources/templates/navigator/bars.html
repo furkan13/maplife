@@ -3,7 +3,7 @@
 <head th:fragment="common-header(title, link)">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>navbar</title>
+    <title th:replace="${title}"></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -11,11 +11,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
     <!--Navbar css(it will also be commonly shared)-->
     <link th:href="@{/css/bars.css}" rel="stylesheet"/>
-    <link href="../../static/css/bars.css" rel="stylesheet"/>
     <link th:href="@{/css/login.css}" rel="stylesheet"/>
-    <link href="../../static/css/login.css" rel="stylesheet"/>
     <!--    Custom CSS of fragments which will replace this-->
-<!--    <th:block th:replace="${link}"/>-->
+    <th:block th:replace="${link}"/>
 </head>
 
 <body th:fragment="common-body(body,sider,script)">
@@ -51,50 +49,238 @@
         </div>
     </nav>
 </header>
-<!--<sidebar>-->
-<!--    <nav class="navbar bg-light sidebar">-->
-<!--        <div class="container-fluid">-->
-<!--            <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">-->
-<!--                <span class="navbar-toggler-icon"></span>-->
-<!--            </button>-->
-<!--            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">-->
-<!--                <div class="offcanvas-header">-->
-<!--                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Offcanvas</h5>-->
-<!--                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>-->
-<!--                </div>-->
-<!--                <div class="offcanvas-body">-->
-<!--                    <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link active" aria-current="page" href="#">Home</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item">-->
-<!--                            <a class="nav-link" href="#">Link</a>-->
-<!--                        </li>-->
-<!--                        <li class="nav-item dropdown">-->
-<!--                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">-->
-<!--                                Dropdown-->
-<!--                            </a>-->
-<!--                            <ul class="dropdown-menu">-->
-<!--                                <li><a class="dropdown-item" href="#">Action</a></li>-->
-<!--                                <li><a class="dropdown-item" href="#">Another action</a></li>-->
-<!--                                <li>-->
-<!--                                    <hr class="dropdown-divider">-->
-<!--                                </li>-->
-<!--                                <li><a class="dropdown-item" href="#">Something else here</a></li>-->
-<!--                            </ul>-->
-<!--                        </li>-->
-<!--                    </ul>-->
-<!--                    <form class="d-flex" role="search">-->
-<!--                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">-->
-<!--                         <button class="btn btn-outline-success" type="submit">Search</button>-->
-<!--                    </form>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </nav>-->
-<!--</sidebar>-->
+    <!-- Creating the sidebar -->
+<sidebar>
+    <th:block th:replace="${sider}"/>
+    <nav class="navbar sidebar">
+        <div>
+            <div id="sidebar-collapse">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+                            <img src="https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u197.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762">
+                        </button>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" th:href="@{/}"><img src="https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u193.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762"></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="bars.html"><img src="https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u190.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762"></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="bars.html"><img src="https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u187.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762"></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="bars.html"><img src="https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u196.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762"></a>
+                    </li>
+                </ul>
+                <div class="sub-avatar-container">
+                    <div class="sub-avatar">
+                        <a class="nav-link" href="bars.html">
+                            <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
+                        </a>
+                    </div>
+                    <div class="sub-avatar">
+                        <a class="nav-link" href="bars.html">
+                            <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
+                        </a>
+                    </div>
+                    <div class="sub-avatar">
+                        <a class="nav-link" href="bars.html">
+                            <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
+                        </a>
+                    </div>
+                    <div class="sub-avatar">
+                        <a class="nav-link" href="bars.html">
+                            <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
+                        </a>
+                    </div>
+                    <div class="sub-avatar">
+                        <a class="nav-link" href="bars.html">
+                            <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
+                        </a>
+                    </div>
+                    <div class="sub-avatar">
+                        <a class="nav-link" href="bars.html">
+                            <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
+                        </a>
+                    </div>
+                </div>
+                <a class="nav-link setting-icon" href="bars.html"><img src="https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u183.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762"></a>
+            </div>
+            <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">LIVE THE LIFE</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                <div class="offcanvas-body">
+                    <ul class="navbar-nav">
+                        <li>
+                                <a class="nav-link nav-link-box" th:href="@{/}">
+                                    <div class="nav-link-icon">
+                                        <img src="https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u193.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762">
+                                    </div>
+                                    <div class="nav-link-text">Home</div>
+                                </a>
+                        </li>
+                        <li>
+                                <a class="nav-link nav-link-box" href="bars.html">
+                                    <div class="nav-link-icon">
+                                        <img src="https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u190.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762">
+                                    </div>
+                                    <div class="nav-link-text">Explore</div>
+                                </a>
+                        </li>
+                        <li>
+                                <a class="nav-link nav-link-box" href="bars.html">
+                                    <div class="nav-link-icon">
+                                        <img src="https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u187.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762">
+                                    </div>
+                                    <div class="nav-link-text">Events</div>
+                                </a>
+                        </li>
+                        <li>
+                                <a class="nav-link nav-link-box" href="bars.html">
+                                    <div class="nav-link-icon">
+                                        <img src="https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u196.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762">
+                                    </div>
+                                    <div class="nav-link-text">History</div>
+                                </a>
+                        </li>
+                    </ul>
+                    <hr class="sidebar-hr">
+                    <a th:href="@{/subscriptions}" class="nav-link">
+                        <div class="offcanvas-header subscription-header">
+                            <h5>SUBSCRIPTIONS</h5><img src="https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u233.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762">
+                        </div>
+                    </a>
 
-    <div class="login-box" id="login-box">
+                    <ul class="subscription-list navbar-nav">
+                        <li>
+                            <a class="nav-link nav-link-box" href="bars.html">
+                                <div class="subscription-live">
+                                    <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
+                                    <div class="streaming-detail">
+                                        <span class="live-name text-truncate">Cat Lover</span><span class="live-description text-truncate">My life with my cat</span>
+                                    </div>
+                                    <div class="live-viewer-box">
+                                        <div class="live-dot"></div>
+                                        <span class="live-viewer">1.2k</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                        <li>
+                        <a class="nav-link nav-link-box" href="bars.html">
+                            <div class="subscription-live">
+                                <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
+                                <div class="streaming-detail">
+                                    <span class="live-name text-truncate">Cat Lover</span><span class="live-description text-truncate">My life with my cat</span>
+                                </div>
+                                <div class="live-viewer-box">
+                                    <div class="live-dot"></div>
+                                    <span class="live-viewer">1.2k</span>
+                                </div>
+                            </div>
+
+                        </a>
+                        </li>
+                        <li>
+                        <a class="nav-link nav-link-box" href="bars.html">
+                            <div class="subscription-live">
+                                <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
+                                <div class="streaming-detail">
+                                    <span class="live-name text-truncate">Cat Lover</span><span class="live-description text-truncate">My life with my cat</span>
+                                </div>
+                                <div class="live-viewer-box">
+                                    <div class="live-dot"></div>
+                                    <span class="live-viewer">1.2k</span>
+                                </div>
+                            </div>
+
+                        </a>
+                        </li>
+                        <li>
+                        <a class="nav-link nav-link-box" href="bars.html">
+                            <div class="subscription-live">
+                                <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
+                                <div class="streaming-detail">
+                                    <span class="live-name text-truncate">Cat Lover</span><span class="live-description text-truncate">My life with my cat</span>
+                                </div>
+                                <div class="live-viewer-box">
+                                    <div class="live-dot"></div>
+                                    <span class="live-viewer">1.2k</span>
+                                </div>
+                            </div>
+
+                        </a>
+                        </li>
+                        <li>
+                            <a class="nav-link nav-link-box" href="bars.html">
+                                <div class="subscription-live">
+                                    <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
+                                    <div class="streaming-detail">
+                                        <span class="live-name text-truncate">Cat Lover</span><span class="live-description text-truncate">My life with my cat</span>
+                                    </div>
+                                    <div class="live-viewer-box">
+                                        <div class="live-dot"></div>
+                                        <span class="live-viewer">1.2k</span>
+                                    </div>
+                                </div>
+
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link nav-link-box" href="bars.html">
+                                <div class="subscription-live">
+                                    <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
+                                    <div class="streaming-detail">
+                                        <span class="live-name text-truncate">Cat Lover</span><span class="live-description text-truncate">My life with my cat</span>
+                                    </div>
+                                    <div class="live-viewer-box">
+                                        <div class="live-dot"></div>
+                                        <span class="live-viewer">1.2k</span>
+                                    </div>
+                                </div>
+
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link nav-link-box" href="bars.html">
+                                <div class="subscription-live">
+                                    <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
+                                    <div class="streaming-detail">
+                                        <span class="live-name text-truncate">Cat Lover</span><span class="live-description text-truncate">My life with my cat</span>
+                                    </div>
+                                    <div class="live-viewer-box">
+                                        <div class="live-dot"></div>
+                                        <span class="live-viewer">1.2k</span>
+                                    </div>
+                                </div>
+
+                            </a>
+                        </li>
+                    </ul>
+                    <hr class="sidebar-hr">
+                    <footer>
+                        <div id="footer-link-primary">
+                            <a th:href="@{/}" class="nav-link">About</a><a th:href="@{/}" class="nav-link">Copyright</a><a th:href="@{/}" class="nav-link">Contact us</a>
+                            <a th:href="@{/}" class="nav-link">Instagram</a><a th:href="@{/}" class="nav-link">Twitter</a><a th:href="@{/}" class="nav-link">Facebook</a>
+                            <a th:href="@{/}" class="nav-link">Developers</a><a th:href="@{/}" class="nav-link">Sponsor</a>
+                        </div>
+                        <div id="footer-link-secondary">
+                            <a th:href="@{/}" class="nav-link">Terms</a><a th:href="@{/}" class="nav-link">Privacy</a><a th:href="@{/}" class="nav-link">Policy</a>
+                            <a th:href="@{/}" class="nav-link">Join us</a><a th:href="@{/}" class="nav-link">Report bugs</a><a th:href="@{/}" class="nav-link">Test new features</a><a th:href="@{/}" class="nav-link">Explore Cardiff</a>
+                        </div>
+                        <span>© 2022 MAPLIFE</span>
+                    </footer>
+                </div>
+            </div>
+        </div>
+    </nav>
+</sidebar>
+
+<div class="login-box" id="login-box">
         <div class="auth-form-container" >
             <div id="popLayer"  class="popLayer"onclick="closeLoginBox()" ></div>
 
@@ -156,14 +342,14 @@
                                 <input class="form-control" type="email" name="email" id="signupEmail">
                             </div>
                             <div class="terms">
-<!--                                <input type="checkbox" class="signup-checkBox">-->
+                                <!--                                <input type="checkbox" class="signup-checkBox">-->
                                 <h4>By clicking Sign Up, you are agreeing to MAP LIFE's </h4>
                                 <a>Terms of Service</a>
                                 <h4> and are acknowledging our </h4>
                                 <a>Privacy Notice</a>
                                 <h4> applies.</h4>
                             </div>
-                            <input type="submit" value="sign up" class="AccessBtn" id="signupBtn">
+                            <input type="submit" value="Sign Up" class="AccessBtn" id="signupBtn">
                         </form>
                     </div>
 
@@ -172,10 +358,12 @@
         </div>
     </div>
 
+<div class="body__container">
+    <th:block th:replace="${body}"/>
+</div>
 
-
-</body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
-<script type="text/javascript" src="../../static/js/login.js"></script>
 <script type="text/javascript" th:src="@{/js/login.js}"></script>
+<th:block th:replace="${script}"/>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+</body>
 </html>

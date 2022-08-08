@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="navigator/bars::common-header(~{::title}, ~{::link})">
+    <meta charset="UTF-8">
+    <title>Map Life</title>
+    <link th:href= "@{/css/map.css}" rel="stylesheet" />
+
+</head>
+<body th:replace="navigator/bars::common-body(~{::#landing-page},~{},~{})">
+<div id="landing-page">
+    THIS IS MAP PAGE
+</div>
+</body>
+</html>
