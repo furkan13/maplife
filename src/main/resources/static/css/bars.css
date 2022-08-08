@@ -10,9 +10,10 @@ body{
 }
 .container-fluid{
     --bs-gutter-x: 2rem;
+    flex-wrap: nowrap;
 }
 .fixed-top{
-    z-index: 2000;
+    z-index: 1700;
 }
 .d-flex {
     width: 30%;
@@ -90,12 +91,15 @@ body{
     margin-top: 45px;
     position: fixed;
     font-family: Arial,sans-serif;
+    z-index: 1500;
 }
 #sidebar-collapse{
     width: 70px;
     min-height: 100vh;
     padding: 0.5rem 0;
     background-color: white;
+    display: flex;
+    flex-direction: column;
 }
 #sidebar-collapse ul{
     flex-direction: column;
@@ -109,6 +113,9 @@ body{
 #sidebar-collapse a:hover{
     background-color: #e7e7e7;
 }
+.sub-avatar-container{
+    flex-shrink: 0;
+}
 .sub-avatar{
     margin: 0.5rem 0;
 }
@@ -119,10 +126,14 @@ body{
 .sub-avatar .nav-link{
     padding: 0.3rem 0;
 }
+#setting-icon-container{
+    flex: auto;
+    min-height: 7rem;
+}
 .setting-icon{
-    position: absolute;
-    top: 58rem;
     margin: auto 20px;
+    position: absolute;
+    bottom: 5rem;
 }
 .setting-icon:hover{
     background-color: transparent !important;

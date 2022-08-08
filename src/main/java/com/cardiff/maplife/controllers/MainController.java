@@ -31,6 +31,11 @@ public class MainController {
         modelAndView = new ModelAndView("subscription/subscriptions");
         return modelAndView;
     }
+    @GetMapping("/authform")
+    public ModelAndView showAuthForm(ModelAndView modelAndView) {
+        modelAndView = new ModelAndView("authform/authform");
+        return modelAndView;
+    }
 
 
 

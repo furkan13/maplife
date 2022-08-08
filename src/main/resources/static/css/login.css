@@ -3,24 +3,13 @@
     z-index: 1800;
     width: 100%;
     height: 100%;
-    display: none;
+    /*display: none;*/
 }
 .auth-form-container{
     overflow-y: auto;
     height: 100%;
-}
-/*click loginBox, other place become grey */
-#popLayer{
-    position: fixed;
-    display: none;
-    left: 0;
-    top: 0;
-    background: #858585;
-    width: 100%;
-    height: 100%;
-    -moz-opacity: 0.5;
-    opacity: .50;
-
+    background-color: rgba(0,0,0,0.08);
+    padding: 8% 0 0 0;
 }
 
 .clearfix::before,
@@ -35,7 +24,7 @@
     width: 27rem;
     /*height: 60rem;*/
     border: 0.1rem solid #cccccc;
-    margin: 5% auto;
+    margin: 0 auto;
     position: relative;
     background-color: white;
 
@@ -140,45 +129,8 @@
 }
 
 /*Msg for login and signup*/
-#login-msg{
-    color: red;
-    display: none;
-    font-size: 0.8rem;
-    font-family: 'Roboto', sans-serif;
-    margin-top: 8px;
-    /*animation-delay:2s;*/
-    /*transition: translate 10s ease-in;*/
-}
-#signup-username{
-    color: red;
-    display: none;
-    font-size: 0.8rem;
-    font-family: 'Roboto', sans-serif;
-    margin-top: 8px;
-}
-#signup-username2{
-    color: red;
-    display: none;
-    font-size: 0.8rem;
-    font-family: 'Roboto', sans-serif;
-    margin-top: 8px;
-}
-#signup-password{
-    color: red;
-    display: none;
-    font-size: 0.8rem;
-    font-family: 'Roboto', sans-serif;
-    margin-top: 8px;
-}
-#signup-comfirmPassword{
-    color: red;
-    display: none;
-    font-size: 0.8rem;
-    font-family: 'Roboto', sans-serif;
-    margin-top: 8px;
-}
-#signup-comfirmPassword2{
-    color: red;
+#login-msg,#signup-username,#signup-username2,#signup-password,#signup-comfirmPassword,#signup-comfirmPassword2 {
+    color: #DE5B19;
     display: none;
     font-size: 0.8rem;
     font-family: 'Roboto', sans-serif;
