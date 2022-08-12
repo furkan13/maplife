@@ -25,7 +25,7 @@ public class UserController {
        try{
            user.setIcon("default icon.png");
            /*validation for username*/
-           User signingUser = userService.findUserByUsername(usernameFromUser);
+           User signingUser = (User) userService.loadUserByUsername(usernameFromUser);
            if(signingUser == null){
                User savedUser=userService.saveUser(user);
                return new ResponseEntity<>(savedUser, HttpStatus.OK);
@@ -47,7 +47,7 @@ public class UserController {
         User loginUser = null;
 
         try {
-            User loggingUser = userService.findUserByUsername(usernameFromUser);
+            User loggingUser = (User) userService.loadUserByUsername(usernameFromUser);
             if (loggingUser != null) {
                 String passwordFromDB = loggingUser.getPassword();
                 if (passwordFromDB.equals(passwordFromUser)) {
