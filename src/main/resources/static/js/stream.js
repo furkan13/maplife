@@ -9,13 +9,34 @@ var user_name="Jeff";
 //user_name should be local stroage/cookie which is obtained when logging in
 function main(){
     let roomToken, liveToken ="";
-    $("#video_rm").click(user_check(roomToken));
-    live_token(liveToken)
+//    $("#video_rm").click(user_check(roomToken));
+    $("#create_room").click(room_create());
+//    live_token(liveToken)
     if(liveToken != ""){
         init_player(player,liveToken);
         $("#Steam").appendChild(player.videoElement);
     }
     console.log(liveToken,roomToken);
+}
+const room_create = async function(e){
+    const event_object= {
+        event_title:
+    }
+    const response = await fetch("/RoomCreation", {
+                method: "POST",
+                headers: {
+                    "Content-type": "application/json"
+                },
+                body: JSON.stringify(event_object),
+            })
+            if (response.status == "200") {
+                        const data = await response.json();
+                        console.log(data);
+                        window.location.href="/"
+                    }
+
+
+//    $.post("/RoomCreation", event_object);
 }
 function user_check(token){ //Check for hashed user name for identity, Get video token if grant access
     //Backend: 1. Check if the user is allowed to stream

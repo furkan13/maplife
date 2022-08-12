@@ -23,12 +23,11 @@ public class Event {
     }
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+
     @Column(name = "eventId")
     private Long id;
-
     @Column(name = "host_id")
     private Long host_id;
-
     @Column(name = "event_link")
     private String event_link;
     @Column(name = "event_title")
@@ -44,4 +43,59 @@ public class Event {
     @Column(name = "event_dis")
     private String event_dis;
 
+
+    public void SetEventId(long id){
+        this.id = id;
+    }
+    public void SetHostId(long id){
+        this.host_id = id;
+    }
+    public void SetLink(String link){
+        this.event_link = link;
+    }
+    public void SetTitle(String title){
+        this.event_title = title;
+    }
+    public void SetRoomType(boolean type){
+        this.room_type = type;
+    }
+    public void SetLongitude(double longitude){
+        this.longitude = longitude;
+    }
+    public void SetLatitude(double latitude){
+        this.latitude = latitude;
+    }
+    public void SetDate(Date date){
+        this.event_date = date;
+    }
+    public void SetDescription(String dis){
+        this.event_dis = dis;
+    }
+    public long GetEventId(){
+        return this.id;
+    }
+    public long GetHostId(){
+        return this.host_id;
+    }
+    public String GetLink(){
+        return this.event_link ;
+    }
+    public String GetTitle(){
+        return this.event_title;
+    }
+    public boolean GetRoomType(){
+        return this.room_type;
+    }
+    public double GetLongitude(){
+        return this.longitude;
+    }
+    public double GetLatitude(){
+        return this.latitude;
+    }
+    public Date SetDate(){
+        return this.event_date;
+    }
+    public String SetDescription(){
+        return this.event_dis;
+    }
 }
