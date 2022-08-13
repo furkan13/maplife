@@ -1,4 +1,16 @@
-#map {
-    height: 100vh;
+#landing-page{
+    padding: 50px 0 0 70px;
 }
-
+#map {
+    height: calc(100vh - 50px);
+}
+.custom-div-icon{
+    height: 50px !important;
+    width: 50px !important;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 14px rgb(0 0 0 / 40%);
+    background-image: url("../../static/image/cat.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+}

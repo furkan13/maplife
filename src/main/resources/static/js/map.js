@@ -1,7 +1,3 @@
-// var map = L.map('map').setView([51.505, -0.09], 13);
-// var marker = L.marker([51.5, -0.09]).addTo(map);
-// marker.bindPopup("<b>Hello world!</b><br>I am a popup.").openPopup();
-
 var map = L.map('map').fitWorld();
 map.locate({setView: true, maxZoom: 16});
 
@@ -18,7 +14,43 @@ function onLocationFound(e) {
 
     L.circle(e.latlng, radius).addTo(map);
 }
-
+function onLocationError(e) {
+    alert(e.message);
+}
+map.on('locationerror', onLocationError);
 map.on('locationfound', onLocationFound);
 
+// var popup = L.popup();
+// function onMapClick(e) {
+//     popup
+//         .setLatLng(e.latlng)
+//         .setContent("You clicked the map at " + e.latlng.toString())
+//         .openOn(map);
+// }
+//
+// map.on('click', onMapClick);
+
+//customize the marker
+// var MapIcon = L.Icon.extend({
+//     options: {
+//         // shadowUrl: 'image/cat.png',
+//         iconSize: [60, 60],
+//         // shadowSize: [0, 0],
+//         iconAnchor: [30, 30],
+//         // shadowAnchor: [4, 62],
+//         popupAnchor: [0, -40]
+//     }
+// });
+// // var catIcon = new LeafIcon({iconUrl: 'image/cat.png'}),
+// //     birdIcon = new LeafIcon({iconUrl: 'image/birds.jfif'});
+// var catIcon = new MapIcon({iconUrl: '../../static/image/cat.png'}),
+//     birdIcon = new MapIcon({iconUrl: '../../static/image/birds.jfif'});
+// L.icon = function (options) {
+//     return new L.Icon(options);
+// };
+// L.marker([51.483396, -3.173728], {icon: catIcon}).addTo(map).bindPopup("I am a cat.");
+// L.marker([51.489566, -3.187325], {icon: birdIcon}).addTo(map).bindPopup("I am a bird.");
+
+var myIcon = L.divIcon({className: 'custom-div-icon'});
+L.marker([51.483396, -3.173728], {icon: myIcon}).addTo(map).bindPopup("I am a cat.");
 
