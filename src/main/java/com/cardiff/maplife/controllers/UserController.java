@@ -26,6 +26,7 @@ public class UserController {
            user.setIcon("default icon.png");
            /*validation for username*/
            User signingUser = (User) userService.loadUserByUsername(usernameFromUser);
+           System.out.println(signingUser);
            if(signingUser == null){
                User savedUser=userService.saveUser(user);
                return new ResponseEntity<>(savedUser, HttpStatus.OK);
@@ -44,6 +45,7 @@ public class UserController {
    public Object userLogin(@RequestBody User user) {
         String usernameFromUser = user.getUsername();
         String passwordFromUser = user.getPassword();
+
         User loginUser = null;
 
         try {

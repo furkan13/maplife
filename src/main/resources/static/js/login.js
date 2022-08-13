@@ -10,7 +10,9 @@ let signupUsername=null;
 let signupPassword=null;
 let signupConfirmPassword=null;
 let signupEmail=null;
-let headerButton = GetQueryString("button")
+let headerButton=''
+
+// let headerButton = GetQueryString("button")
 let tabLoginButton =document.getElementById("login-a")
 let tabSignupButton =document.getElementById("signup-a")
 
@@ -20,6 +22,8 @@ window.onload = function (){
     document.getElementById("signupPassword").value="";
     document.getElementById("signupConfirmPassword").value="";
     document.getElementById("signupEmail").value="";
+    showLoginbox()
+
 }
 function GetQueryString(name) {
     let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
@@ -159,7 +163,7 @@ const signupUser = async function (e) {
         if (response.status == "200") {
             const data = await response.json();
             console.log(data);
-            window.location.href="/"
+            window.location.href="/authform"
         } else {
             signupComfirmPasswordMsg.style.display="none";
             signupUsernameMsg2.style.display="block";
@@ -176,21 +180,23 @@ const signupUser = async function (e) {
 
 //show the login and signup box
 const showLoginbox = function (){
-    loginbox.style.display="block";
-    if(headerButton==="login-button"){
+    headerButton = GetQueryString("button")
+    if(headerButton==="login-button"||headerButton===''){
         tabSignupButton.className="";
         tabLoginButton.className="current";
         document.getElementById("dom-login").style.display="block";
         document.getElementById("dom-signup").style.display="none";
+        loginbox.style.display="block";
     }
     else if(headerButton==="signup-button"){
         tabLoginButton.className="";
         tabSignupButton.className="current";
         document.getElementById("dom-login").style.display="none";
         document.getElementById("dom-signup").style.display="block";
+        loginbox.style.display="block";
+
     }
 }
-showLoginbox()
 const loginTab = function (){
         tabSignupButton.className="";
         tabLoginButton.className="current";
