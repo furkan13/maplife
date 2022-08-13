@@ -8,12 +8,10 @@
     height: 50px !important;
     width: 50px !important;
     border-radius: 50%;
+}
+#custom-div-icon{
     border: 2px solid white;
     box-shadow: 0 2px 14px rgb(0 0 0 / 40%);
-    background-image: url("../../static/image/cat.png");
-    /*background-image: url("/image/cat.png");*/
-    background-repeat: no-repeat;
-    background-size: contain;
 }
 #event-img{
     width: 300px;
