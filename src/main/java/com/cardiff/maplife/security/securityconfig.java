@@ -9,13 +9,22 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Configuration
+@EnableWebSecurity
 public class securityconfig extends WebSecurityConfigurerAdapter {
 //    @Resource
 //    private LoginSuccessHandler loginSuccessHandler;
@@ -26,6 +35,7 @@ public class securityconfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     UserService userService;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService);
@@ -36,18 +46,23 @@ public class securityconfig extends WebSecurityConfigurerAdapter {
 
         http.formLogin()
                 .loginPage("/authform")
-//                .successHandler(loginSuccessHandler)
-//                .successForwardUrl("/subscriptions")
-//                .failureForwardUrl("/fail")
+                .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/").permitAll()
+                .failureUrl("/authform?message=errorMessage")
+
                 .and()
                 .authorizeRequests()
+//                .antMatchers("/subscriptions").hasAuthority("ROLE_USER")
+//                .antMatchers("/subscriptions").hasRole("USER")
                 .antMatchers("/authform","/","/userLogin","/addUser").permitAll()
-                .antMatchers("/js/**","/css/**","/images/*","/fonts/**","/**/*.png","/**/*.jpg").permitAll()
-                .anyRequest()
-                .authenticated();
+                .antMatchers("/js/**","/css/**","/images/*","/fonts/**","/**/*.png","/**/*.jpg").permitAll();
+//                .anyRequest()
+//                .authenticated();
                 http.csrf().disable();
+                super.configure(http);
 
     }
+
 
 }
 

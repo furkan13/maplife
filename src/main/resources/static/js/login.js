@@ -11,6 +11,7 @@ let signupPassword=null;
 let signupConfirmPassword=null;
 let signupEmail=null;
 let headerButton=''
+let loginFail=null;
 
 // let headerButton = GetQueryString("button")
 let tabLoginButton =document.getElementById("login-a")
@@ -87,34 +88,6 @@ const captureUserInputForS = function (e) {
     }
 
 };
-const loginUser = async function (e) {
-    e.preventDefault();
-    if (loginUsername != null && loginPassword != null) {
-        const userObject = {
-            username: loginUsername,
-            password: loginPassword,
-        }
-
-        const response = await fetch("/userLogin", {
-            method: "POST",
-            headers: {
-                "Content-type": "application/json"
-            },
-            body: JSON.stringify(userObject),
-        });
-        if (response.status == "200") {
-            const data = await response.json();
-            console.log(data);
-            window.location.href="/"
-        } else {
-            loginMsg.style.display="block";
-        }
-
-    }
-    else {
-        loginMsg.style.display="block";
-    }
-}
 // Function to validate the userInputs
 const validate = function (elementNameForS, userInputForS) {
     let validated = false;
@@ -196,6 +169,10 @@ const showLoginbox = function (){
         loginbox.style.display="block";
 
     }
+    loginFail=GetQueryString("message")
+    if(loginFail==="errorMessage"){
+        loginMsg.style.display="block";
+    }
 }
 const loginTab = function (){
         tabSignupButton.className="";
@@ -212,7 +189,7 @@ const signupTab = function (){
 
 const usernameInput = document.getElementById("loginUsername");
 const passwordInput = document.getElementById("loginPassword");
-const loginButton = document.getElementById("loginBtn");
+// const loginButton = document.getElementById("loginBtn");
 const usernameInputForS=document.getElementById("signupUsername");
 const passwordInputForS=document.getElementById("signupPassword");
 const confirmPasswordInputForS=document.getElementById("signupConfirmPassword");
@@ -221,7 +198,7 @@ const signupButton = document.getElementById("signupBtn");
 
 usernameInput.addEventListener("change", captureUserInput);
 passwordInput.addEventListener("change", captureUserInput);
-loginButton.addEventListener("click", loginUser);
+// loginButton.addEventListener("click", loginUser);
 usernameInputForS.addEventListener("change", captureUserInputForS)
 passwordInputForS.addEventListener("change", captureUserInputForS)
 confirmPasswordInputForS.addEventListener("change", captureUserInputForS)
