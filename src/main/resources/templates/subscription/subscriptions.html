@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head th:replace="navigator/bars::common-header(~{::title}, ~{::link})">
     <meta charset="UTF-8">
     <title>Subscriptions</title>
@@ -7,7 +7,7 @@
 
 </head>
 <body th:replace="navigator/bars::common-body(~{::#subscriptions-page},~{},~{})">
-<div id="subscriptions-page">
+<div id="subscriptions-page" >
     <p>This is subscription list</p>
 </div>
 </body>

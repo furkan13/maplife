@@ -13,8 +13,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.annotation.Resource;
+
 @Configuration
 public class securityconfig extends WebSecurityConfigurerAdapter {
+//    @Resource
+//    private LoginSuccessHandler loginSuccessHandler;
     @Bean
     PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
@@ -32,6 +36,7 @@ public class securityconfig extends WebSecurityConfigurerAdapter {
 
         http.formLogin()
                 .loginPage("/authform")
+//                .successHandler(loginSuccessHandler)
 //                .successForwardUrl("/subscriptions")
 //                .failureForwardUrl("/fail")
                 .and()
@@ -43,11 +48,6 @@ public class securityconfig extends WebSecurityConfigurerAdapter {
                 http.csrf().disable();
 
     }
-//    public void configure(WebSecurity web) throws Exception {
-//        // 忽略URL
-//        web.ignoring().antMatchers("/**/*.js", "/lang/*.json", "/**/*.css", "/**/*.js", "/**/*.map", "/**/*.html",
-//                "/**/*.png");
-//    }
 
 }
 
