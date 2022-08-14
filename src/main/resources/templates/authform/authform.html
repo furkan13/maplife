@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="navigator/bars::common-header(~{::title}, ~{::link})">
     <meta charset="UTF-8">
@@ -27,7 +28,7 @@
 
             <div class="loginbox-content-body">
                 <div class="dom-login"  id="dom-login">
-                    <form action="/processFormPost" method="post">
+                    <form action="/login" method="post">
                         <div class="boxInput">
                             <h4>username</h4>
                             <input class="form-control" type="text" name="username" id="loginUsername">

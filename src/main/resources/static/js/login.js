@@ -10,7 +10,10 @@ let signupUsername=null;
 let signupPassword=null;
 let signupConfirmPassword=null;
 let signupEmail=null;
-let headerButton = GetQueryString("button")
+let headerButton=''
+let loginFail=null;
+
+// let headerButton = GetQueryString("button")
 let tabLoginButton =document.getElementById("login-a")
 let tabSignupButton =document.getElementById("signup-a")
 
@@ -20,7 +23,9 @@ window.onload = function (){
     document.getElementById("signupPassword").value="";
     document.getElementById("signupConfirmPassword").value="";
     document.getElementById("signupEmail").value="";
+    showLoginbox()
 }
+
 function GetQueryString(name) {
     let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
     let r = window.location.search.substr(1).match(reg); // get the parameters behind ?
@@ -83,34 +88,6 @@ const captureUserInputForS = function (e) {
     }
 
 };
-const loginUser = async function (e) {
-    e.preventDefault();
-    if (loginUsername != null && loginPassword != null) {
-        const userObject = {
-            username: loginUsername,
-            password: loginPassword,
-        }
-
-        const response = await fetch("/userLogin", {
-            method: "POST",
-            headers: {
-                "Content-type": "application/json"
-            },
-            body: JSON.stringify(userObject),
-        });
-        if (response.status == "200") {
-            const data = await response.json();
-            console.log(data);
-            window.location.href="/"
-        } else {
-            loginMsg.style.display="block";
-        }
-
-    }
-    else {
-        loginMsg.style.display="block";
-    }
-}
 // Function to validate the userInputs
 const validate = function (elementNameForS, userInputForS) {
     let validated = false;
@@ -149,7 +126,7 @@ const signupUser = async function (e) {
             password: signupPassword,
             email:signupEmail,
         }
-        const response = await fetch("/addUser", {
+        const response = await fetch("/api/addUser", {
             method: "POST",
             headers: {
                 "Content-type": "application/json"
@@ -159,7 +136,7 @@ const signupUser = async function (e) {
         if (response.status == "200") {
             const data = await response.json();
             console.log(data);
-            window.location.href="/"
+            window.location.href="/authform"
         } else {
             signupComfirmPasswordMsg.style.display="none";
             signupUsernameMsg2.style.display="block";
@@ -174,23 +151,30 @@ const signupUser = async function (e) {
 }
 
 
+
 //show the login and signup box
 const showLoginbox = function (){
-    loginbox.style.display="block";
-    if(headerButton==="login-button"){
+    headerButton = GetQueryString("button")
+    if(headerButton==="login-button"||headerButton===''){
         tabSignupButton.className="";
         tabLoginButton.className="current";
         document.getElementById("dom-login").style.display="block";
         document.getElementById("dom-signup").style.display="none";
+        loginbox.style.display="block";
     }
     else if(headerButton==="signup-button"){
         tabLoginButton.className="";
         tabSignupButton.className="current";
         document.getElementById("dom-login").style.display="none";
         document.getElementById("dom-signup").style.display="block";
+        loginbox.style.display="block";
+
+    }
+    loginFail=GetQueryString("message")
+    if(loginFail==="errorMessage"){
+        loginMsg.style.display="block";
     }
 }
-showLoginbox()
 const loginTab = function (){
         tabSignupButton.className="";
         tabLoginButton.className="current";
@@ -206,7 +190,7 @@ const signupTab = function (){
 
 const usernameInput = document.getElementById("loginUsername");
 const passwordInput = document.getElementById("loginPassword");
-const loginButton = document.getElementById("loginBtn");
+// const loginButton = document.getElementById("loginBtn");
 const usernameInputForS=document.getElementById("signupUsername");
 const passwordInputForS=document.getElementById("signupPassword");
 const confirmPasswordInputForS=document.getElementById("signupConfirmPassword");
@@ -215,7 +199,7 @@ const signupButton = document.getElementById("signupBtn");
 
 usernameInput.addEventListener("change", captureUserInput);
 passwordInput.addEventListener("change", captureUserInput);
-loginButton.addEventListener("click", loginUser);
+// loginButton.addEventListener("click", loginUser);
 usernameInputForS.addEventListener("change", captureUserInputForS)
 passwordInputForS.addEventListener("change", captureUserInputForS)
 confirmPasswordInputForS.addEventListener("change", captureUserInputForS)
