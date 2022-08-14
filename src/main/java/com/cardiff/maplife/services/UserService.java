@@ -30,18 +30,22 @@ public class UserService implements UserDetailsService {
 
     }
 
-        public User saveUser(User user) {
-            return userRepository.save(user);
-        }
+    public User findUserByUsername(String username){
+        return userRepository.findUserByUsername(username);
+    }
 
-     public String getAuthentication(){
+    public User saveUser(User user) {
+            return userRepository.save(user);
+    }
+
+    public String getAuthentication(){
          Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
          if (!(authentication instanceof AnonymousAuthenticationToken)) {
              String currentUserName = authentication.getName();
              return currentUserName;
          }
          return null;
-     }
+    }
 
 
 

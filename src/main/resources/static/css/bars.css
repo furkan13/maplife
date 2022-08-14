@@ -24,13 +24,22 @@ body{
 .navbar-nav{
     flex-direction: row;
 }
+#header-button .navbar-nav{
+    align-items: center;
+}
 .nav-item{
     margin: 0 0.5rem 0 0.5rem;
 }
 .user-icon{
     margin-left: 1rem;
+    overflow: hidden;
 }
-
+.user-icon-img{
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 2px solid #de5b19;
+}
 .bg-light {
     --bs-bg-opacity: 1;
     background-color: rgba(var(--bs-white-rgb), var(--bs-bg-opacity)) !important;
