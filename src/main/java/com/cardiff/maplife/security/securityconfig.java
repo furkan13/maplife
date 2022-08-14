@@ -40,14 +40,14 @@ public class securityconfig extends WebSecurityConfigurerAdapter {
         http.formLogin()
                 .loginPage("/authform")
                 .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/api/showUserName",true).permitAll()
+                .defaultSuccessUrl("/",true).permitAll()
 //                .successForwardUrl("/api/showUserObject").permitAll()
                 .failureUrl("/authform?message=errorMessage")
                 .and()
                 .authorizeRequests()
 //                .antMatchers("/subscriptions").hasAnyAuthority("ROLE_USER")
                 .antMatchers("/subscriptions").hasRole("USER")
-                .antMatchers("/authform","/","/api/addUser").permitAll()
+                .antMatchers("/authform","/","/api/addUser","/api/getUser").permitAll()
                 .antMatchers("/js/**","/css/**","/images/*","/fonts/**","/**/*.png","/**/*.jpg").permitAll();
 //                .anyRequest()
 //                .authenticated();
