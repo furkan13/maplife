@@ -4,14 +4,16 @@
   <meta charset="UTF-8">
   <title>Map Life</title>
   <link th:href= "@{/css/map.css}" rel="stylesheet" />
+  <link th:href= "@{/css/cards.css}" rel="stylesheet" />
 
 </head>
 <body th:replace="navigator/bars::common-body(~{::#landing-page},~{},~{})">
-<div id="landing-page">
+
   <ul class="cards">
-    <li th:each="events : ${event}">
+    <li th:each="eventList : ${event}">
       <a href="" class="card">
-        <img th:src="${event.image}" class="card__image" alt="" />
+        <!--<img th:src="${event.image}" class="card__image" alt="" />-->
+        <img th:src="@{${'/image/cat.png'}}" class="card__image" alt="" />
         <div class="card__overlay">
           <div class="card__header">
 
@@ -32,6 +34,6 @@
     </li>
 
   </ul>
-</div>
+
 </body>
 </html>
