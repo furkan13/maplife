@@ -20,7 +20,7 @@ function main(){
 }
 const room_create = async function(e){
     const event_object= {
-        event_title:
+        event_title: "Jeff"
     }
     const response = await fetch("/RoomCreation", {
                 method: "POST",
