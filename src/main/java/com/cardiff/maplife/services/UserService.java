@@ -2,44 +2,46 @@ package com.cardiff.maplife.services;
 
 import com.cardiff.maplife.entities.User;
 import com.cardiff.maplife.repositories.UserRepository;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.Set;
-
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
+
     public UserRepository userRepository;
     public UserService(UserRepository userRepository){
         this.userRepository=userRepository;
     }
 
-    public User saveUser(User user){
-        return userRepository.save(user);
-    }
-//    public Set<User> findAllUser(){
-//        return userRepository.findAllUser();
-//    }
-
-    public  User findUserByUsername(String username){
-        Optional<User> optionalUser=userRepository.findUserByUsername(username);
-        if(optionalUser.isPresent()){
-            return optionalUser.get();
-        }
-        else {
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user=userRepository.findUserByUsername(username);
+        if(user==null){
             return null;
         }
-    }
-    public User findUserByPassword(String password){
-    Optional<User> optionalPassword =userRepository.findUserByPassword(password);
-        if(optionalPassword.isPresent()){
-        return optionalPassword.get();
-    }
-        else {
-        return null;
-    }
-}
+        user.setAuthorities(AuthorityUtils.commaSeparatedStringToAuthorityList(user.getRoles()));
+        return user;
 
+    }
+
+        public User saveUser(User user) {
+            return userRepository.save(user);
+        }
+
+     public String getAuthentication(){
+         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+         if (!(authentication instanceof AnonymousAuthenticationToken)) {
+             String currentUserName = authentication.getName();
+             return currentUserName;
+         }
+         return null;
+     }
 
 
 

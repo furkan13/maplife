@@ -4,12 +4,9 @@ import com.cardiff.maplife.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.html.Option;
-import java.util.Optional;
-import java.util.Set;
 
 @RestController
 public class UserController {
@@ -19,13 +16,14 @@ public class UserController {
        this.userService=userService;
    }
    //sign up
-   @PostMapping("/addUser")
+   @PostMapping("/api/addUser")
     private ResponseEntity<User> addUser(@RequestBody User user){
        String usernameFromUser = user.getUsername();
        try{
            user.setIcon("default icon.png");
+           user.setRoles("ROLE_USER");
            /*validation for username*/
-           User signingUser = userService.findUserByUsername(usernameFromUser);
+           User signingUser = (User) userService.loadUserByUsername(usernameFromUser);
            if(signingUser == null){
                User savedUser=userService.saveUser(user);
                return new ResponseEntity<>(savedUser, HttpStatus.OK);
@@ -39,31 +37,17 @@ public class UserController {
        }
    }
 
-    //login in
-    @PostMapping("/userLogin")
-   public Object userLogin(@RequestBody User user) {
-        String usernameFromUser = user.getUsername();
-        String passwordFromUser = user.getPassword();
-        User loginUser = null;
 
-        try {
-            User loggingUser = userService.findUserByUsername(usernameFromUser);
-            if (loggingUser != null) {
-                String passwordFromDB = loggingUser.getPassword();
-                if (passwordFromDB.equals(passwordFromUser)) {
-                    loginUser = loggingUser;
-                }
-                else {
-                    return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-                }
-            }
-            else {
-                return new ResponseEntity<>(loginUser, HttpStatus.BAD_REQUEST);
-            }
-            return new ResponseEntity<>(loginUser, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
+    @RequestMapping(value = "/api/showUserName", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView currentUserName(HttpServletResponse response) {
+        ModelAndView mav = new ModelAndView();
+        Cookie userName = new Cookie("userName", userService.getAuthentication());
+        userName.setPath("/");
+        response.addCookie(userName);
+        System.out.println(userService.getAuthentication());
+        mav.setViewName("landing/map");
+        return mav;
     }
 
 }

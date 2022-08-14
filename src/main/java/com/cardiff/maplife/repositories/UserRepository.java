@@ -22,10 +22,10 @@ public interface UserRepository extends CrudRepository<User, Long> {
 //    Optional<User> findAllById(long id);
 
     // find user by username
-    Optional<User> findUserByUsername(String username);
-
+//    Optional<User> findUserByUsername(String username);
+    User findUserByUsername(String username);
     //find username and password
-    Optional<User> findUserByPassword(String password);
+//    Optional<User> findUserByPassword(String password);
 
 
 
