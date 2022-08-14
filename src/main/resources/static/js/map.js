@@ -1,11 +1,17 @@
-let popupContent = document.getElementById("marker-popup")
+let popupContent
 
 // display the map layer
 var map = L.map('map').fitWorld();
 map.locate({setView: true, maxZoom: 16}); // ask for the current location
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+
+//render map tile layer
+L.tileLayer('https://api.maptiler.com/maps/voyager/256/{z}/{x}/{y}@2x.png?key=qnH9hX4XM6EYJA7JoXVH',{
+    tileSize: 512,
+    zoomOffset: -1,
     maxZoom: 19,
-    attribution: '© OpenStreetMap'
+    minZoom: 1,
+    attribution: "\u003ca href=\"https://carto.com/\" target=\"_blank\"\u003e\u0026copy; CARTO\u003c/a\u003e \u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e",
+    crossOrigin: true
 }).addTo(map);
 
 function onLocationFound(e) {
@@ -39,25 +45,28 @@ L.Marker.prototype.options.icon = orangeIcon
 //
 // map.on('click', onMapClick);
 
-
 //define the custom icon
-var myIcon = L.divIcon({className:'custom-div-icon',iconAnchor: [25, 25],popupAnchor: [3, -30]});
+var myIcon = L.divIcon({className:'custom-div-icon',iconAnchor: [25, 25],popupAnchor: [2, -28]});
 
 //retrieve the streaming data
 var data = [
-    {'event_title':'Cat Lover','event_description':'My life with cats','event_cover':'cat.png','event_icon':'cat.png',lat:51.483396,lng:-3.173728},
-    {'event_title':'Bird life','event_description':'Do you know the birds?','event_cover':'birds.jfif','event_icon':'birds.jfif',lat:51.480023,lng:-3.170290}
+    {'host_name':'Cat Lover','event_title':'My life with cats','event_description':'event_description_test','event_cover':'cat.png','event_viewer':'1000','host_icon':'cat.png',lat:51.483396,lng:-3.173728},
+    {'host_name':'Bird life','event_title':'Do you know these birds?','event_description':'event_description_test','event_cover':'birds.jfif','event_viewer':'1000','host_icon':'birds.jfif',lat:51.480023,lng:-3.170290},
+    {'host_name':'Bird life','event_title':'Do you know these birds?','event_description':'event_description_test','event_cover':'birds.jfif','event_viewer':'20','host_icon':'birds.jfif',lat:51.485923,lng:-3.175390},
+    {'host_name':'Bird life','event_title':'Do you know these birds?','event_description':'event_description_test','event_cover':'birds.jfif','event_viewer':'30000','host_icon':'birds.jfif',lat:51.481023,lng:-3.155490},
+    {'host_name':'Bird life','event_title':'Do you know these birds?','event_description':'event_description_test','event_cover':'birds.jfif','event_viewer':'2000','host_icon':'birds.jfif',lat:51.487023,lng:-3.170190},
 ]
 
-//put the marker on the map
+//resolve data and put them in our marker and popup
 for (let i = 0;data.length>i;i++){
-    let eventCoverImg = "../../static/image/" + data[i].event_cover
-    let eventIconImg = "../../static/image/" + data[i].event_icon
-    popupContent = "<h1>" + data[i].event_title + "<h1><img id='event-img' src=" + eventCoverImg + ">"
+    let eventCoverImg = "image/" + data[i].event_cover
+    let eventIconImg = "image/" + data[i].host_icon
+    popupContent = '<div id="event-img-container" style="background-image: url(' + eventCoverImg + ')"></div><div id="event-title">' +
+        data[i].event_title + "</div><div id='host-name' class='event-text'>" + data[i].host_name + "</div><div id='event-viewers' class='event-text'>" +
+        data[i].event_viewer + " viewers</div><div class='event-text'>47 minutes ago</div>"
     myIcon.options.html = '<img id="custom-div-icon" class="custom-div-icon" src=' + eventIconImg + ">"
-    L.marker([data[i].lat,data[i].lng], {icon: myIcon}).addTo(map).bindPopup(popupContent);
+    //put the marker on the map, bind the popup
+    L.marker([data[i].lat,data[i].lng], {icon: myIcon}).addTo(map).bindPopup(popupContent,{closeButton:false});
 }
-// L.marker([51.483396, -3.173728], {icon: myIcon}).addTo(map).bindPopup(popupContent);
-// marker.bindPopup(popupContent).openPopup(popup);
 
 

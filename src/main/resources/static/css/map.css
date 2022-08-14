@@ -11,8 +11,31 @@
 }
 #custom-div-icon{
     border: 2px solid white;
-    box-shadow: 0 2px 14px rgb(0 0 0 / 40%);
+    box-shadow: 0 2px 8px rgb(0 0 0 / 40%);
 }
-#event-img{
-    width: 300px;
+.leaflet-popup-content{
+    width: 200px !important;
+    margin: 8px 24px 8px 24px !important;
 }
+
+#event-img-container{
+    width: 250px;
+    min-height: 138px;
+    margin-top: -14px;
+    margin-left: -25px;
+    overflow:hidden;
+    border-radius: 12px 12px 0 0;
+    background-position-y: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin-bottom: 0.5rem;
+}
+#event-title{
+    font-weight: bold;
+    font-size: 1rem;
+}
+.event-text{
+    font-size: 14px;
+    color: #555555;
+}
+
