@@ -51,10 +51,10 @@ var myIcon = L.divIcon({className:'custom-div-icon',iconAnchor: [25, 25],popupAn
 //retrieve the streaming data
 var data = [
     {'host_name':'Cat Lover','event_title':'My life with cats','event_description':'event_description_test','event_cover':'cat.png','event_viewer':'1000','host_icon':'cat.png',lat:51.483396,lng:-3.173728},
-    {'host_name':'Bird life','event_title':'Do you know these birds?','event_description':'event_description_test','event_cover':'birds.jfif','event_viewer':'1000','host_icon':'birds.jfif',lat:51.480023,lng:-3.170290},
-    {'host_name':'Bird life','event_title':'Do you know these birds?','event_description':'event_description_test','event_cover':'birds.jfif','event_viewer':'20','host_icon':'birds.jfif',lat:51.485923,lng:-3.175390},
-    {'host_name':'Bird life','event_title':'Do you know these birds?','event_description':'event_description_test','event_cover':'birds.jfif','event_viewer':'30000','host_icon':'birds.jfif',lat:51.481023,lng:-3.155490},
-    {'host_name':'Bird life','event_title':'Do you know these birds?','event_description':'event_description_test','event_cover':'birds.jfif','event_viewer':'2000','host_icon':'birds.jfif',lat:51.487023,lng:-3.170190},
+    {'host_name':'Bird life','event_title':'Do you know these birds?','event_description':'event_description_test','event_cover':'birds.jpg','event_viewer':'1000','host_icon':'birds.jpg',lat:51.480023,lng:-3.170290},
+    {'host_name':'Bird life','event_title':'Do you know these birds?','event_description':'event_description_test','event_cover':'birds.jpg','event_viewer':'20','host_icon':'birds.jpg',lat:51.485923,lng:-3.175390},
+    {'host_name':'Bird life','event_title':'Do you know these birds?','event_description':'event_description_test','event_cover':'birds.jpg','event_viewer':'30000','host_icon':'birds.jpg',lat:51.481023,lng:-3.155490},
+    {'host_name':'Bird life','event_title':'Do you know these birds?','event_description':'event_description_test','event_cover':'birds.jpg','event_viewer':'2000','host_icon':'birds.jpg',lat:51.487023,lng:-3.170190},
 ]
 
 //resolve data and put them in our marker and popup
