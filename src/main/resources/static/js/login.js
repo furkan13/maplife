@@ -24,8 +24,8 @@ window.onload = function (){
     document.getElementById("signupConfirmPassword").value="";
     document.getElementById("signupEmail").value="";
     showLoginbox()
-
 }
+
 function GetQueryString(name) {
     let reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
     let r = window.location.search.substr(1).match(reg); // get the parameters behind ?
@@ -126,7 +126,7 @@ const signupUser = async function (e) {
             password: signupPassword,
             email:signupEmail,
         }
-        const response = await fetch("/addUser", {
+        const response = await fetch("/api/addUser", {
             method: "POST",
             headers: {
                 "Content-type": "application/json"
@@ -149,6 +149,7 @@ const signupUser = async function (e) {
 
     }
 }
+
 
 
 //show the login and signup box

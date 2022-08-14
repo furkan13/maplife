@@ -5,12 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.text.html.Option;
-import java.util.Optional;
-import java.util.Set;
 
 @RestController
 public class UserController {
@@ -20,7 +16,7 @@ public class UserController {
        this.userService=userService;
    }
    //sign up
-   @PostMapping("/addUser")
+   @PostMapping("/api/addUser")
     private ResponseEntity<User> addUser(@RequestBody User user){
        String usernameFromUser = user.getUsername();
        try{
@@ -41,31 +37,17 @@ public class UserController {
        }
    }
 
-//    @RequestMapping(path = "/userLogin", method = RequestMethod.POST)
-//    public ModelAndView userLogin(HttpServletResponse response, User user, @RequestParam(value = "username") String username, @RequestParam(value = "password") String password) {
-//        ModelAndView mav = new ModelAndView();
-//        try {
-//            User loggingUser = (User) userService.loadUserByUsername(username);
-//            if (loggingUser != null) {
-//                String passwordFromDB = loggingUser.getPassword();
-//                if (passwordFromDB.equals(password)) {
-//                    mav.setViewName("subscription/subscriptions");
-//                    return mav;
-//                }
-//                else {
-////                    mav.addObject("msg"," wrong username or password");
-//                    mav.setViewName("authform/authform");
-//                    return mav;
-//                }
-//            }
-//            else {
-//                mav.setViewName("authform/authform");
-//                return mav;
-//            }
-//        } catch (Exception e) {
-//            mav.setViewName("authform/authform");
-//            return mav;
-//        }
-//    }
+
+    @RequestMapping(value = "/api/showUserName", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView currentUserName(HttpServletResponse response) {
+        ModelAndView mav = new ModelAndView();
+        Cookie userName = new Cookie("userName", userService.getAuthentication());
+        userName.setPath("/");
+        response.addCookie(userName);
+        System.out.println(userService.getAuthentication());
+        mav.setViewName("landing/map");
+        return mav;
+    }
 
 }

@@ -12,6 +12,9 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,19 +29,9 @@ import java.io.IOException;
 @Configuration
 @EnableWebSecurity
 public class securityconfig extends WebSecurityConfigurerAdapter {
-//    @Resource
-//    private LoginSuccessHandler loginSuccessHandler;
     @Bean
     PasswordEncoder passwordEncoder() {
         return NoOpPasswordEncoder.getInstance();
-    }
-
-    @Autowired
-    UserService userService;
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService);
     }
 
     @Override
@@ -47,14 +40,14 @@ public class securityconfig extends WebSecurityConfigurerAdapter {
         http.formLogin()
                 .loginPage("/authform")
                 .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/").permitAll()
+                .defaultSuccessUrl("/api/showUserName",true).permitAll()
+//                .successForwardUrl("/api/showUserObject").permitAll()
                 .failureUrl("/authform?message=errorMessage")
-
                 .and()
                 .authorizeRequests()
-//                .antMatchers("/subscriptions").hasAuthority("ROLE_USER")
-//                .antMatchers("/subscriptions").hasRole("USER")
-                .antMatchers("/authform","/","/userLogin","/addUser").permitAll()
+//                .antMatchers("/subscriptions").hasAnyAuthority("ROLE_USER")
+                .antMatchers("/subscriptions").hasRole("USER")
+                .antMatchers("/authform","/","/api/addUser").permitAll()
                 .antMatchers("/js/**","/css/**","/images/*","/fonts/**","/**/*.png","/**/*.jpg").permitAll();
 //                .anyRequest()
 //                .authenticated();
@@ -62,6 +55,7 @@ public class securityconfig extends WebSecurityConfigurerAdapter {
                 super.configure(http);
 
     }
+
 
 
 }
