@@ -1,0 +1,101 @@
+package com.cardiff.maplife.entities;
+
+import javax.persistence.*;
+import java.util.Date;
+
+@Entity
+@Table(name = "event")
+
+public class Event {
+    public Event() {
+
+    }
+    public Event(Long id, long host_id, String event_link, String event_title, double longitude, double latitude, boolean room_type, Date event_date, String event_dis) {
+        this.id = id;
+        this.host_id = host_id;
+        this.event_link = event_link;
+        this.event_title = event_title;
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.room_type = room_type;
+        this.event_date = event_date;
+        this.event_dis = event_dis;
+    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Column(name = "eventId")
+    private Long id;
+    @Column(name = "host_id")
+    private Long host_id;
+    @Column(name = "event_link")
+    private String event_link;
+    @Column(name = "event_title")
+    private String event_title;
+    @Column(name = "room_type")
+    private boolean room_type;
+    @Column(name = "longitude")
+    private double longitude;
+    @Column(name = "latitude")
+    private double latitude;
+    @Column(name = "event_date")
+    private Date event_date;
+    @Column(name = "event_dis")
+    private String event_dis;
+
+
+    public void SetEventId(long id){
+        this.id = id;
+    }
+    public void SetHostId(long id){
+        this.host_id = id;
+    }
+    public void SetLink(String link){
+        this.event_link = link;
+    }
+    public void SetTitle(String title){
+        this.event_title = title;
+    }
+    public void SetRoomType(boolean type){
+        this.room_type = type;
+    }
+    public void SetLongitude(double longitude){
+        this.longitude = longitude;
+    }
+    public void SetLatitude(double latitude){
+        this.latitude = latitude;
+    }
+    public void SetDate(Date date){
+        this.event_date = date;
+    }
+    public void SetDescription(String dis){
+        this.event_dis = dis;
+    }
+    public long GetEventId(){
+        return this.id;
+    }
+    public long GetHostId(){
+        return this.host_id;
+    }
+    public String GetLink(){
+        return this.event_link ;
+    }
+    public String GetTitle(){
+        return this.event_title;
+    }
+    public boolean GetRoomType(){
+        return this.room_type;
+    }
+    public double GetLongitude(){
+        return this.longitude;
+    }
+    public double GetLatitude(){
+        return this.latitude;
+    }
+    public Date SetDate(){
+        return this.event_date;
+    }
+    public String SetDescription(){
+        return this.event_dis;
+    }
+}
