@@ -1,28 +1,28 @@
 package com.cardiff.maplife.controllers;
 
 
+import com.cardiff.maplife.services.UserService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @RestController
 public class MainController {
+    private final UserService userService;
 
-    // DI the community service
-//    private UserService userService;
-
-//    public MainController(UserService userService) {
-//
-//        this.userService = userService;
-//    }
-
+    public MainController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping("/")
-    public ModelAndView showMapPage(ModelAndView modelAndView) {
+    public ModelAndView showMapPage(ModelAndView modelAndView, HttpServletResponse response) {
         modelAndView = new ModelAndView("landing/map");
+        Cookie userName = new Cookie("userName", userService.getAuthentication());
+        userName.setPath("/");
+        response.addCookie(userName);
+        System.out.println(userService.getAuthentication());
         return modelAndView;
     }
 
