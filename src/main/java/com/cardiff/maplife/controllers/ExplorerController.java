@@ -18,7 +18,7 @@ public class ExplorerController {
     EventService eventservice;
 
 
-    @RequestMapping("/explore")
+    @GetMapping("/explore")
     public String showMapPage(Model model) {
 
 

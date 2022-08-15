@@ -26,6 +26,43 @@ public class Event {
 
     @Column(name = "eventId")
     private Long id;
+
+    public Long getId() {
+        return id;
+    }
+
+    public Long getHost_id() {
+        return host_id;
+    }
+
+    public String getEvent_link() {
+        return event_link;
+    }
+
+    public String getEvent_title() {
+        return event_title;
+    }
+
+    public boolean isRoom_type() {
+        return room_type;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public Date getEvent_date() {
+        return event_date;
+    }
+
+    public String getEvent_dis() {
+        return event_dis;
+    }
+
     @Column(name = "host_id")
     private Long host_id;
     @Column(name = "event_link")
