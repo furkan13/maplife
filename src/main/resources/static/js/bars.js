@@ -1,9 +1,13 @@
-
 let userJsonIcon = null
 let userJson = {}
 let userJsonName = null
 let userJsonEmail = null
-const userIcon = document.getElementById("user-icon-img")
+const headerButtonLogged=document.getElementById("header-button").getElementsByTagName("ul")[1]
+const userIcon = document.getElementById("user-icon-img-current")
+const headerButton=document.getElementById("header-button").getElementsByTagName("ul")[0]
+const dropDownBox=document.getElementById("dropdown")
+
+
 function getCookie(cname){
     const name = cname + "=";
     let res= document.cookie.split(';');
@@ -30,6 +34,7 @@ const getUser = async function () {
 
     let userName = GetUserName()
     if (userName != null) {
+        headerButton.style.display="none"
         const userObject = {
             username: userName,
         }
@@ -52,8 +57,12 @@ const getUser = async function () {
             userJsonName = userJson.username;
             userJsonEmail = userJson.email;
             if (userJsonIcon!==null){
-                userIcon.setAttribute("src","images/"+userJsonIcon)
-                userIcon.setAttribute("class","user-icon-img")
+                headerButtonLogged.style.display="block"
+                userIcon.setAttribute("src","image/"+userJsonIcon)
+
+                // userIcon.setAttribute("class","user-icon-img-current")
+
+
             }
         } else {
             console.log("not 200");
@@ -66,5 +75,20 @@ const getUser = async function () {
 }
 getUser().then();
 
+function showDropDown(){
+    if(userIcon.id === "user-icon-img-current"){
+        dropDownBox.style.display="block"
+    }
+}
+
+function mounted() {
+    document.addEventListener("mouseup", e => {
+            if (!dropDownBox.contains(e.target)) {
+                dropDownBox.style.display="none"
+        }
+    });
+}
+mounted()
 
 
+userIcon.addEventListener("click", showDropDown);
