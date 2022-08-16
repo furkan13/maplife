@@ -19,10 +19,6 @@ public class MainController {
     @GetMapping("/")
     public ModelAndView showMapPage(ModelAndView modelAndView, HttpServletResponse response) {
         modelAndView = new ModelAndView("landing/map");
-        Cookie userName = new Cookie("userName", userService.getAuthentication());
-        userName.setPath("/");
-        response.addCookie(userName);
-        System.out.println(userService.getAuthentication());
         return modelAndView;
     }
 
@@ -36,7 +32,16 @@ public class MainController {
         modelAndView = new ModelAndView("authform/authform");
         return modelAndView;
     }
-
+    @GetMapping("/profile")
+    public ModelAndView showProfilePage(ModelAndView modelAndView) {
+        modelAndView = new ModelAndView("account/profile");
+        return modelAndView;
+    }
+    @GetMapping("/settings")
+    public ModelAndView showSettingsPage(ModelAndView modelAndView) {
+        modelAndView = new ModelAndView("account/settings");
+        return modelAndView;
+    }
 
 
 }

@@ -1,46 +1,17 @@
-
 let userJsonIcon = null
 let userJson = {}
 let userJsonName = null
 let userJsonEmail = null
-const userIcon = document.getElementById("user-icon-img")
-function getCookie(cname){
-    const name = cname + "=";
-    let res= document.cookie.split(';');
-    for(let i=0; i<res.length; i++) {
-        let cookieData = res[i].trim();
-        if (cookieData.indexOf(name)===0)
-        {
-            return cookieData.substring(name.length,cookieData.length);
-        }
-    }
-}
+const headerButtonLogged=document.getElementById("header-button").getElementsByTagName("ul")[1]
+const userIcon = document.getElementById("user-icon-img-current")
+const headerButton=document.getElementById("header-button").getElementsByTagName("ul")[0]
+const dropDownBox=document.getElementById("dropdown")
 
-function GetUserName(){
-    let userName = getCookie("userName");
-    if(userName){
-        return userName;
-    }else{
-        console.log("ERROE: Can't get 'username' from cookie!");
-        return null;
-    }
-}
 
 const getUser = async function () {
-
-    let userName = GetUserName()
-    if (userName != null) {
-        const userObject = {
-            username: userName,
-        }
-        const response = await fetch("/api/getUser", {
-            method: "POST",
-            headers: {
-                "Content-type": "application/json"
-            },
-            body: JSON.stringify(userObject),
-        })
+        const response = await fetch("/api/getUser")
         if (response.status == "200") {
+            // headerButton.style.display="none"
             const data = await response.json();
             console.log(data);
             userJson = {
@@ -52,19 +23,31 @@ const getUser = async function () {
             userJsonName = userJson.username;
             userJsonEmail = userJson.email;
             if (userJsonIcon!==null){
-                userIcon.setAttribute("src","images/"+userJsonIcon)
-                userIcon.setAttribute("class","user-icon-img")
+                headerButtonLogged.style.display="flex"
+                userIcon.setAttribute("src","image/"+userJsonIcon)
             }
         } else {
+            headerButton.style.display="flex"
             console.log("not 200");
             return null;
         }
-    } else {
-        console.log("fail to get username");
-        return null;
-    }
 }
+
 getUser().then();
 
+function showDropDown(){
+    if(userIcon.id === "user-icon-img-current"){
+        dropDownBox.style.display="block"
+    }
+}
 
+function mounted() {
+    document.addEventListener("mouseup", e => {
+            if (!dropDownBox.contains(e.target)) {
+                dropDownBox.style.display="none"
+        }
+    });
+}
+mounted()
 
+userIcon.addEventListener("click", showDropDown);
