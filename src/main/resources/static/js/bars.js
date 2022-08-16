@@ -8,44 +8,10 @@ const headerButton=document.getElementById("header-button").getElementsByTagName
 const dropDownBox=document.getElementById("dropdown")
 
 
-function getCookie(cname){
-    const name = cname + "=";
-    let res= document.cookie.split(';');
-    for(let i=0; i<res.length; i++) {
-        let cookieData = res[i].trim();
-        if (cookieData.indexOf(name)===0)
-        {
-            return cookieData.substring(name.length,cookieData.length);
-        }
-    }
-}
-
-function GetUserName(){
-    let userName = getCookie("userName");
-    if(userName){
-        return userName;
-    }else{
-        console.log("ERROE: Can't get 'username' from cookie!");
-        return null;
-    }
-}
-
 const getUser = async function () {
-
-    let userName = GetUserName()
-    if (userName != null) {
-        headerButton.style.display="none"
-        const userObject = {
-            username: userName,
-        }
-        const response = await fetch("/api/getUser", {
-            method: "POST",
-            headers: {
-                "Content-type": "application/json"
-            },
-            body: JSON.stringify(userObject),
-        })
+        const response = await fetch("/api/getUser")
         if (response.status == "200") {
+            // headerButton.style.display="none"
             const data = await response.json();
             console.log(data);
             userJson = {
@@ -57,22 +23,16 @@ const getUser = async function () {
             userJsonName = userJson.username;
             userJsonEmail = userJson.email;
             if (userJsonIcon!==null){
-                headerButtonLogged.style.display="block"
+                headerButtonLogged.style.display="flex"
                 userIcon.setAttribute("src","image/"+userJsonIcon)
-
-                // userIcon.setAttribute("class","user-icon-img-current")
-
-
             }
         } else {
+            headerButton.style.display="flex"
             console.log("not 200");
             return null;
         }
-    } else {
-        console.log("fail to get username");
-        return null;
-    }
 }
+
 getUser().then();
 
 function showDropDown(){
@@ -89,6 +49,5 @@ function mounted() {
     });
 }
 mounted()
-
 
 userIcon.addEventListener("click", showDropDown);

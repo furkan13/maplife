@@ -2,6 +2,8 @@ package com.cardiff.maplife.controllers;
 
 import com.cardiff.maplife.entities.User;
 import com.cardiff.maplife.services.UserService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -20,14 +22,16 @@ public class LoginController {
         this.userService = userService;
     }
 
-    @PostMapping("/api/getUser")
-    public User getUser(@RequestBody User user) {
-        User gotUser= userService.findUserByUsername(user.getUsername());
-        return gotUser;
-//        return (User) userService.loadUserByUsername(user.getUsername());
+
+    @GetMapping("/api/getUser")
+    public ResponseEntity<User> getUser() {
+
+        User gotUser = userService.findUserByUsername(userService.getAuthentication());
+        if (gotUser != null) {
+            return new ResponseEntity<>(gotUser, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
-
-
 }
 
 
