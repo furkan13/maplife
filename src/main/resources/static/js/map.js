@@ -51,11 +51,20 @@ var myIcon = L.divIcon({className:'custom-div-icon',iconAnchor: [25, 25],popupAn
 //retrieve the streaming data
 var data = [
     {'host_name':'Cat Lover','event_title':'My life with cats','event_description':'event_description_test','event_cover':'cat.png','event_viewer':'1000','host_icon':'cat.png',lat:51.483396,lng:-3.173728},
+    {'host_name':'Cat Lover','event_title':'My life with cats','event_description':'event_description_test','event_cover':'cat.png','event_viewer':'1000','host_icon':'cat.png',lat:51.483396,lng:-3.173728},
+    {'host_name':'Cat Lover','event_title':'My life with cats','event_description':'event_description_test','event_cover':'cat.png','event_viewer':'1000','host_icon':'cat.png',lat:51.483396,lng:-3.173728},
+    {'host_name':'Cat Lover','event_title':'My life with cats','event_description':'event_description_test','event_cover':'cat.png','event_viewer':'1000','host_icon':'cat.png',lat:51.483396,lng:-3.173728},
+    {'host_name':'Cat Lover','event_title':'My life with cats','event_description':'event_description_test','event_cover':'cat.png','event_viewer':'1000','host_icon':'cat.png',lat:51.483396,lng:-3.173728},
+    {'host_name':'Cat Lover','event_title':'My life with cats','event_description':'event_description_test','event_cover':'cat.png','event_viewer':'1000','host_icon':'cat.png',lat:51.483392,lng:-3.173728},
     {'host_name':'Bird life','event_title':'Do you know these birds?','event_description':'event_description_test','event_cover':'birds.jpg','event_viewer':'1000','host_icon':'birds.jpg',lat:51.480023,lng:-3.170290},
     {'host_name':'Bird life','event_title':'Do you know these birds?','event_description':'event_description_test','event_cover':'birds.jpg','event_viewer':'20','host_icon':'birds.jpg',lat:51.485923,lng:-3.175390},
     {'host_name':'Bird life','event_title':'Do you know these birds?','event_description':'event_description_test','event_cover':'birds.jpg','event_viewer':'30000','host_icon':'birds.jpg',lat:51.481023,lng:-3.155490},
     {'host_name':'Bird life','event_title':'Do you know these birds?','event_description':'event_description_test','event_cover':'birds.jpg','event_viewer':'2000','host_icon':'birds.jpg',lat:51.487023,lng:-3.170190},
 ]
+// define a marker cluster to support heat map
+var markers = new L.MarkerClusterGroup({
+    spiderLegPolylineOptions:{opacity: 0},
+    showCoverageOnHover:false})
 
 //resolve data and put them in our marker and popup
 for (let i = 0;data.length>i;i++){
@@ -66,7 +75,10 @@ for (let i = 0;data.length>i;i++){
         data[i].event_viewer + " viewers</div><div class='event-text'>47 minutes ago</div>"
     myIcon.options.html = '<img id="custom-div-icon" class="custom-div-icon" src=' + eventIconImg + ">"
     //put the marker on the map, bind the popup
-    L.marker([data[i].lat,data[i].lng], {icon: myIcon}).addTo(map).bindPopup(popupContent,{closeButton:false});
+    // L.marker([data[i].lat,data[i].lng], {icon: myIcon}).addTo(map).bindPopup(popupContent,{closeButton:false});
+    // markers.addLayer()
+    markers.addLayer(L.marker([data[i].lat,data[i].lng], {icon: myIcon}).bindPopup(popupContent,{closeButton:false}));
 }
+map.addLayer(markers);
 
 
