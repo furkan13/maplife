@@ -36,15 +36,6 @@ var orangeIcon = new L.Icon({
 })
 L.Marker.prototype.options.icon = orangeIcon
 
-// function onMapClick(e) {
-//     popup
-//         .setLatLng(e.latlng)
-//         .setContent("You clicked the map at " + e.latlng.toString())
-//         .openOn(map);
-// }
-//
-// map.on('click', onMapClick);
-
 //define the custom icon
 var myIcon = L.divIcon({className:'custom-div-icon',iconAnchor: [25, 25],popupAnchor: [2, -28]});
 
@@ -70,6 +61,7 @@ var markers = new L.MarkerClusterGroup({
 for (let i = 0;data.length>i;i++){
     let eventCoverImg = "image/" + data[i].event_cover
     let eventIconImg = "image/" + data[i].host_icon
+
     popupContent = '<div id="event-img-container" style="background-image: url(' + eventCoverImg + ')"></div><div id="event-title">' +
         data[i].event_title + "</div><div id='host-name' class='event-text'>" + data[i].host_name + "</div><div id='event-viewers' class='event-text'>" +
         data[i].event_viewer + " viewers</div><div class='event-text'>47 minutes ago</div>"
@@ -81,4 +73,10 @@ for (let i = 0;data.length>i;i++){
 }
 map.addLayer(markers);
 
+//function for the locate button
+function relocate(e) {
+    map.locate({setView: true, maxZoom: 16});
+}
 
+const relocateButton = document.getElementById("relocate")
+relocateButton.addEventListener("click",relocate )
