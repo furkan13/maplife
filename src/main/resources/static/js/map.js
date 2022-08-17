@@ -1,5 +1,11 @@
 let popupContent
+let currentLocation
 
+document.onreadystatechange=function () {
+    if (document.readyState=="complete"){
+        getCurrentLocation()
+    }
+}
 // display the map layer
 var map = L.map('map',{zoomControl:false}).setView([51.483396, -3.173728], 11);
 //render map tile layer
@@ -14,7 +20,7 @@ L.tileLayer('https://api.maptiler.com/maps/voyager/256/{z}/{x}/{y}@2x.png?key=qn
 //zoom controller
 L.control.zoom({position:'topright'}).addTo(map);
 // load and zoom to the current location controller
-var currentLocation = L.control.locate({
+var displayCurrentLocation = L.control.locate({
     position:'bottomright',
     markerStyle:{fillColor:'#de5b19'},
     compassStyle:{fillColor:'#de5b19'},
@@ -26,18 +32,23 @@ var currentLocation = L.control.locate({
     flyTo:true,
     icon:'relocate',
 }).addTo(map);
-currentLocation.start({setView:false})
+displayCurrentLocation.start({setView:false}) //load location as soon as load the page
+//print the current location latitude and longitude
+let getCurrentLocation =function () {
+    currentLocation = displayCurrentLocation._marker._latlng
+    console.log(currentLocation)
+}
 
 //customize the default marker
-var orangeIcon = new L.Icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-})
-L.Marker.prototype.options.icon = orangeIcon
+// var orangeIcon = new L.Icon({
+//     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
+//     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+//     iconSize: [25, 41],
+//     iconAnchor: [12, 41],
+//     popupAnchor: [1, -34],
+//     shadowSize: [41, 41]
+// })
+// L.Marker.prototype.options.icon = orangeIcon
 
 //define the custom icon
 var myIcon = L.divIcon({className:'custom-div-icon',iconAnchor: [25, 25],popupAnchor: [2, -28]});
@@ -75,4 +86,5 @@ for (let i = 0;data.length>i;i++){
     markers.addLayer(L.marker([data[i].lat,data[i].lng], {icon: myIcon}).bindPopup(popupContent,{closeButton:false}));
 }
 map.addLayer(markers);
+
 
