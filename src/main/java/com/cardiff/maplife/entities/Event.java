@@ -1,5 +1,7 @@
 package com.cardiff.maplife.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -43,6 +45,7 @@ public class Event {
     private Date event_date;
     @Column(name = "event_dis")
     private String event_dis;
+    @JsonIgnoreProperties("Object")
     @Column(name = "Object", columnDefinition = "json")
     private String Object;
 

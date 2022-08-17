@@ -9,9 +9,7 @@ import com.cardiff.maplife.services.TwilioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class EventController {
@@ -46,11 +44,21 @@ public class EventController {
         }
     }
 
-    @PostMapping("/RoomDelection")
+    @PostMapping("/RoomDeletion")
     private void delEvent(@RequestBody Event event){
 
         twilioService.DeleteRoom(event);
         //Delete room in event table here
+    }
+
+    @GetMapping("/EventAccessToken")
+    private String generateVideoToken(@RequestParam(value = "user", defaultValue = "null") String UserName, @RequestParam(value = "room", defaultValue = "null") String RoomName){
+        //Check whether user is allowed to join video room in database
+        //check if room exist
+        System.out.println(UserName);
+
+        System.out.println(RoomName);
+        return twilioService.EventAccessToken(UserName, RoomName);
     }
     //token generation
     //Live player implementation
