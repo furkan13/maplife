@@ -1,13 +1,13 @@
 body{
     background-color: rgba(249, 249, 249, 1);
 }
-.body__container{
-    /*min-height: 100%;*/
+/*.body__container{
+    !*min-height: 100%;*!
     z-index: 0;
     left: 70px;
     top: 50px;
     position: absolute;
-}
+}*/
 .container-fluid{
     --bs-gutter-x: 2rem;
     flex-wrap: nowrap;

@@ -23,8 +23,28 @@ public class ExplorerController {
 
 
         List <Event> eventList=eventservice.eventRepository.findAll();
+        if(eventList.size()>3)
+        {
+            eventList.subList(3, eventList.size()).clear();
+        }
        model.addAttribute("eventList",eventList);
         return "Explore/explore";
+    }
+    @GetMapping("/nearby")
+    public String showNearBy(Model model) {
+
+
+        List <Event> eventList=eventservice.eventRepository.findAll();
+        model.addAttribute("eventList",eventList);
+        return "Explore/nearby";
+    }
+    @GetMapping("/trending")
+    public String showTrending(Model model) {
+
+
+        List <Event> eventList=eventservice.eventRepository.findAll();
+        model.addAttribute("eventList",eventList);
+        return "Explore/trending";
     }
 
 

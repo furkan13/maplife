@@ -1,6 +1,6 @@
 
 :root {
-    --surface-color: #fff;
+    --surface-color: rgb(255, 121, 61);
     --curve: 40;
 }
 
@@ -13,13 +13,41 @@ body {
     background-color: #ffffff;
 }
 
+
+.headline
+{
+    padding: 12px;
+    display: inline-block;
+    color: #de5b19;
+    text-decoration-thickness: auto;
+}
+
+.section_nearby {
+    top: 8%;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 3%;
+
+}
+
+
+.section_Trending {
+    top: 600px;
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+}
+
 .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(400px,600px));
+    grid-template-columns: repeat(auto-fit, minmax(200px,400px));
     gap: 2rem;
     margin: 4rem 5vw;
-    padding: 0;
+    padding: 3%;
     list-style-type: none;
+
 }
 
 .card {
@@ -29,6 +57,7 @@ body {
     border-radius: calc(var(--curve) * 1px);
     overflow: hidden;
     text-decoration: none;
+    left: 50%;
 }
 
 .card__image {
@@ -100,18 +129,18 @@ body {
     margin: 1em 0;
     font-family: "MockFlowFont";
     font-size: .8em;
-    color: #4da6e7;
+    color: #ffffff;
 }
 
 .card__status {
     font-size: .8em;
-    color: #4da6e7;
+    color: #ffffff;
 }
 
 .card__description {
     padding: 0 2em 2em;
     margin: 0;
-    color: #4da6e7;
+    color: #ffffff;
     font-family: "MockFlowFont";
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -200,26 +229,17 @@ body {
 
 }*/
 
-.add_desk
-{
-    border: none;
-    transition-duration: 0.4s;
-    padding: 5px 15px;
-
-    border-radius: 12px;
-    margin: auto;
-    position:relative;
-    top:50%;
-    left:50%;
 
 
-}
-.add_desk:hover
-{
-    background-color: #4caf50;
-    color: white;
-    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
 
+.about_me .about_large_title {
+    font-weight: 800;
+    color: #de5b19;
+    font-size: 235px;
+    position: absolute;
+    left: 21%;
+    top: 0;
+    line-height: 1;
 }
 
 .book
@@ -243,4 +263,21 @@ body {
     box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
 
 }
+.showmore_div
+{
 
+    top: 560px;
+    position: absolute;
+    left: 80%;
+    transform: translate(-50%, -50%);
+    padding: 3%;
+
+}
+
+.showmore
+{
+    padding: 12px;
+    display: inline-block;
+    color: #de5b19;
+    text-decoration-thickness: auto;
+}
