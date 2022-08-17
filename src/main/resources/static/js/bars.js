@@ -1,7 +1,7 @@
-let userJsonIcon = null
-let userJson = {}
-let userJsonName = null
-let userJsonEmail = null
+var userJsonIcon = null
+var userJson = {}
+var userJsonName = null
+var userJsonEmail = null
 const headerButtonLogged=document.getElementById("header-button").getElementsByTagName("ul")[1]
 const userIcon = document.getElementById("user-icon-img-current")
 const headerButton=document.getElementById("header-button").getElementsByTagName("ul")[0]
