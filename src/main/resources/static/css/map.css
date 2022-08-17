@@ -46,6 +46,7 @@
     width: 70px !important;
     height: 70px !important;
     margin-left: -35px !important;
+    margin-top: -35px !important;
 }
 .marker-cluster div {
     width: 40px !important;
@@ -60,21 +61,48 @@
 .marker-cluster span {
     line-height: 40px !important;
 }
-#relocate{
+.relocate{
     height: 50px;
     width: 50px;
-    position: fixed;
+    position: absolute;
     background-repeat: no-repeat;
-    bottom: 3rem;
-    right: 1rem;
+    right: 0px;
     z-index: 1000;
     background-image: url("https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u10.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762");
     background-position: center;
     background-color: #f8f9fa;
-    box-shadow: 0 0px 8px rgb(0 0 0 / 40%);
     border: 0;
+    border-radius: 8px;
 }
-#relocate:hover{
+.relocate:hover{
     background-image: url("https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u10_mouseover.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762");
-    box-shadow: 0 0px 12px rgb(0 0 0 / 40%);
+    box-shadow: 0 0px 4px rgb(0 0 0 / 30%);
+}
+
+.leaflet-control-locate{
+    margin-right: 2rem!important;
+    margin-bottom: 2rem!important;
+}
+.leaflet-control-locate a{
+    width: 50px!important;
+    height: 50px!important;
+    line-height: 50px!important;
+}
+.leaflet-touch .leaflet-bar{
+    box-shadow: 0 0px 4px rgb(0 0 0 / 30%)!important;
+    border: 0!important;
+    border-radius: 8px!important;
+}
+.leaflet-touch .leaflet-bar a:first-child {
+    border-top-left-radius: 8px!important;
+    border-top-right-radius: 8px!important;
+}
+.leaflet-touch .leaflet-bar a:last-child {
+    border-bottom-left-radius: 8px!important;
+    border-bottom-right-radius: 8px!important;
+}
+.leaflet-control-locate-spinner {
+    width: 30px!important;
+    height: 30px!important;
+    margin: 10px!important;
 }

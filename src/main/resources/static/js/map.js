@@ -1,9 +1,7 @@
 let popupContent
 
 // display the map layer
-var map = L.map('map').fitWorld();
-map.locate({setView: true, maxZoom: 16}); // ask for the current location
-
+var map = L.map('map',{zoomControl:false}).setView([51.483396, -3.173728], 11);
 //render map tile layer
 L.tileLayer('https://api.maptiler.com/maps/voyager/256/{z}/{x}/{y}@2x.png?key=qnH9hX4XM6EYJA7JoXVH',{
     tileSize: 512,
@@ -13,17 +11,22 @@ L.tileLayer('https://api.maptiler.com/maps/voyager/256/{z}/{x}/{y}@2x.png?key=qn
     attribution: "\u003ca href=\"https://carto.com/\" target=\"_blank\"\u003e\u0026copy; CARTO\u003c/a\u003e \u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e",
     crossOrigin: true
 }).addTo(map);
-
-function onLocationFound(e) {
-    var radius = e.accuracy;
-    L.marker(e.latlng).addTo(map).bindPopup("You are within " + radius + " meters from this point").openPopup();
-    L.circle(e.latlng,{radius:radius,color:'#de5b19'}).addTo(map);
-}
-function onLocationError(e) {
-    alert(e.message);
-}
-map.on('locationerror', onLocationError);
-map.on('locationfound', onLocationFound);
+//zoom controller
+L.control.zoom({position:'topright'}).addTo(map);
+// load and zoom to the current location controller
+var currentLocation = L.control.locate({
+    position:'bottomright',
+    markerStyle:{fillColor:'#de5b19'},
+    compassStyle:{fillColor:'#de5b19'},
+    circleStyle:{fillColor:'#de5b19'},
+    initialZoomLevel:15,
+    keepCurrentZoomLevel:true,
+    setView:'untilPanOrZoom',
+    clickBehavior:{inView: 'setView', outOfView: 'setView', inViewNotFollowing: 'inView'},
+    flyTo:true,
+    icon:'relocate',
+}).addTo(map);
+currentLocation.start({setView:false})
 
 //customize the default marker
 var orangeIcon = new L.Icon({
@@ -73,10 +76,3 @@ for (let i = 0;data.length>i;i++){
 }
 map.addLayer(markers);
 
-//function for the locate button
-function relocate(e) {
-    map.locate({setView: true, maxZoom: 16});
-}
-
-const relocateButton = document.getElementById("relocate")
-relocateButton.addEventListener("click",relocate )
