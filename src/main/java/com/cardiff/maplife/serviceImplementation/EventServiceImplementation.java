@@ -41,7 +41,7 @@ public class EventServiceImplementation implements EventService {
     @Override
     public Event findByName(String name)
     {
-        Optional<Event> result = eventRepository.findByName(name);
+        Optional<Event> result = eventRepository.findByTitle(name);
 
         Event event = null;
 
