@@ -26,7 +26,7 @@ const privacyTab = function (){
  function changeUserIcon() {
     let fileData = inputChoose.files[0]
     var reader = new FileReader();
-    reader.readAsDataURL(fileData);//异步读取文件内容，结果用data:url的字符串形式表示
+    reader.readAsDataURL(fileData);
     /*当读取操作成功完成时调用*/
     reader.onload = function (e) {
         // console.log(e);
@@ -50,7 +50,9 @@ async function getNewIcon() {
         body: formObject
     });
     if (response.status == "200") {
-        profileIcon.setAttribute("src", fileData.name)
+        profileIcon.setAttribute("src","image/"+fileData.name)
+        // profileIcon.setAttribute("src", fileData.name)
+        location.reload();
     }
 
 
