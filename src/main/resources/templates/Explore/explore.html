@@ -31,13 +31,13 @@
     <li th:each="event : ${eventList}">
       <a href="" class="card">
         <!--<img th:src="${event.image}" class="card__image" alt="" />-->
-        <img th:src="@{${'/image/cat.png'}}" class="card__image" alt="" />
+        <img th:src="${event.PhotosImagePath}" class="card__image" alt="" />
         <div class="card__overlay">
           <div class="card__header">
 
             <div class="card__header-text">
-              <h3 class="card__title" th:text="${event.Event_title}"></h3>
-              <span class="card__status" th:text="${event.Event_date}" ></span>
+              <h3 class="card__title" th:text="${event.title}"></h3>
+              <span class="card__status" th:text="${event.event_date}" ></span>
               <div>
                 <form action="#"  >
                   <input type="submit" value="Join Event" class="accept_button" />
@@ -46,7 +46,7 @@
               </div>
             </div>
           </div>
-          <p class="card__description" th:text="${event.Event_dis}"></p>
+          <p class="card__description" th:text="${event.event_dis}"></p>
         </div>
       </a>
     </li>
