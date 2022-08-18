@@ -40,6 +40,7 @@ public class securityconfig extends WebSecurityConfigurerAdapter {
         http.formLogin()
                 .loginPage("/authform")
                 .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/",true).permitAll()
                 //.defaultSuccessUrl("/api/showUserName",true).permitAll()
 //                .successForwardUrl("/api/showUserObject").permitAll()
                 .failureUrl("/authform?message=errorMessage")
