@@ -38,9 +38,9 @@
           <img id="profileIcon" class="profile-image">
         </div>
         <div id="add-icon-button" class="add-icon-button">
-<!--          <input id='fileid' type='file' hidden/>-->
-          <input type="button" value="Add profile picture" class="settings-button">
-          <label class="settings-label-description">Must be JPEG, PNG, or GIF and cannot exceed 10MB.</label>
+          <input type="file" id="inputChoose"  />
+          <input id="uploadIconButton" type="button" value="Add profile picture" class="settings-button">
+          <label class="settings-label-description">Must be JPEG, PNG, or GIF and cannot exceed 5MB.</label>
         </div>
       </div>
     </div>
@@ -62,14 +62,12 @@
           <label class="settings-label">Bio</label>
         </div>
         <div class="bio-text-contain">
-          <!--          <input type="text" id="bio-text" class="bio-text">-->
           <textarea id="bio-text" class="bio-text"></textarea>
         </div>
         <div id="add-bio-button" class="add-icon-button add-bio-button">
           <input type="button" value="Change" class="settings-button">
         </div>
       </div>
-
     </div>
   </div>
   </div>
@@ -97,7 +95,7 @@
         <h3>Security</h3>
       </div>
       <div id="privacy-password" class="profile-picture privacy-password">
-        <div class="profile-icon" >
+        <div class="profile-icon">
           <label class="settings-label password-label">Password</label>
         </div>
         <div class="add-icon-button">
@@ -105,7 +103,7 @@
         </div>
       </div>
       <div id="privacy-delete-account" class="profile-picture privacy-delete-account">
-        <div class="profile-icon delete-account" >
+        <div class="profile-icon delete-account">
           <label class="settings-label delete-label">Delete account</label>
         </div>
         <div class="add-icon-button ">
@@ -117,7 +115,6 @@
   </div>
   </div>
 </div>
-<!--<script type="text/javascript" th:src="@{/js/bars.js}"></script>-->
 <script type="text/javascript" th:src="@{/js/settings.js}"></script>
 </body>
 </html>

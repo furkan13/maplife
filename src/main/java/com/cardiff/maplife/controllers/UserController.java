@@ -4,9 +4,7 @@ import com.cardiff.maplife.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
+
 
 @RestController
 public class UserController {
