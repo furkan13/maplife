@@ -2,14 +2,11 @@ let tabProfileButton =document.getElementById("profileButton")
 let tabPrivacyButton =document.getElementById("privacyButton")
 let profileIcon=document.getElementById("profileIcon")
 
-document.onreadystatechange=function (){
-    if (document.readyState=="complete"){
-        getUserIcon()
-    }
+const showProfileUserIcon = async function (){
+    let userJson = await getUser()
+    profileIcon.setAttribute("src","image/"+userJson.icon)
 }
-const getUserIcon = function (){
-    profileIcon.setAttribute("src","image/"+userJsonIcon)
-}
+showProfileUserIcon().then()
 
 const profileTab = function (){
     tabPrivacyButton.className="nav-item";
