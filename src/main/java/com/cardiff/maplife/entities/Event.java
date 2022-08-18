@@ -11,6 +11,51 @@ import java.util.Date;
 
 @Component
 public class Event {
+
+        /*Variables*/
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Column(name = "eventId")
+    private Long id;
+
+    @Column(name = "host_id")
+    private Long host_id;
+    @Column(name = "event_link")
+    private String event_link;
+    @Column(name = "event_title")
+    private String title;
+    @Column(name = "room_type")
+    private boolean room_type;
+    @Column(name = "longitude")
+    private double longitude;
+    @Column(name = "latitude")
+    private double latitude;
+    @Column(name = "event_date")
+    private Date event_date;
+    @Column(name = "event_dis")
+    private String event_dis;
+
+
+    String eventImageName;
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /*Constructor*/
+
+
+
     public Event() {
 
     }
@@ -30,12 +75,14 @@ public class Event {
         this.host_id = host_id;
         this.title = event_title;
     }
+    public Event(String event_title,String event_dis) {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+        this.title = event_title;
+        this.event_dis=event_dis;
+    }
 
-    @Column(name = "eventId")
-    private Long id;
+
+
 
     public Long getId() {
         return id;
@@ -47,10 +94,6 @@ public class Event {
 
     public String getEvent_link() {
         return event_link;
-    }
-
-    public String getEvent_title() {
-        return title;
     }
 
     public boolean isRoom_type() {
@@ -73,24 +116,37 @@ public class Event {
         return event_dis;
     }
 
-    @Column(name = "host_id")
-    private Long host_id;
-    @Column(name = "event_link")
-    private String event_link;
-    @Column(name = "event_title")
-    private String title;
-    @Column(name = "room_type")
-    private boolean room_type;
-    @Column(name = "longitude")
-    private double longitude;
-    @Column(name = "latitude")
-    private double latitude;
-    @Column(name = "event_date")
-    private Date event_date;
-    @Column(name = "event_dis")
-    private String event_dis;
 
 
+    public String getTitle() {
+        return title;
+    }
+
+
+
+    public String getEventImageName() {
+        return eventImageName;
+    }
+
+    public void setEventImageName(String eventImageName) {
+        this.eventImageName = eventImageName;
+    }
+
+    @Transient
+    public String getPhotosImagePath() {
+        if (title == null || id == -1) return null;
+
+        return "event/" + id + "/" + title;
+    }
+
+
+
+
+
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
     public void SetEventId(long id){
         this.id = id;
     }
@@ -99,9 +155,6 @@ public class Event {
     }
     public void SetLink(String link){
         this.event_link = link;
-    }
-    public void SetTitle(String title){
-        this.title = title;
     }
     public void SetRoomType(boolean type){
         this.room_type = type;
@@ -142,7 +195,8 @@ public class Event {
     public Date SetDate(){
         return this.event_date;
     }
-    public String SetDescription(){
-        return this.event_dis;
+    public void setEvent_dis(String event_dis) {
+        this.event_dis = event_dis;
     }
+
 }

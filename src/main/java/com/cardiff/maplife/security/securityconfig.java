@@ -52,6 +52,7 @@ public class securityconfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/explore/**").hasRole("USER")
                 .antMatchers("/nearby/**").hasRole("USER")
                 .antMatchers("/trending/**").hasRole("USER")
+                .antMatchers("**/event/**").permitAll()
                 .antMatchers("/js/**","/css/**","/images/*","/fonts/**","/**/*.png","/**/*.jpg").permitAll();
 //                .anyRequest()
 //                .authenticated();
