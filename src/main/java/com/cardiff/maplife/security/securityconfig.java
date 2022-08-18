@@ -41,14 +41,18 @@ public class securityconfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/authform")
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/",true).permitAll()
+                //.defaultSuccessUrl("/api/showUserName",true).permitAll()
 //                .successForwardUrl("/api/showUserObject").permitAll()
                 .failureUrl("/authform?message=errorMessage")
                 .and()
                 .authorizeRequests()
 //                .antMatchers("/subscriptions").hasAnyAuthority("ROLE_USER")
                 .antMatchers("/subscriptions").hasRole("USER")
-                .antMatchers("/authform","/","/api/addUser","/api/getUser").permitAll()
-                .antMatchers("/js/**","/css/**","/image/*","/fonts/**","/**/*.png","/**/*.jpg").permitAll();
+                .antMatchers("/authform","/","/api/addUser").permitAll()
+                .antMatchers("/explore/**").hasRole("USER")
+                .antMatchers("/nearby/**").hasRole("USER")
+                .antMatchers("/trending/**").hasRole("USER")
+                .antMatchers("/js/**","/css/**","/images/*","/fonts/**","/**/*.png","/**/*.jpg").permitAll();
 //                .anyRequest()
 //                .authenticated();
                 http.csrf().disable();
