@@ -37,17 +37,4 @@ public class UserController {
        }
    }
 
-
-    @RequestMapping(value = "/api/showUserName", method = RequestMethod.GET)
-    @ResponseBody
-    public ModelAndView currentUserName(HttpServletResponse response) {
-        ModelAndView mav = new ModelAndView();
-        Cookie userName = new Cookie("userName", userService.getAuthentication());
-        userName.setPath("/");
-        response.addCookie(userName);
-        System.out.println(userService.getAuthentication());
-        mav.setViewName("landing/map");
-        return mav;
-    }
-
 }

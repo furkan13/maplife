@@ -55,6 +55,9 @@ public class securityconfig extends WebSecurityConfigurerAdapter {
 //                .anyRequest()
 //                .authenticated();
                 http.csrf().disable();
+        http.logout()
+                .logoutSuccessUrl("/")
+                .deleteCookies("JSESSIONID");
                 super.configure(http);
 
     }
