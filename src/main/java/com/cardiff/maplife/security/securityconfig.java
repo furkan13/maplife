@@ -48,7 +48,7 @@ public class securityconfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
 //                .antMatchers("/subscriptions").hasAnyAuthority("ROLE_USER")
                 .antMatchers("/subscriptions").hasRole("USER")
-                .antMatchers("/authform","/","/api/addUser").permitAll()
+                .antMatchers("/authform","/","/api/addUser","/api/getUser").permitAll()
                 .antMatchers("/explore/**").hasRole("USER")
                 .antMatchers("/nearby/**").hasRole("USER")
                 .antMatchers("/trending/**").hasRole("USER")
