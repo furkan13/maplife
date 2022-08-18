@@ -4,16 +4,11 @@ let profileIcon=document.getElementById("profileIcon")
 let inputChoose=document.getElementById("inputChoose")
 let uploadIconButton=document.getElementById("uploadIconButton")
 
-document.onreadystatechange=function (){
-    if (document.readyState=="complete"){
-        getUserIcon()
-    }
+const showProfileUserIcon = async function (){
+    let userJson = await getUser()
+    profileIcon.setAttribute("src","image/"+userJson.icon)
 }
-const getUserIcon =  function (){
-    profileIcon.setAttribute("src","image/"+userJsonIcon)
-}
-getUserIcon()
-
+showProfileUserIcon().then()
 
 const profileTab = function (){
     tabPrivacyButton.className="nav-item";
@@ -58,10 +53,6 @@ async function getNewIcon() {
         profileIcon.setAttribute("src", fileData.name)
     }
 
-    // const response2 =await  fetch("api/updateImage", {
-    //     method: "PUT",
-    //     }
-    // )
 
 }
 
