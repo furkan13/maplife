@@ -1,11 +1,15 @@
 package com.cardiff.maplife.entities;
 
+import org.springframework.stereotype.Component;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "event")
 
+
+@Component
 public class Event {
     public Event() {
 
@@ -21,6 +25,12 @@ public class Event {
         this.event_date = event_date;
         this.event_dis = event_dis;
     }
+
+    public Event(Long host_id, String event_title) {
+        this.host_id = host_id;
+        this.event_title = event_title;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 
