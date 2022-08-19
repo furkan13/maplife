@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="en">
+<head th:replace="navigator/bars::common-header(~{::title}, ~{::link})">
+  <meta charset="UTF-8">
+  <title>Map Life</title>
+  <link th:href= "@{/css/map.css}" rel="stylesheet" />
+  <link th:href= "@{/css/cards.css}" rel="stylesheet" />
+
+</head>
+<body th:replace="navigator/bars::common-body(~{::#explore-page},~{},~{})">
+
+
+<div id="explore-page"  >
+
+
+  <div class="section_nearby">
+    <div class="headline">
+      <h2 > NEARBY </h2>
+    </div>
+
+  </div>
+
+
+
+
+  <ul class="cards">
+
+    <li th:each="event : ${eventList}">
+      <a href="" class="card">
+        <!--<img th:src="${event.image}" class="card__image" alt="" />-->
+        <img th:src="@{${'/image/cat.png'}}" class="card__image" alt="" />
+        <div class="card__overlay">
+          <div class="card__header">
+
+            <div class="card__header-text">
+              <h3 class="card__title" th:text="${event.Event_title}"></h3>
+              <span class="card__status" th:text="${event.Event_date}" ></span>
+              <div>
+                <form action="#"  >
+                  <input type="submit" value="Join Event" class="accept_button" />
+                </form>
+
+              </div>
+            </div>
+          </div>
+          <p class="card__description" th:text="${event.Event_dis}"></p>
+        </div>
+      </a>
+    </li>
+
+  </ul>
+  <div class="showmore_div">
+    <div class="showmore" action="#">
+      <a href="nearby"> Show more </a>
+    </div>
+
+  </div>
+
+
+  <div class="section_Trending">
+    <div class="headline">
+      <h2 > TRENDING </h2>
+    </div>
+
+  </div>
+
+</div>
+
+</body>
+</html>
