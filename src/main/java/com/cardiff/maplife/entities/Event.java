@@ -12,11 +12,11 @@ public class Event {
     public Event() {
 
     }
-    public Event(Long id, long host_id, String event_link, String event_title, double longitude, double latitude, boolean room_type, Date event_date, String event_dis, String Object) {
+    public Event(Long id, long host_id, String event_link, String title, double longitude, double latitude, boolean room_type, Date event_date, String event_dis, String Object) {
         this.id = id;
         this.host_id = host_id;
         this.event_link = event_link;
-        this.event_title = event_title;
+        this.title = title;
         this.longitude = longitude;
         this.latitude = latitude;
         this.room_type = room_type;
@@ -33,8 +33,8 @@ public class Event {
     private Long host_id;
     @Column(name = "event_link")
     private String event_link;
-    @Column(name = "event_title")
-    private String event_title;
+    @Column(name = "title")
+    private String title;
     @Column(name = "room_type")
     private boolean room_type;
     @Column(name = "longitude")
@@ -119,12 +119,12 @@ public class Event {
         this.event_link = event_link;
     }
 
-    public String getEvent_title() {
-        return event_title;
+    public String getTitle() {
+        return title;
     }
 
-    public void setEvent_title(String event_title) {
-        this.event_title = event_title;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public boolean isRoom_type() {

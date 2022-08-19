@@ -14,7 +14,7 @@ public class TwilioService {
 
     public Boolean CheckRoomExist(Event event){
         try{ //if room exist
-            Room room = Room.fetcher(event.getEvent_title()).fetch();
+            Room room = Room.fetcher(event.getTitle()).fetch();
             System.out.println(room.getStatus());
             return true;
         }
@@ -32,7 +32,7 @@ public class TwilioService {
         Room room = Room.creator()
 //                .setStatusCallback(URI.create("http://example.org"))
                 .setType(Room.RoomType.PEER_TO_PEER)
-                .setUniqueName(event.getEvent_title())
+                .setUniqueName(event.getTitle())
                 .create();
 
         return room.getUrl().toString();
@@ -40,7 +40,7 @@ public class TwilioService {
     public void DeleteRoom(Event event){
         try {
             Room room = Room.updater(
-                            event.getEvent_title(), Room.RoomStatus.COMPLETED)
+                            event.getTitle(), Room.RoomStatus.COMPLETED)
                     .update();
 
         }
@@ -56,7 +56,7 @@ public class TwilioService {
                 TwilioConfig.GetAPI_Key(),
                 TwilioConfig.GetAPI_Secret()
         ).identity(UserName).grant(grant).build();
-        System.out.println(token.toJwt());
+//        System.out.println(token.toJwt());
         return token.toJwt();
     }
 }

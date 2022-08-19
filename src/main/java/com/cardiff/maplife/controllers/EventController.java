@@ -25,7 +25,7 @@ public class EventController {
     private ResponseEntity<Event> addEvent(@RequestBody Event event){
 //        System.out.println(event.getEvent_title());
         if(twilioService.CheckRoomExist(event)) { //If there is existing room with the same name
-            event.setEvent_title("Error");
+            event.setTitle("Error");
             System.out.println("Room exist");
             return new ResponseEntity<>(event, HttpStatus.OK);
         }

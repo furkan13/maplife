@@ -7,10 +7,16 @@ const QueryString = new URLSearchParams(window.location.search);
 const roomName = "JeffRoom";
 let player;
 var user_name="Jeff";
-let roomObj = {room:""};
+let roomObj = {room:"", tracks:""};
 let roomToken, liveToken ="";
 //user_name should be local stroage/cookie which is obtained when logging in
 function main(){
+	//What to do for connecting in twilio video room:
+	//1. Create a room with unique room name
+	//2. Get a token for that room with user name and room name
+	//3. Create a local track to publish in the twilio video room
+	//4. Connect to twilio video room with the token, localtrack and room name
+	//5. Show other participant's tracks from the video room
 
     $("#video_rm").click(function(){
         liveToken = user_check(roomToken)
@@ -27,13 +33,9 @@ function main(){
     $("#create_room").click(function(){room_create();});
 	$("#delete_room").click(function(){room_delete();});
 //    live_token(liveToken)
-    if(liveToken != ""){
-        init_player(player,liveToken);
-        $("#Steam").appendChild(player.videoElement);
-    }
-    console.log(liveToken,roomToken);
+
 }
-function participant_video(roomObj){
+function participant_video(roomObj){ //Show all the video of participant in the room
     roomObj.room.participants.forEach(participant => {
         participant.tracks.forEach(publication => {
             if(publication.track){
@@ -45,7 +47,7 @@ function participant_video(roomObj){
         });
     });
 }
-function room_exit(roomObj){
+function room_exit(roomObj){ //Exit the room
     roomObj.room.on("disconnected", room =>{ //Notify other participant that this client is leaving
         room.localParticipant.tracks.forEach(publication => {
             const attachedElements = publication.track.detach();
@@ -54,9 +56,18 @@ function room_exit(roomObj){
     })
     roomObj.room.disconnect();
 }
-function room_join(token,roomObj){
+function GetTracks(roomObj){ //Obtain local audio/video tracks
+    return Twilio.Video.createLocalTracks({audio: true, video: true}).then(function(localTracks){
+        roomObj.tracks = localTracks;
+        console.log(localTracks);
+    });
 
-    Twilio.Video.connect(token, {name: "JeffRoom"}).then(room => {
+}
+const room_join =async function(token,roomObj){ //Join the room with tracks
+    let cache = await GetTracks(roomObj);
+    console.log(roomObj.tracks);
+
+    Twilio.Video.connect(token, {name: "JeffRoom", tracks:roomObj.tracks}).then(room => {
         console.log(`Successfully joined a Room: ${room}`);
         roomObj.room = room;
         room.on('participantConnected', participant => {
@@ -88,7 +99,7 @@ const room_create = async function(e){
 
 //    $.post("/RoomCreation", event_object);
 }
-const room_delete = async function(e){
+const room_delete = async function(e){ //Delete the room, should only allow host to do it
 	const event_object= {
         event_title: "JeffRoom"
     }
@@ -129,16 +140,7 @@ function live_token(token) { //Get live token for the room, required for all use
     }
     return token;
 }
-async function init_player(player,token) {
-    const {
-        host,
-        protocol,
-    } = window.location;
-    player = await Twilio.Live.Player.connect(token, {
-        playerWasmAssetsPath: `${protocol}//${host}/path/to/hosted/player/assets`,
-    });
-    return player;
-}
+
 $(document).ready(function(){
 	main();
 });
