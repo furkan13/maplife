@@ -33,7 +33,7 @@ public class EventController {
         try{
             String cache = (twilioService.CreateRoom(event));
             event.setEvent_link(cache);
-            Event savedEvent = eventService.saveEvent(event);
+            Event savedEvent = eventService.save(event);
 //            System.out.println(savedEvent.getEvent_link());
 //            System.out.println(savedEvent.getEvent_title());
             return new ResponseEntity<>(savedEvent, HttpStatus.OK);
