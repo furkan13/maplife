@@ -170,4 +170,8 @@
 .setting-scroll:hover::-webkit-scrollbar-thumb {
     background-color: #dfdfdf;
 }
+.email-address{
+    font-weight: 700;
+    font-size: 18px;
+}
 

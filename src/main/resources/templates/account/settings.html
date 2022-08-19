@@ -4,7 +4,9 @@
   <meta charset="UTF-8">
   <title>Settings</title>
   <link th:href= "@{/css/settings.css}" rel="stylesheet" />
-<!--  <link href="../../static/css/settings.css" rel="stylesheet"/>-->
+  <link th:href= "@{/css/login.css}" rel="stylesheet" />
+
+  <!--  <link href="../../static/css/settings.css" rel="stylesheet"/>-->
 
 </head>
 <body th:replace="navigator/bars::common-body(~{::#settings-page},~{},~{::script})">
@@ -37,11 +39,14 @@
         <div id="profile-icon" class="profile-icon" >
           <img id="profileIcon" class="profile-image">
         </div>
-        <div id="add-icon-button" class="add-icon-button">
-          <input type="file" id="inputChoose"  />
-          <input id="uploadIconButton" type="button" value="Add profile picture" class="settings-button">
-          <label class="settings-label-description">Must be JPEG, PNG, or GIF and cannot exceed 5MB.</label>
+        <div id="add-icon-button" class="add-icon-button bio-text-contain">
+            <input type="file" id="inputChoose"/>
+            <label class="settings-label-description">Must be JPEG, PNG, or GIF and cannot exceed 5MB.</label>
         </div>
+        <div class="add-bio-button">
+            <input id="uploadIconButton" type="button" value="Add profile picture" class="settings-button">
+        </div>
+
       </div>
     </div>
     <div id="profile-settings-block">
@@ -52,9 +57,11 @@
         <div id="profile-video" class="profile-icon" >
           <img class="video-img" th:src="@{${'/image/video.png'}}">
         </div>
-        <div id="add-video-button" class="add-icon-button">
-          <input type="button" value="Update" class="settings-button">
-          <label class="settings-label-description">Add your introduction video</label>
+        <div class="bio-text-contain">
+          <input id="introduction-video" placeholder="Add your introduction video" class="bio-text">
+        </div>
+        <div id="add-video-button" class="add-icon-button add-bio-button">
+          <input id="updateVideoBtn" type="button" value="Update" class="settings-button">
         </div>
       </div>
       <div id="bio-settings" class="profile-picture bio-settings">
@@ -65,7 +72,7 @@
           <textarea id="bio-text" class="bio-text"></textarea>
         </div>
         <div id="add-bio-button" class="add-icon-button add-bio-button">
-          <input type="button" value="Change" class="settings-button">
+          <input id="updateBioBtn" type="button" value="Change" class="settings-button">
         </div>
       </div>
     </div>
@@ -81,12 +88,19 @@
         <div class="profile-icon" >
           <label class="settings-label">Email</label>
         </div>
-        <div>
-          <label>email</label>
-          <label style="display: block">This email is linked to your account.</label>
+        <div id="oldEmailBox" class="bio-text-contain">
+            <label id="emailAddress" class="email-address"></label>
+           <label style="display: block">This email is linked to your account.</label>
         </div>
-        <div class="add-icon-button">
-          <input type="button" value="Change" class="settings-button">
+        <div id="changeEmailBtn" class="add-bio-button">
+          <input  type="button" value="Change" class="settings-button">
+        </div>
+        <div id="newEmailBox" class="bio-text-contain" style="display: none">
+          <label>please enter your new email address</label>
+          <input id="newEmail" class="form-control">
+        </div>
+        <div id="submitEmailBtn" class="add-bio-button" style="display: none">
+          <input type="button" value="Submit" class="settings-button" >
         </div>
       </div>
     </div>
@@ -98,16 +112,35 @@
         <div class="profile-icon">
           <label class="settings-label password-label">Password</label>
         </div>
-        <div class="add-icon-button">
+        <div id="changePasswordBox" class="bio-text-contain">
+          <label id="password-Msg">Change password. Improve your security with a strong password.</label>
+        </div>
+        <div id="changePasswordBtn" class="add-icon-button add-bio-button">
           <input type="button" value="Change" class="settings-button">
+        </div>
+        <div id="oldPasswordBox" class="bio-text-contain" style="display: none">
+          <label>For security, please enter your password to continue.</label>
+          <input id="oldPassword" class="form-control">
+        </div>
+        <div id="verifiedPasswordBtn" class="add-bio-button" style="display: none">
+          <input type="button" value="Verified" class="settings-button" >
+        </div>
+        <div id="newPasswordBox" class="bio-text-contain" style="display: none">
+          <label>Please enter your new password.</label>
+          <input id="newPassword" class="form-control">
+        </div>
+        <div id="submitPasswordBtn" class="add-bio-button" style="display: none">
+          <input type="button" value="Submit" class="settings-button" >
         </div>
       </div>
       <div id="privacy-delete-account" class="profile-picture privacy-delete-account">
         <div class="profile-icon delete-account">
           <label class="settings-label delete-label">Delete account</label>
         </div>
-        <div class="add-icon-button ">
+        <div class="bio-text-contain">
           <label>IF DELETE, CAN NOT RECOVER</label>
+        </div>
+        <div class="add-bio-button">
           <input type="button" class="delete-account-button" value="Delete">
         </div>
       </div>
