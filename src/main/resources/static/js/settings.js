@@ -22,6 +22,8 @@ let newPasswordBox=document.getElementById("newPasswordBox")
 let submitPasswordBtn=document.getElementById("submitPasswordBtn")
 let newPasswordInput=document.getElementById("newPassword")
 let passwordMsg=document.getElementById("password-Msg")
+let wrongPasswordMsg=document.getElementById("wrongPasswordMsg")
+let invalidPasswordMsg=document.getElementById("invalidPasswordMsg")
 let introVideo=null;
 let bioText=null;
 let newEmail=null;
@@ -41,8 +43,25 @@ const captureUserInput = function (e) {
         newEmail=userInput;
     } else if (elementId === "oldPassword"){
         oldPassword=userInput;
-    } else if (elementId === "newPassword"){
-        newPassword=userInput;
+    } else if (elementId === "newPassword") {
+        const validated = validate(elementId, userInput);
+        if (validated === true) {
+            invalidPasswordMsg.style.display="none"
+            newPassword = userInput;
+        }
+        else {
+            invalidPasswordMsg.style.display="block"
+        }
+    }
+}
+
+const validate = function (elementId, userInput) {
+    let validated = false;
+    if (elementId === "newPassword") {
+        if (userInput.length > 7) {
+            validated = true;
+        }
+        return validated;
     }
 }
 const showUserInfo = async function (){
@@ -177,36 +196,40 @@ const verifiedPassword = async function () {
         submitPasswordBtn.style.display="block"
         oldPasswordBox.style.display="none"
         verifiedPasswordBtn.style.display="none"
-
+        wrongPasswordMsg.style.display="none"
     }
     else {
+        wrongPasswordMsg.style.display="block"
+
 
     }
 
 }
 
 const updatePassword = async function () {
-    const userObject = {
-        password: newPassword,
+    if(newPassword!=null) {
+        const userObject = {
+            password: newPassword,
+        }
+        const response = await fetch("/api/updatePassword", {
+            method: "POST",
+            headers: {
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify(userObject),
+        })
+        if (response.status == "200") {
+            changePasswordBtn.style.display = "block"
+            changePasswordBox.style.display = "block"
+            newPasswordBox.style.display = "none"
+            submitPasswordBtn.style.display = "none"
+            passwordMsg.innerText = "Successfully change your password!"
+
+        }
     }
-    const response = await fetch("/api/updatePassword", {
-        method: "POST",
-        headers: {
-            "Content-type": "application/json"
-        },
-        body: JSON.stringify(userObject),
-    })
-    if (response.status == "200"){
-        changePasswordBtn.style.display="block"
-        changePasswordBox.style.display="block"
-        newPasswordBox.style.display="none"
-        submitPasswordBtn.style.display="none"
-        passwordMsg.innerText="Successfully change your password!"
-
-
-    }
-    else {
-
+    else
+    {
+        invalidPasswordMsg.style.display="block"
     }
 
 }

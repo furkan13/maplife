@@ -174,4 +174,8 @@
     font-weight: 700;
     font-size: 18px;
 }
+.wrongMsg{
+    display: none;
+    color: #DE5B19;
+}
 
