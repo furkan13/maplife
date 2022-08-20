@@ -79,7 +79,8 @@ for (let i = 0;data.length>i;i++){
     popupContent = '<div id="event-img-container" style="background-image: url(' + eventCoverImg + ')"></div><div id="event-title">' +
         data[i].event_title + "</div><div id='host-name' class='event-text'>" + data[i].host_name + "</div><div id='event-viewers' class='event-text'>" +
         data[i].event_viewer + " viewers</div><div class='event-text'>47 minutes ago</div>"
-    myIcon.options.html = '<img id="custom-div-icon" class="custom-div-icon" src=' + eventIconImg + ">"
+    // myIcon.options.html = '<img id="custom-div-icon" class="custom-div-icon" src=' + eventIconImg + ">"
+    myIcon.options.html = `<img id="custom-div-icon" class="custom-div-icon" src=${eventIconImg}>`
     //put the marker on the map, bind the popup
     // L.marker([data[i].lat,data[i].lng], {icon: myIcon}).addTo(map).bindPopup(popupContent,{closeButton:false});
     // markers.addLayer()
