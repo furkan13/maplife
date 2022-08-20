@@ -3,7 +3,8 @@ package com.cardiff.maplife.entities;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
+
 
 @Entity
 @Table(name = "event")
@@ -89,6 +90,25 @@ public class Event {
     private Date event_date;
     @Column(name = "event_dis")
     private String event_dis;
+
+
+    String eventImageName;
+
+    public String getEventImageName() {
+        return eventImageName;
+    }
+
+    public void setEventImageName(String eventImageName) {
+        this.eventImageName = eventImageName;
+    }
+
+    @Transient
+    public String getPhotosImagePath() {
+        if (title == null || id == -1) return null;
+
+        return "event/" + id + "/" + eventImageName;
+    }
+
 
 
     public void setId(Long id) {
