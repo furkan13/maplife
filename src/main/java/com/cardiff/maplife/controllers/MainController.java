@@ -42,6 +42,10 @@ public class MainController {
         modelAndView = new ModelAndView("account/settings");
         return modelAndView;
     }
-
+    @GetMapping("/streaming")
+    public ModelAndView showStreamingPage(ModelAndView modelAndView) {
+        modelAndView = new ModelAndView("/streaming");
+        return modelAndView;
+    }
 
 }
