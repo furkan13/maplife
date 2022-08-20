@@ -22,7 +22,7 @@ public interface EventService {
 
     public Event findByName(String name);
 
-    public void save(Event event);
+    public Event save(Event event);
 
     public void deleteById(int eventId);
 

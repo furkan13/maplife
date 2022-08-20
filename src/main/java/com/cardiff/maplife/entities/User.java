@@ -16,7 +16,7 @@ public class User implements UserDetails, Serializable {
     public User() {
 
     }
-    public User(Long id, String username, String password, String email, boolean userType, int coins, int views, String icon, String roles) {
+    public User(Long id, String username, String password, String email, boolean userType, int coins, int views, String icon, String roles, String video, String bio) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -26,6 +26,8 @@ public class User implements UserDetails, Serializable {
         this.views = views;
         this.icon = icon;
         this.roles=roles;
+        this.video=video;
+        this.bio=bio;
     }
 
     @Id
@@ -57,9 +59,13 @@ public class User implements UserDetails, Serializable {
     @Column(name = "roles")
     private String roles;
 
-    public Long getId() {
-        return id;
-    }
+    @Column(name = "video")
+    private String video;
+
+    @Column(name = "bio")
+    private String bio;
+
+
 
     @Transient
     private List<GrantedAuthority> authorities;
@@ -96,6 +102,9 @@ public class User implements UserDetails, Serializable {
         return authorities;
     }
 
+    public Long getId() {
+        return id;
+    }
     public void setId(Long id) {
         this.id = id;
     }
@@ -143,5 +152,21 @@ public class User implements UserDetails, Serializable {
     }
     public void setRoles(String roles) {
         this.roles = roles;
+    }
+
+    public String getVideo() {
+        return video;
+    }
+
+    public void setVideo(String video) {
+        this.video = video;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 }

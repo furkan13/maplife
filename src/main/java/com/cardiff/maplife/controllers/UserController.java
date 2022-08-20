@@ -4,9 +4,7 @@ import com.cardiff.maplife.services.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
+
 
 @RestController
 public class UserController {
@@ -36,5 +34,101 @@ public class UserController {
            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
        }
    }
+
+   //update personal video
+    @PostMapping("/api/updateVideo")
+    private ResponseEntity<User> updateVideo(@RequestBody User user){
+       try {
+           String usernameFromUser = userService.getAuthentication();
+           User loggedUser = (User) userService.loadUserByUsername(usernameFromUser);
+           loggedUser.setVideo(user.getVideo());
+           userService.saveUser(loggedUser);
+           return new ResponseEntity<>(loggedUser, HttpStatus.OK);
+       }
+       catch (Exception e){
+           return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+
+       }
+    }
+    //update bio
+    @PostMapping("/api/updateBio")
+    private ResponseEntity<User> updateBio(@RequestBody User user){
+        try {
+            String usernameFromUser = userService.getAuthentication();
+            User loggedUser = (User) userService.loadUserByUsername(usernameFromUser);
+            loggedUser.setBio(user.getBio());
+            userService.saveUser(loggedUser);
+            return new ResponseEntity<>(loggedUser, HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+
+        }
+    }
+    //update email
+    @PostMapping("/api/updateEmail")
+    private ResponseEntity<User> updateEmail(@RequestBody User user){
+        try {
+            String usernameFromUser = userService.getAuthentication();
+            User loggedUser = (User) userService.loadUserByUsername(usernameFromUser);
+            loggedUser.setEmail(user.getEmail());
+            userService.saveUser(loggedUser);
+            return new ResponseEntity<>(loggedUser, HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+
+        }
+    }
+
+    //verify password
+    @PostMapping("/api/verifiedPassword")
+    private ResponseEntity<User> verifiedPassword(@RequestBody User user){
+        try {
+            String usernameFromUser = userService.getAuthentication();
+            String passwordFromUser = user.getPassword();
+            User loggedUser = (User) userService.loadUserByUsername(usernameFromUser);
+            String passwordFromDB=loggedUser.getPassword();
+            if(passwordFromUser.equals(passwordFromDB)){
+                return new ResponseEntity<>(loggedUser, HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+            }
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+
+        }
+    }
+
+    //update password
+    @PostMapping("/api/updatePassword")
+    private ResponseEntity<User> updatePassword(@RequestBody User user){
+        try {
+            String usernameFromUser = userService.getAuthentication();
+            User loggedUser = (User) userService.loadUserByUsername(usernameFromUser);
+            loggedUser.setPassword(user.getPassword());
+            userService.saveUser(loggedUser);
+            return new ResponseEntity<>(loggedUser, HttpStatus.OK);
+        }
+        catch (Exception e){
+            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+
+        }
+    }
+    //delete Account
+    @PostMapping("/api/deleteAccount")
+    private String deleteAccount(){
+        try {
+            String usernameFromUser = userService.getAuthentication();
+            User loggedUser = (User) userService.loadUserByUsername(usernameFromUser);
+            userService.deleteById(loggedUser.getId());
+            return "delete successfully";
+        }
+        catch (Exception e){
+            return null;
+        }
+    }
 
 }

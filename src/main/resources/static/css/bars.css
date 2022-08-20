@@ -11,7 +11,7 @@ body{
 }*/
 .container-fluid{
     --bs-gutter-x: 2rem;
-    flex-wrap: nowrap;
+    flex-wrap: nowrap!important;
 }
 .fixed-top{
     z-index: 1700;
@@ -32,7 +32,7 @@ body{
     margin: 0 0.5rem 0 0.5rem;
 }
 .user-icon{
-    margin-left: 1rem;
+    margin-left: 0.5rem;
     overflow: hidden;
 }
 #user-icon-img-current{

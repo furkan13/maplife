@@ -1,0 +1,181 @@
+#settings-page{
+    padding: 50px 0 0 70px;
+    height: calc(100vh);
+    /*background-color: rgba(223, 222, 222, 0.12);*/
+    display: flex;
+    flex-direction: column;
+
+
+}
+#settings-contain{
+    margin: 30px;
+}
+.settings-title h2{
+    font-family: 'Roboto', sans-serif;
+    font-size: 35px;
+    font-weight: 800;
+}
+.settings-nav .nav-link{
+    margin-top: 24px;
+    margin-right: 20px;
+
+}
+.settings-nav .nav-item{
+    padding: 0px 0.5rem 10px 0.5rem !important;
+    margin: 0px;
+}
+
+.current{
+    padding: 0px 0.5rem 10px 0.5rem;
+    border-bottom: solid 2px #de5b19;
+}
+
+.settings-nav-a{
+    font-family: 'Roboto', sans-serif;
+    font-size: 17px;
+}
+.settings-nav hr{
+    margin: 0;
+}
+
+.settings-profile-contain{
+    margin: 30px;
+}
+.settings-block-title h3{
+    font-weight: 700;
+    font-size: 20px;
+    margin-bottom: 32px;
+    font-family: 'Roboto', sans-serif;
+}
+.profile-picture{
+    display: flex;
+    border: solid 1px gainsboro;
+    border-radius: 8px;
+    align-items: center;
+    background-color: white;
+}
+.profile-icon{
+    width: 146px;
+    height: 146px;
+    padding: 26px;
+}
+.profile-image{
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+}
+
+.add-icon-button{
+    margin-left: 56px;
+}
+
+#profile-settings-block{
+    margin-top: 30px;
+}
+.video-settings{
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+.bio-settings{
+    border-top-left-radius:0px;
+    border-top-right-radius:0px ;
+}
+
+#privacy-security-title h3{
+    margin-top: 30px;
+}
+.privacy-password{
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+.privacy-delete-account{
+    border-top-left-radius:0px;
+    border-top-right-radius:0px ;
+}
+.delete-account{
+    color: red;
+}
+.delete-account-button{
+    background-color: red;
+    color: white;
+}
+.bio-text-contain{
+    padding-left: 3.5rem;
+    width: 65%;
+
+}
+.bio-text{
+    width: 100%;
+    height: 4.5rem;
+    border: solid 2px gainsboro;
+    background: gainsboro;
+    border-radius: 11px;
+    resize: none;
+    padding: 0.5rem 1rem 0.5rem 1rem;
+}
+.bio-text:focus{
+    outline: none;
+    border-color:#de5b19 !important;
+    background-color: white;
+}
+.settings-label{
+    padding:30px;
+}
+.password-label{
+    padding: 15px;
+    margin-top: 19px;
+}
+.delete-label{
+    padding: 16px;
+    margin-top: 6px;
+}
+.settings-label-description{
+    display: block;
+}
+.add-bio-button{
+    margin: auto;
+}
+.video-img{
+    width: 90%;
+    height: 90%;
+    margin-left: 5px;
+}
+
+.settings-button{
+    border: solid 2px #de5b19;
+    height: 28px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #f8f9fa;
+    font-family: 'Roboto', sans-serif;
+    background: #de5b19;
+}
+/*For scroll*/
+.setting-scroll{
+    overflow: scroll;
+    /*height: 370px;*/
+}
+.setting-scroll::-webkit-scrollbar-thumb {
+    background-color: #ffffff;
+    border-radius: 10px;
+}
+.setting-scroll::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+.setting-scroll::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0);
+    border-radius: 10px;
+}
+.setting-scroll:hover::-webkit-scrollbar-thumb {
+    background-color: #dfdfdf;
+}
+.email-address{
+    font-weight: 700;
+    font-size: 18px;
+}
+.wrongMsg{
+    display: none;
+    color: #DE5B19;
+}
+
