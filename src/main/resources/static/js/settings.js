@@ -24,6 +24,13 @@ let newPasswordInput=document.getElementById("newPassword")
 let passwordMsg=document.getElementById("password-Msg")
 let wrongPasswordMsg=document.getElementById("wrongPasswordMsg")
 let invalidPasswordMsg=document.getElementById("invalidPasswordMsg")
+let deleteUserBox=document.getElementById("deleteUserBox")
+let deleteBtn=document.getElementById("deleteBtn")
+let currentPasswordBox=document.getElementById("currentPasswordBox")
+let confirmDeleteBtn=document.getElementById("confirmDeleteBtn")
+let wrongPasswordMsg2=document.getElementById('wrongPasswordMsg2');
+let currentPasswordInput=document.getElementById("currentPassword")
+
 let introVideo=null;
 let bioText=null;
 let newEmail=null;
@@ -33,6 +40,7 @@ let newPassword=null;
 const captureUserInput = function (e) {
     const userInput = e.target.value;
     const elementId = e.target.id;
+    const elementName =  e.target.name;
 
 
     if (elementId === "introduction-video") {
@@ -41,9 +49,10 @@ const captureUserInput = function (e) {
         bioText = userInput;
     } else if (elementId === "newEmail"){
         newEmail=userInput;
-    } else if (elementId === "oldPassword"){
-        oldPassword=userInput;
-    } else if (elementId === "newPassword") {
+    } else if (elementName === "password") {
+        oldPassword = userInput;
+    }
+    else if (elementId === "newPassword") {
         const validated = validate(elementId, userInput);
         if (validated === true) {
             invalidPasswordMsg.style.display="none"
@@ -161,8 +170,6 @@ const updateEmail = async function () {
         changeEmailBtn.style.display="block"
         submitEmailBtn.style.display="none"
         emailAddress.innerText="Successfully change your email!"
-
-
     }
 
 }
@@ -180,6 +187,19 @@ function showOldPasswordBox(){
     verifiedPasswordBtn.style.display="block"
 }
 
+function showCurrentPasswordBox(){
+    currentPasswordBox.style.display="block"
+    confirmDeleteBtn.style.display="block"
+    deleteUserBox.style.display="none"
+    deleteBtn.style.display="none"
+
+}
+const deleteAccount = async function () {
+    const response = await fetch("/api/deleteAccount", {
+        method: "POST",
+    })
+    return response
+}
 const verifiedPassword = async function () {
     const userObject = {
         password: oldPassword,
@@ -191,20 +211,35 @@ const verifiedPassword = async function () {
         },
         body: JSON.stringify(userObject),
     })
-    if (response.status == "200"){
-        newPasswordBox.style.display="block"
-        submitPasswordBtn.style.display="block"
-        oldPasswordBox.style.display="none"
-        verifiedPasswordBtn.style.display="none"
-        wrongPasswordMsg.style.display="none"
-    }
-    else {
-        wrongPasswordMsg.style.display="block"
-
-
-    }
-
+    return response
 }
+const changePasswordVerification = async function(){
+    verifiedPassword().then(response=>{
+        if (response.status == "200"){
+            newPasswordBox.style.display="block"
+            submitPasswordBtn.style.display="block"
+            oldPasswordBox.style.display="none"
+            verifiedPasswordBtn.style.display="none"
+            wrongPasswordMsg.style.display="none"
+        }
+        else {
+            wrongPasswordMsg.style.display="block"
+        }
+    })
+}
+const deleteAccountVerification = async function(){
+    verifiedPassword().then(response=>{
+        if (response.status == "200"){
+            deleteAccount().then()
+            window.location.href='/'
+        }
+        else {
+            wrongPasswordMsg2.style.display="block"
+        }
+    })
+}
+
+
 
 const updatePassword = async function () {
     if(newPassword!=null) {
@@ -247,7 +282,10 @@ changeEmailBtn.addEventListener("click",showEmailBox)
 submitEmailBtn.addEventListener("click",updateEmail)
 emailInput.addEventListener("change",captureUserInput)
 changePasswordBtn.addEventListener("click",showOldPasswordBox)
-verifiedPasswordBtn.addEventListener("click",verifiedPassword)
+verifiedPasswordBtn.addEventListener("click",changePasswordVerification)
 oldPasswordInput.addEventListener("change",captureUserInput)
 submitPasswordBtn.addEventListener("click",updatePassword)
 newPasswordInput.addEventListener("change",captureUserInput)
+deleteBtn.addEventListener("click",showCurrentPasswordBox)
+currentPasswordInput.addEventListener("change",captureUserInput)
+confirmDeleteBtn.addEventListener("click",deleteAccountVerification)

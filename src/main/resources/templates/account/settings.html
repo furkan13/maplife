@@ -120,7 +120,7 @@
         </div>
         <div id="oldPasswordBox" class="bio-text-contain" style="display: none">
           <label>For security, please enter your password to continue.</label>
-          <input id="oldPassword" class="form-control">
+          <input id="oldPassword" class="form-control" name="password">
           <p id="wrongPasswordMsg" class="wrongMsg">That password was incorrect. Please try again.</p>
         </div>
         <div id="verifiedPasswordBtn" class="add-bio-button" style="display: none">
@@ -139,11 +139,19 @@
         <div class="profile-icon delete-account">
           <label class="settings-label delete-label">Delete account</label>
         </div>
-        <div class="bio-text-contain">
+        <div id="deleteUserBox" class="bio-text-contain">
           <label>IF DELETE, CAN NOT RECOVER</label>
         </div>
-        <div class="add-bio-button">
+        <div id="currentPasswordBox" class="bio-text-contain" style="display: none">
+          <label>For security, please enter your password to continue.</label>
+          <input id="currentPassword" class="form-control" name="password">
+          <p id="wrongPasswordMsg2" class="wrongMsg">That password was incorrect. Please try again.</p>
+        </div>
+        <div id="deleteBtn" class="add-bio-button">
           <input type="button" class="delete-account-button" value="Delete">
+        </div>
+        <div id="confirmDeleteBtn" class="add-bio-button" style="display: none">
+          <input type="button" value="Confirm" class="delete-account-button" >
         </div>
       </div>
     </div>

@@ -117,5 +117,18 @@ public class UserController {
 
         }
     }
+    //delete Account
+    @PostMapping("/api/deleteAccount")
+    private String deleteAccount(){
+        try {
+            String usernameFromUser = userService.getAuthentication();
+            User loggedUser = (User) userService.loadUserByUsername(usernameFromUser);
+            userService.deleteById(loggedUser.getId());
+            return "delete successfully";
+        }
+        catch (Exception e){
+            return null;
+        }
+    }
 
 }
