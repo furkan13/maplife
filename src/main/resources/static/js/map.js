@@ -6,11 +6,6 @@ let lifeGroup=[]
 
 var overlays = {}
 
-document.onreadystatechange=function () {
-    if (document.readyState=="complete"){
-        getCurrentLocation()
-    }
-}
 // display the map layer
 var map = L.map('map',{zoomControl:false}).setView([51.483396, -3.173728], 11);
 //render map tile layer
@@ -38,12 +33,17 @@ var displayCurrentLocation = L.control.locate({
     icon:'relocate',
 }).addTo(map);
 displayCurrentLocation.start({setView:false}) //load location as soon as load the page
-//print the current location latitude and longitude
-let getCurrentLocation =function () {
-    currentLocation = displayCurrentLocation._marker._latlng
+//set the current location latitude and longitude to sessionStorage
+function getCurrentLocation(e) {
+    currentLocation = e.latlng
+    let currentLat =  currentLocation.lat
+    let currentLng = currentLocation.lng
     console.log(currentLocation)
-    return currentLocation
+    sessionStorage.setItem('lat',currentLat)
+    sessionStorage.setItem('lng',currentLng)
 }
+map.on('locationfound', getCurrentLocation);
+
 //customize the default marker
 // var orangeIcon = new L.Icon({
 //     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
@@ -112,5 +112,13 @@ L.control.layers(null, overlays, {
     collapsed: false,
 }).addTo(map);
 
-var helloPopup = L.popup().setContent('Hello World!');
+var filterSidebar = L.control.sidebar('filter-sidebar', {
+    position: 'left',
+    autoPan:false
+});
+
+map.addControl(filterSidebar);
+setTimeout(function () {
+    filterSidebar.show();
+}, 500);
 
