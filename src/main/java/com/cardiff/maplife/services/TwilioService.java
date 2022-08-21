@@ -36,7 +36,7 @@ public class TwilioService {
         Room room = Room.creator()
 //                .setStatusCallback(URI.create("http://example.org"))
                 .setType(Room.RoomType.PEER_TO_PEER)
-                .setStatusCallback(URI.create("https://bea7-131-251-33-213.eu.ngrok.io/roomStatus"))
+                .setStatusCallback(URI.create("https://8b35-131-251-33-213.eu.ngrok.io/roomStatus"))
                 .setStatusCallbackMethod(HttpMethod.POST)
                 .setUniqueName(event.getTitle())
                 .create();

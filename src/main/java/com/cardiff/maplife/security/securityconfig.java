@@ -41,6 +41,8 @@ public class securityconfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/authform")
                 .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/",true).permitAll()
+
+//                .defaultSuccessUrl("/roomStatus",true).permitAll()
                 //.defaultSuccessUrl("/api/showUserName",true).permitAll()
 //                .successForwardUrl("/api/showUserObject").permitAll()
                 .failureUrl("/authform?message=errorMessage")
@@ -52,7 +54,7 @@ public class securityconfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/explore/**").hasRole("USER")
                 .antMatchers("/nearby/**").hasRole("USER")
                 .antMatchers("/trending/**").hasRole("USER")
-                .antMatchers("/js/**","/css/**","/images/*","/fonts/**","/**/*.png","/**/*.jpg").permitAll();
+                .antMatchers("/js/**","/css/**","/images/*","/fonts/**","/**/*.png","/**/*.jpg","/roomStatus").permitAll();
 //                .anyRequest()
 //                .authenticated();
                 http.csrf().disable();

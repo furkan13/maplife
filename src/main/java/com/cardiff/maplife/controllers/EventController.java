@@ -95,6 +95,7 @@ public class EventController {
         if(userService.findUserByUsername(userService.getAuthentication()).getId() == eventCache.getHost_id()){
             eventService.deleteById(eventCache.getId()); //Delete room in event table
             twilioService.DeleteRoom(eventCache); //Delete room in twilio service
+            liveService.deleteAllLiveByEventid(eventCache.getId()); //Delete all cohost in database
         }
         return new ResponseEntity(HttpStatus.OK);
 
@@ -137,10 +138,26 @@ public class EventController {
         }
     }
     @PostMapping(value = "/roomStatus", produces = "application/x-www-form-urlencoded")
-    private void getRoomStatus(@RequestParam(value ="RoomName")String RoomName, @RequestParam(value="StatusCallbackEvent")String test){
+    private void getRoomStatus(@RequestParam(value ="RoomName")String RoomName, @RequestParam(value="StatusCallbackEvent")String status,@RequestParam(value ="ParticipantIdentity",defaultValue = "")String UserName){
         //Web hook from twilio, testing
         System.out.println(RoomName);
-        System.out.println(test);
+        System.out.println(status);
+        Event eventCache = eventService.findByName(RoomName);
+        if(status.equals("room-ended")){ //Delete room in database
+            eventService.deleteById(eventCache.getId());
+            liveService.deleteAllLiveByEventid(eventCache.getId());
+        }
+        if(status.equals("participant-disconnected")){ //Delete cohost in database
+            User userCache = userService.findUserByUsername(UserName);
+
+            if(userCache.getId() == eventCache.getHost_id()){ //Host disconnect, delete room
+                eventService.deleteById(eventCache.getId());
+                liveService.deleteAllLiveByEventid(eventCache.getId());
+            }
+            else{
+                liveService.deleteLiveByCohostid(userCache.getId());
+            }
+        }
     }
 
     @GetMapping("/EventAccessToken")
