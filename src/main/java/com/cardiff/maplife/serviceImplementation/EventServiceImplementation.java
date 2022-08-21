@@ -22,7 +22,7 @@ public class EventServiceImplementation implements EventService {
     }
 
     @Override
-    public Event findById(int eventId)
+    public Event findById(long eventId)
     {
         Optional<Event> result = eventRepository.findById(eventId);
 
@@ -61,7 +61,7 @@ public class EventServiceImplementation implements EventService {
         return eventRepository.save(event);
     }
     @Override
-    public void deleteById(int eventId)
+    public void deleteById(long eventId)
     {
         eventRepository.deleteById(eventId);
     }

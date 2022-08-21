@@ -18,13 +18,13 @@ public interface EventService {
 
     public List<Event> findAll();
 
-    public Event findById(int eventId);
+    public Event findById(long eventId);
 
     public Event findByName(String name);
 
     public Event save(Event event);
 
-    public void deleteById(int eventId);
+    public void deleteById(long eventId);
 
     public void deleteAll();
 
