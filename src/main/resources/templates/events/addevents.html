@@ -25,8 +25,8 @@
                                     <input type="text" class="form-control" name="name" id="Title" th:field="${events.title}" placeholder="Event Title">
                                 </div>
                                 <div class="col-md-6 form-group mb-3">
-                                    <label for="" class="col-form-label">Email *</label>
-                                    <input type="date" class="form-control-plaintext" name="date" id="date"  th:field="${events.event_date}" placeholder="Event Date">
+                                    <label for="" class="col-form-label">Date *</label>
+                                    <input type="date" class="form-control-plaintext" name="date" id="date_picker"  th:field="${events.event_date}" th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" >
                                 </div>
                             </div>
 
@@ -60,16 +60,15 @@
 
                             <div class="row">
                                 <div class="col-md-12 form-group">
-                                    <input type="submit" value="Send Message" class="btn btn-primary rounded-0 py-2 px-4">
+                                    <input type="submit" value="Add Event" class="btn btn-primary rounded-0 py-2 px-4">
                                     <span class="submitting"></span>
                                 </div>
                             </div>
                         </form>
 
                         <div id="form-message-warning mt-4"></div>
-                        <div id="form-message-success">
-                            Your message was sent, thank you!
-                        </div>
+                        <div class="alert alert-primary" role="alert" th:text="${success}" th:if="${success}"></div>
+                        <div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
 
                     </div>
                 </div>
@@ -79,5 +78,6 @@
     </div>
 
 </div>
+
 </body>
 </html>
