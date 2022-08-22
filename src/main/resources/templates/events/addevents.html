@@ -22,11 +22,11 @@
                             <div class="row">
                                 <div class="col-md-6 form-group mb-3">
                                     <label for="" class="col-form-label">Title *</label>
-                                    <input type="text" class="form-control" name="name" id="Title" th:field="${events.title}" placeholder="Event Title">
+                                    <input type="text" class="form-control" name="name" id="Title" th:field="${events.title}" placeholder="Event Title" required>
                                 </div>
                                 <div class="col-md-6 form-group mb-3">
                                     <label for="" class="col-form-label">Date *</label>
-                                    <input type="date" class="form-control-plaintext" name="date" id="date_picker"  th:field="${events.event_date}" th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}" >
+                                    <input type="date" class="form-control-plaintext" name="date" id="date_picker"  th:field="${events.event_date}" th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"  required>
                                 </div>
                             </div>
 
@@ -60,7 +60,7 @@
 
                             <div class="row">
                                 <div class="col-md-12 form-group">
-                                    <input type="submit" value="Add Event" class="btn btn-primary rounded-0 py-2 px-4">
+                                    <input type="submit" value="Add Event" class="button button-primary rounded-0 py-2 px-4">
                                     <span class="submitting"></span>
                                 </div>
                             </div>

@@ -39,7 +39,7 @@ a, a:hover {
     color: #000;
     font-size: 13px; }
 
-.btn, .form-control, .custom-select {
+.button, .form-control, .custom-select {
     height: 45px;
     border-radius: 0; }
 
@@ -55,22 +55,22 @@ a, a:hover {
     box-shadow: none;
     border-color: #000; }
 
-.btn {
+.button {
     border: none;
     border-radius: 0;
     font-size: 11px;
     letter-spacing: .2rem;
     text-transform: uppercase;
     border-radius: 30px !important; }
-.btn.btn-primary {
+.button.button-primary {
     border-radius: 30px;
-    background: #ef4339;
+    background: #de5b19;
     color: #fff;
     -webkit-box-shadow: 0 15px 30px 0 rgba(239, 67, 57, 0.2);
     box-shadow: 0 15px 30px 0 rgba(239, 67, 57, 0.2); }
-.btn:hover {
+.button:hover {
     color: #fff; }
-.btn:active, .btn:focus {
+.button:active, .button:focus {
     outline: none;
     -webkit-box-shadow: none;
     box-shadow: none; }
