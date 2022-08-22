@@ -7,14 +7,17 @@ import com.cardiff.maplife.fileUpload.EventFileUploadUtil;
 import com.cardiff.maplife.services.EventService;
 import com.cardiff.maplife.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.BindException;
@@ -37,7 +40,7 @@ public class AddEventController {
 
 
     @RequestMapping ("/addevents")
-    public String addEvents( @ModelAttribute("events") Event event,Model model, @RequestParam(value = "image",required = false) MultipartFile file, @AuthenticationPrincipal User user, HttpSession session, RedirectAttributes redirAttrs) throws IOException,NullPointerException, BindException {
+    public String addEvents(@ModelAttribute("events") Event event, Model model, @RequestParam(value = "image",required = false) MultipartFile file, @AuthenticationPrincipal User user, HttpSession session, RedirectAttributes redirAttrs, BindingResult result) throws IOException,NullPointerException, BindException {
         //session.getAttribute()
 
         System.out.println(event.getTitle());
@@ -46,7 +49,7 @@ public class AddEventController {
         model.addAttribute(now);
 
 
-        try {
+
 
 
         String fileName = "";
@@ -81,9 +84,9 @@ public class AddEventController {
             redirAttrs.addFlashAttribute("success", "Event created successfully .");
             return "redirect:/addevents/";
         }
-        }
-        catch(Exception e)
-        {
+
+        if(result.hasErrors()) {
+
             redirAttrs.addFlashAttribute("error", "Invalid input");
             return "redirect:/addevents/";
         }
