@@ -3,12 +3,13 @@ $("#Steam") //streaming window
 //Cache: username hashed
 // import { Player } from '@twilio/live-player-sdk';
 const QueryString = new URLSearchParams(window.location.search);
-// const room = QueryString.get("room");
-const roomName = "JeffRoom";
-let player;
-var user_name="Jeff";
+const room = QueryString.get("room");
+let roomName = "TestingRoom";
+if(room != null){
+	roomName = room;
+}
 let roomObj = {room:"", tracks:""};
-let roomToken, liveToken ="";
+let roomToken ="";
 //user_name should be local stroage/cookie which is obtained when logging in
 function main(){
 	//What to do for connecting in twilio video room:
@@ -17,16 +18,11 @@ function main(){
 	//3. Create a local track to publish in the twilio video room
 	//4. Connect to twilio video room with the token, localtrack and room name
 	//5. Show other participant's tracks from the video room
-
+	
+	
     $("#video_rm").click(function(){
-        liveToken = user_check(roomToken)
-        let response;
-        liveToken.then((response)=> {
-            console.log(response);
-            room_join(response,roomObj);
-        })
+        video_reload();
 		// console.log(liveToken)
-
 	});
     $("#exit").click(function(){ room_exit(roomObj);});
     $("#partycheck").click(function(){ participant_video(roomObj);});
@@ -34,6 +30,20 @@ function main(){
 	$("#delete_room").click(function(){room_delete();});
 //    live_token(liveToken)
 
+}
+function video_reload(){
+	roomToken = user_check();
+    let response;
+    roomToken.then((response)=> {
+        console.log(response);
+        room_join(response,roomObj);
+    });
+	
+}
+function video_block(){ //Create block for multiple streamers' video
+	$("#bottom_other_stream") //Target div 
+	
+	
 }
 function participant_video(roomObj){ //Show all the video of participant in the room
     roomObj.room.participants.forEach(participant => {
@@ -64,25 +74,26 @@ function GetTracks(roomObj){ //Obtain local audio/video tracks
 
 }
 const room_join =async function(token,roomObj){ //Join the room with tracks
-    let cache = await GetTracks(roomObj);
+    let cache = await GetTracks(roomObj); //Get local tracks from user, saved in roomObj.tracks
     console.log(roomObj.tracks);
 
-    Twilio.Video.connect(token, {name: "JeffRoom", tracks:roomObj.tracks}).then(room => {
+    await Twilio.Video.connect(token, {name: roomName, tracks:roomObj.tracks}).then(room => {
         console.log(`Successfully joined a Room: ${room}`);
         roomObj.room = room;
         room.on('participantConnected', participant => {
             console.log(`A remote Participant connected: ${participant}`);
 
+		});
+	}, error => {
+		console.error(`Unable to connect to Room: ${error.message}`);
 	});
-}, error => {
-	console.error(`Unable to connect to Room: ${error.message}`);
-});
-
+	participant_video(roomObj);
 }
 const room_create = async function(e){
     const event_object= {
-        event_title: "JeffRoom"
+        title: roomName
     }
+    console.log(event_object);
     const response = await fetch("/RoomCreation", {
                 method: "POST",
                 headers: {
@@ -101,7 +112,7 @@ const room_create = async function(e){
 }
 const room_delete = async function(e){ //Delete the room, should only allow host to do it
 	const event_object= {
-        event_title: "JeffRoom"
+        title: roomName
     }
     const response = await fetch("/RoomDeletion", {
                 method: "POST",
@@ -118,10 +129,10 @@ const room_delete = async function(e){ //Delete the room, should only allow host
 
 
 }
-const user_check = async function(token){ //Check for hashed user name for identity, Get video token if grant access
+const user_check = async function(){ //Check for hashed user name for identity, Get video token if grant access
     //Backend: 1. Check if the user is allowed to stream
     //2. Check with host to see if they allow this user to stream
-    token = $.get("/EventAccessToken?user="+user_name+"&room="+roomName, function(data, status){
+    let token = $.get("/EventAccessToken?room="+roomName, function(data, status){
 		return data;
 	}); //Get the access token or reject if user is not authorised
     if(token == ""){//Show user not enough coins

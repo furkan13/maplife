@@ -50,10 +50,6 @@ public class Event {
         return event_link;
     }
 
-    public String getEvent_title() {
-        return title;
-    }
-
     public boolean isRoom_type() {
         return room_type;
     }
