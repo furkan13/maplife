@@ -21,7 +21,7 @@
       -moz-box-sizing: border-box;
       box-sizing: border-box;
       padding: 8px 24px;
-      font-size: 1.1em;
+      font-size: 18px;
       background: white;
       box-shadow: 0 1px 7px rgba(0, 0, 0, 0.65);
       /*-webkit-border-radius: 4px;*/
@@ -63,15 +63,15 @@
           right: 288px; }
     .leaflet-sidebar .close {
       position: absolute;
-      right: 10px;
-      top: 10px;
-      width: 31px;
+      right: 0px;
+      top: 6px;
+      width: 41px;
       height: 31px;
       color: #333;
       font-size: 25px;
-      line-height: 1em;
+      line-height: 1;
       text-align: center;
-      background: white;
+      background: transparent;
       -webkit-border-radius: 16px;
       border-radius: 16px;
       cursor: pointer;
@@ -116,5 +116,39 @@
 .form-range:focus::-webkit-slider-thumb {
   /*background-color: #DE5B19!important;*/
   box-shadow: 0 0 0 0.2rem rgb(222 91 25 / 25%)!important;
+}
 
+/*For map filter*/
+.form-select:focus {
+  border-color: rgb(222 91 25) !important;
+  box-shadow: 0 0 0 0.25rem rgb(222 91 25 / 25%) !important;
+}
+.form-switch .form-check-input:focus {
+  border-color: #DE5B19!important;
+  box-shadow: 0 0 0 0.25rem rgb(222 91 25 / 25%) !important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23DE5B19'/%3e%3c/svg%3e")!important;
+}
+.form-switch .form-check-input:checked {
+  background-color: #DE5B19!important;
+  border-color: #DE5B19!important;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'%3e%3ccircle r='3' fill='%23fff'/%3e%3c/svg%3e")!important;
+}
+.form-switch .h6{
+  margin: 0!important;
+}
+/*For scroll bar*/
+.leaflet-sidebar::-webkit-scrollbar-thumb {
+  background-color: #ffffff;
+  border-radius: 10px;
+}
+.leaflet-sidebar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.leaflet-sidebar::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0);
+  border-radius: 10px;
+}
+.leaflet-sidebar:hover::-webkit-scrollbar-thumb {
+  background-color: #dfdfdf;
 }
