@@ -30,6 +30,7 @@ public class LiveService {
         liveRepository.deleteByCohostid(userId);
     }
     public void deleteAllLiveByEventid(long eventid){
-        liveRepository.deleteAllByEventid(eventid);
+        liveRepository.deleteByEventid(eventid);
     }
+
 }

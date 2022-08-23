@@ -34,50 +34,114 @@ public class EventController {
     @PostMapping("/RoomLocationUpdate")
     private void updateEventLocation(@RequestBody Event event) {
         //update the event's dis/long/lat/host_id
-        Event ServerEvent = eventService.findById(event.getId());
+        Event ServerEvent;
+        try{ //Check if the room exist
+            ServerEvent = eventService.findById(event.getId());
+        }
+        catch(Exception e){
+            return;
+        }
         //Check if the user is the host of that room
         if (userService.findUserByUsername(userService.getAuthentication()).getId() == ServerEvent.getHost_id()) {
             ServerEvent.setLatitude(event.getLatitude());
             ServerEvent.setLongitude(event.getLongitude());
+            eventService.save(ServerEvent);
         }
     }
     @PostMapping("/RoomDetailUpdate")
     private void updateEventDetail(@RequestBody Event event){
-        Event ServerEvent = eventService.findById(event.getId());
+        Event ServerEvent;
+        try{ //Check if the room exist
+            ServerEvent = eventService.findById(event.getId());
+        }
+        catch(Exception e){
+            return;
+        }
         //Check if the user is the host of that room
         if (userService.findUserByUsername(userService.getAuthentication()).getId() == ServerEvent.getHost_id()) {
             ServerEvent.setEvent_dis(event.getEvent_dis());
             ServerEvent.setHost_id(event.getHost_id());
+            ServerEvent.setCat(event.getCat());
+            eventService.save(ServerEvent);
         }
     }
-    @PostMapping("/RoomCreation")
-    private ResponseEntity<Event> addEvent(@RequestBody Event event){
-//        System.out.println(event.getTitle());
-        if(twilioService.CheckRoomExist(event)) { //If there is existing room with the same name
+    @PostMapping("/RoomFutureCreation")//for event in future
+    private ResponseEntity<Event> addFutureEvent(@RequestBody Event event){
+        if(twilioService.CheckRoomExist(event) || eventService.findByName(event.getTitle()) != null) { //If there is existing room with the same name
             event.setTitle("Error");
             System.out.println("Room exist");
             return new ResponseEntity<>(event, HttpStatus.OK);
         }
-//        System.out.println(twilioService.CreateRoom(event));
-        try{
-            //set host_id as the current user id
-            event.setHost_id(userService.findUserByUsername(userService.getAuthentication()).getId());
-            //Set event_date as current time
-            Timestamp datetime = new Timestamp(System.currentTimeMillis());
-            event.setEvent_date(datetime);
+        Timestamp datetime = new Timestamp(System.currentTimeMillis());
+        if(event.getEvent_date().getTime() > datetime.getTime()){ //If the event time is in future
 
-            //Create twilio room and get url of the created room from twilio
-            String link = (twilioService.CreateRoom(event));
-            event.setEvent_link(link);
-            Event savedEvent = eventService.save(event);
+            try{
+                //set host_id as the current user id
+                event.setHost_id(userService.findUserByUsername(userService.getAuthentication()).getId());
+                event.setLive(false); //Not in live
+                event.setEvent_link("");//Empty link as twilio api is not called
+                Event savedEvent = eventService.save(event);
+    //            System.out.println(savedEvent.getEvent_link());
+    //            System.out.println(savedEvent.getEvent_title());
+                return new ResponseEntity<>(savedEvent, HttpStatus.OK);
+            }
+            catch(Exception e){
+                System.out.println("some error here...");
+                return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+            }
+        }
+        return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+    }
+    @PostMapping("/RoomCreation")
+    private ResponseEntity<Event> addEvent(@RequestBody Event event){
+//        System.out.println(event.getTitle());
+        Event eventCache = eventService.findByName(event.getTitle());
+        if (twilioService.CheckRoomExist(event)) { //If there is existing twilio room with the same name
+            event.setTitle("Error");
+            System.out.println("Room exist");
+            return new ResponseEntity<>(event, HttpStatus.OK);
+        }
+        if(eventCache == null) { //If there is no entry in database, create Event and twilio room
+
+//        System.out.println(twilioService.CreateRoom(event));
+            try {
+                //set host_id as the current user id
+                event.setHost_id(userService.findUserByUsername(userService.getAuthentication()).getId());
+                //Set event_date as current time
+                Timestamp datetime = new Timestamp(System.currentTimeMillis());
+                event.setEvent_date(datetime);
+                event.setLive(true);
+                //Create twilio room and get url of the created room from twilio
+                String link = (twilioService.CreateRoom(event));
+                event.setEvent_link(link);
+                Event savedEvent = eventService.save(event);
 //            System.out.println(savedEvent.getEvent_link());
 //            System.out.println(savedEvent.getEvent_title());
-            return new ResponseEntity<>(savedEvent, HttpStatus.OK);
+                return new ResponseEntity<>(savedEvent, HttpStatus.OK);
+            } catch (Exception e) {
+                System.out.println("some error here...");
+                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+            }
         }
-        catch(Exception e){
-            System.out.println("some error here...");
-            return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
+        else{ //Future event but host call it now
+            if(userService.findUserByUsername(userService.getAuthentication()).getId() == eventCache.getHost_id()) {
+                try {
+                    //Turn event into live
+                    eventCache.setLive(true);
+                    //Create twilio room and get url of the created room from twilio
+                    String link = (twilioService.CreateRoom(eventCache));
+                    eventCache.setEvent_link(link);
+                    Event savedEvent = eventService.save(eventCache);
+//            System.out.println(savedEvent.getEvent_link());
+//            System.out.println(savedEvent.getEvent_title());
+                    return new ResponseEntity<>(savedEvent, HttpStatus.OK);
+                } catch (Exception e) {
+                    System.out.println("some error here...");
+                    return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+                }
+            }
         }
+        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/RoomDeletion")
@@ -93,7 +157,9 @@ public class EventController {
         else{return new ResponseEntity(HttpStatus.BAD_REQUEST);} //Invalid event data
         //Check if the user is the host of that room
         if(userService.findUserByUsername(userService.getAuthentication()).getId() == eventCache.getHost_id()){
-            eventService.deleteById(eventCache.getId()); //Delete room in event table
+            eventCache.setLive(false);
+            eventService.save(eventCache);
+//            eventService.deleteById(eventCache.getId()); //Delete room in event table
             twilioService.DeleteRoom(eventCache); //Delete room in twilio service
             liveService.deleteAllLiveByEventid(eventCache.getId()); //Delete all cohost in database
         }
@@ -101,80 +167,154 @@ public class EventController {
 
     }
     @GetMapping("/CoHostRequest")
-    private Set<Live> showLiveRequest(@RequestParam(value = "room", defaultValue = "null") String RoomName){
+    private Set<Live> showLiveRequest(@RequestParam(value = "RoomName", defaultValue = "null") String RoomName){
         //Send all request to be cohost to host
-        //If the user is host
-        if(userService.findUserByUsername(userService.getAuthentication()).getId() == eventService.findByName(RoomName).getHost_id()){
+        Event eventCache;
+        try{ //Check if the room exist
+            eventCache = eventService.findByName(RoomName);
+        }
+        catch(Exception e){
+            return null;
+        }
+        //If the user is the host of the room
+        if(userService.findUserByUsername(userService.getAuthentication()).getId() == eventCache.getHost_id()){
             return liveService.findLiveByEventid( eventService.findByName(RoomName).getId());
         }
         return null;
     }
     @PostMapping("/CoHostAccept")
-    private void LiveAccept(@RequestParam(value="room", defaultValue = "null")String RoomName, @RequestParam(value="username", defaultValue = "null")String UserName){
+    private void LiveAccept(@RequestParam(value="RoomName", defaultValue = "null")String RoomName, @RequestParam(value="username", defaultValue = "null")String UserName){
         //Accept the requested user as cohost
+        Event eventCache;
+        try{ //Check if the room exist
+            eventCache = eventService.findByName(RoomName);
+        }
+        catch(Exception e){
+            return;
+        }
         //If the user is host
-        if(userService.findUserByUsername(userService.getAuthentication()).getId() == eventService.findByName(RoomName).getHost_id()){
+        if(userService.findUserByUsername(userService.getAuthentication()).getId() == eventCache.getHost_id()){
             Live liveCache = liveService.findLiveByUserid(userService.findUserByUsername(UserName).getId());
             liveCache.setApproved(true);
             liveService.saveLive(liveCache);
         }
     }
     @PostMapping("/CoHostDecline")
-    private void LiveDecline(@RequestParam(value="room", defaultValue = "null")String RoomName, @RequestParam(value="username", defaultValue = "null")String UserName){
+    private void LiveDecline(@RequestParam(value="RoomName", defaultValue = "null")String RoomName, @RequestParam(value="username", defaultValue = "null")String UserName){
         //Delete the cohost request
+        Event eventCache;
+        try{ //Check if the room exist
+            eventCache = eventService.findByName(RoomName);
+        }
+        catch(Exception e){
+            return;
+        }
         //If the user is host
-        if(userService.findUserByUsername(userService.getAuthentication()).getId() == eventService.findByName(RoomName).getHost_id()){
+        if(userService.findUserByUsername(userService.getAuthentication()).getId() == eventCache.getHost_id()){
             liveService.deleteLiveByCohostid(userService.findUserByUsername(UserName).getId());
         }
     }
     @PostMapping("/CoHostKick")
-    private void LiveKick(@RequestParam(value="room", defaultValue = "null")String RoomName, @RequestParam(value="username", defaultValue = "null")String UserName){
+    private void LiveKick(@RequestParam(value="RoomName", defaultValue = "null")String RoomName, @RequestParam(value="username", defaultValue = "null")String UserName){
         //Kick the existing cohost
+        Event eventCache;
+        try{ //Check if the room exist
+            eventCache = eventService.findByName(RoomName);
+        }
+        catch(Exception e){
+            return;
+        }
         //If the user is host
-        if(userService.findUserByUsername(userService.getAuthentication()).getId() == eventService.findByName(RoomName).getHost_id()){
+        if(userService.findUserByUsername(userService.getAuthentication()).getId() == eventCache.getHost_id()){
             liveService.deleteLiveByCohostid(userService.findUserByUsername(UserName).getId());
             //Add twilio kick participant here
             twilioService.KickCohost(RoomName, UserName);
         }
     }
+    @PostMapping("/CoHostSubmit") //User send a cohost request to host
+    private void AddLiveEntry(@RequestParam(value="RoomName")String RoomName){
+        Event eventCache;
+        try{ //Check if the room exist
+            eventCache = eventService.findByName(RoomName);
+        }
+        catch(Exception e){
+            return;
+        }
+
+            Live newLive = new Live();
+            newLive.setApproved(false);
+            newLive.setEventid(eventCache.getId());
+            newLive.setCohostid(userService.findUserByUsername(userService.getAuthentication()).getId());
+            liveService.saveLive(newLive);
+
+    }
     @PostMapping(value = "/roomStatus", produces = "application/x-www-form-urlencoded")
+    //Web hook with twilio
     private void getRoomStatus(@RequestParam(value ="RoomName")String RoomName, @RequestParam(value="StatusCallbackEvent")String status,@RequestParam(value ="ParticipantIdentity",defaultValue = "")String UserName){
         //Web hook from twilio, testing
-        System.out.println(RoomName);
-        System.out.println(status);
-        Event eventCache = eventService.findByName(RoomName);
+        Event eventCache;
+        try{ //Check if the room exist
+            eventCache = eventService.findByName(RoomName);
+        }
+        catch(Exception e){
+            return;
+        }
         if(status.equals("room-ended")){ //Delete room in database
-            eventService.deleteById(eventCache.getId());
+            eventCache.setLive(false);
+            eventService.save(eventCache);
             liveService.deleteAllLiveByEventid(eventCache.getId());
         }
         if(status.equals("participant-disconnected")){ //Delete cohost in database
             User userCache = userService.findUserByUsername(UserName);
 
             if(userCache.getId() == eventCache.getHost_id()){ //Host disconnect, delete room
-                eventService.deleteById(eventCache.getId());
+                eventCache.setLive(false);
+                eventService.save(eventCache);
                 liveService.deleteAllLiveByEventid(eventCache.getId());
             }
-            else{
+            else{ //Remove entry related to cohost
                 liveService.deleteLiveByCohostid(userCache.getId());
             }
         }
     }
+    @GetMapping("/EventDetail")
+    private Event GetEvent(@RequestParam(value = "RoomName", defaultValue = "null") String RoomName) {
+        //check if room exist
+        System.out.println(RoomName);
+        Event eventCache;
+        try{ //Check if the room exist
+            eventCache = eventService.findByName(RoomName);
+        }
+        catch(Exception e){
+            return null;
+        }
+        return eventCache;
+    }
 
     @GetMapping("/EventAccessToken")
-    private String generateVideoToken(@RequestParam(value = "room", defaultValue = "null") String RoomName){
+    private String generateVideoToken(@RequestParam(value = "RoomName", defaultValue = "null") String RoomName){
         //Check whether user is allowed to join video room in database
         //check if room exist
         User user = userService.findUserByUsername(userService.getAuthentication());
-        System.out.println(user.getUsername());
-        System.out.println(RoomName);
-        if(RoomName != "" ) { //Create video token for user, only provide token if user is in Live/Event
-            Event eventCache = eventService.findByName(RoomName);//Find the room in database
-            Live liveCache = liveService.findLiveByUserid(user.getId());
-            if(user.getId() == eventCache.getHost_id() || liveCache.isApproved()) {
-                //Check if the user is host or approved live user by host(cohost)
-                return twilioService.EventAccessToken(user.getUsername(), RoomName);
-            }
+//        System.out.println(user.getUsername());
+//        System.out.println(RoomName);
+        Event eventCache;
+        try{ //Check if the room exist
+            eventCache = eventService.findByName(RoomName);
         }
+        catch(Exception e){
+            return "";
+        }
+         //Create video token for user, only provide token if user is in Live/Event
+
+            if(eventCache.isLive()) { //If the room is streaming
+                Live liveCache = liveService.findLiveByUserid(user.getId());
+                if (user.getId() == eventCache.getHost_id() || liveCache.isApproved()) {
+                    //Check if the user is host or approved live user by host(cohost)
+                    return twilioService.EventAccessToken(user.getUsername(), RoomName);
+                }
+            }
+
         return "";
 
 
