@@ -162,3 +162,23 @@
   background-image: url("https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u16_mouseover.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762");
   background-color: #fff;
 }
+/*For scroll bar*/
+.leaflet-sidebar > .leaflet-control::-webkit-scrollbar-thumb {
+  background-color: #ffffff;
+  border-radius: 10px;
+}
+.leaflet-sidebar > .leaflet-control::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background-color: white;
+}
+.leaflet-sidebar > .leaflet-control::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0);
+  border-radius: 10px;
+}
+.leaflet-sidebar > .leaflet-control:hover::-webkit-scrollbar-thumb {
+  background-color: #dfdfdf;
+}
+/*.leaflet-sidebar > .leaflet-control {*/
+/*  */
+/*}*/

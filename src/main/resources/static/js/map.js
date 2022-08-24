@@ -122,7 +122,7 @@ L.easyButton('filter-button',function(){
     filterSidebar.toggle();
 }).setPosition('bottomright').addTo(map);
 
-// setTimeout(function () {
-//     filterSidebar.show();
-// }, 500);
+setTimeout(function () {
+    filterSidebar.show();
+}, 500);
 
