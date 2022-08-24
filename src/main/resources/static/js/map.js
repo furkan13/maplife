@@ -116,9 +116,13 @@ var filterSidebar = L.control.sidebar('filter-sidebar', {
     position: 'left',
     autoPan:false
 });
-
 map.addControl(filterSidebar);
-setTimeout(function () {
-    filterSidebar.show();
-}, 500);
+
+L.easyButton('filter-button',function(){
+    filterSidebar.toggle();
+}).setPosition('bottomright').addTo(map);
+
+// setTimeout(function () {
+//     filterSidebar.show();
+// }, 500);
 

@@ -73,7 +73,7 @@ body{
     z-index: 1000;
     background-image: url("https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u10.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762");
     background-position: center;
-    background-color: #f8f9fa;
+    background-color: #fff;
     border: 0;
     border-radius: 8px;
 }
@@ -81,7 +81,10 @@ body{
     background-image: url("https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u10_mouseover.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762");
     box-shadow: 0 0px 4px rgb(0 0 0 / 30%);
 }
-
+.easy-button-container{
+    margin-right: 2rem!important;
+    margin-bottom: 2rem!important;
+}
 .leaflet-control-locate{
     margin-right: 2rem!important;
     margin-bottom: 2rem!important;

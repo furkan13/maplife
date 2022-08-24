@@ -136,19 +136,29 @@
 .form-switch .h6{
   margin: 0!important;
 }
-/*For scroll bar*/
-.leaflet-sidebar::-webkit-scrollbar-thumb {
-  background-color: #ffffff;
-  border-radius: 10px;
+
+.leaflet-touch .leaflet-bar button{
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  padding: 0;
 }
-.leaflet-sidebar::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+.leaflet-touch .leaflet-bar button:hover{
+  box-shadow: 0 0px 4px rgb(0 0 0 / 30%);
 }
-.leaflet-sidebar::-webkit-scrollbar-track {
-  background-color: rgba(0, 0, 0, 0);
-  border-radius: 10px;
+.filter-button{
+  height: 50px;
+  width: 50px;
+  position: absolute;
+  background-repeat: no-repeat;
+  right: 0px;
+  z-index: 1000;
+  background-position: center;
+  background-color: #fff;
+
+  background-image: url("https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u16.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762");
 }
-.leaflet-sidebar:hover::-webkit-scrollbar-thumb {
-  background-color: #dfdfdf;
+.filter-button:hover{
+  background-image: url("https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u16_mouseover.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762");
+  background-color: #fff;
 }
