@@ -3,7 +3,11 @@ package com.cardiff.maplife.entities;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+
 
 @Entity
 @Table(name = "event")
@@ -12,9 +16,8 @@ import java.util.Date;
 @Component
 public class Event {
     public Event() {
-
     }
-    public Event(Long id, long host_id, String event_link, String title, double longitude, double latitude, boolean room_type, Date event_date, String event_dis) {
+    public Event(Long id, long host_id, String event_link, String title, double longitude, double latitude, boolean room_type, Date event_date, String event_dis, boolean live) {
         this.id = id;
         this.host_id = host_id;
         this.event_link = event_link;
@@ -24,6 +27,7 @@ public class Event {
         this.room_type = room_type;
         this.event_date = event_date;
         this.event_dis = event_dis;
+        this.live=live;
     }
 
     public Event(Long host_id, String event_title) {
@@ -49,10 +53,6 @@ public class Event {
         return event_link;
     }
 
-    public String getEvent_title() {
-        return title;
-    }
-
     public boolean isRoom_type() {
         return room_type;
     }
@@ -73,6 +73,11 @@ public class Event {
         return event_dis;
     }
 
+
+
+    @ManyToOne  //creating Many to one relation with user
+    @JoinColumn(name = "user_id",nullable = false) //UserId from user class will be the foreign key in the booking table
+    private User user;
     @Column(name = "host_id")
     private Long host_id;
     @Column(name = "event_link")
@@ -90,6 +95,54 @@ public class Event {
     @Column(name = "event_dis")
     private String event_dis;
 
+    public boolean isLive() {
+        return live;
+    }
+
+    public void setLive(boolean live) {
+        this.live = live;
+    }
+
+    @Column(name= "live")
+    private boolean live;
+
+    @Column(name = "cat")
+    private Integer cat;
+
+
+    public Integer getCat() {
+        return cat;
+    }
+
+    public void setCat(Integer cat) {
+        this.cat = cat;
+    }
+
+    String eventImageName;
+
+    public String getEventImageName() {
+        return eventImageName;
+    }
+
+    public void setEventImageName(String eventImageName) {
+        this.eventImageName = eventImageName;
+    }
+
+    @Transient
+    public String getPhotosImagePath() {
+        if (title == null || id == -1) return null;
+
+        return "event/" + id + "/" + eventImageName;
+    }
+
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public void setId(Long id) {
         this.id = id;
@@ -130,4 +183,10 @@ public class Event {
     public void setEvent_dis(String event_dis) {
         this.event_dis = event_dis;
     }
+
+    public void setUserId(Long id)
+    {
+        this.getUser().setId(id);
+    }
+
 }
