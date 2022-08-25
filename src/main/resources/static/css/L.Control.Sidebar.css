@@ -83,32 +83,40 @@
   
   .leaflet-right {
     transition: right 0.5s; }
-  
-  /* Custom */
+
+/*For map filter*/
+#filter-sidebar form{
+  display: flex;
+  flex-direction: column;
+}
+#filter-sidebar hr{
+  margin: 1.5rem 0;
+}
 .group-chips-container{
   font-size: 14px;
   display: flex;
   justify-content:space-between;
   margin: 0.5rem 0;
 }
-  .group-chips{
-    border: 1px solid #c2c2c2;
-    border-radius: 16px;
-    color: #333;
-    width: 70px;
-    text-align: center;
-    cursor: pointer;
-  }
-  .group-chips:hover{
-    background-color: #DE5B19;
-    border-color: #f59a23;
-    color: white;
-  }
+.group-chips{
+  border: 1px solid #ced4da;
+  border-radius: 16px;
+  color: #333;
+  width: 70px;
+  text-align: center;
+  cursor: pointer;
+}
+.group-chips:hover{
+  background-color: #DE5B19;
+  border-color: #DE5B19;
+  color: white;
+}
 
 .btn-check:checked + .group-chips, .btn-check:active + .group-chips, .group-chips:active{
   background-color: #DE5B19!important;
-  border-color: #f59a23!important;
+  border-color: #DE5B19!important;
   color: white!important;
+  box-shadow: 0 0 0 0.15rem rgb(255 85 0 / 50%) !important;
 }
 .form-range::-webkit-slider-thumb {
   background-color: #DE5B19!important;
@@ -117,11 +125,12 @@
   /*background-color: #DE5B19!important;*/
   box-shadow: 0 0 0 0.2rem rgb(222 91 25 / 25%)!important;
 }
-
-/*For map filter*/
 .form-select:focus {
   border-color: rgb(222 91 25) !important;
   box-shadow: 0 0 0 0.25rem rgb(222 91 25 / 25%) !important;
+}
+.form-switch .form-check-input {
+  margin-top: 4px!important;
 }
 .form-switch .form-check-input:focus {
   border-color: #DE5B19!important;

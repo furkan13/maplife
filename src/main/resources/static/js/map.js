@@ -1,11 +1,7 @@
 let popupContent
 let currentLocation
-let petGroup=[]
-let gameGroup=[]
-let lifeGroup=[]
-
-var overlays = {}
-
+const categoryElements= document.getElementsByName('cat-group-chips')
+categoryElements.checked=true;
 // display the map layer
 var map = L.map('map',{zoomControl:false}).setView([51.483396, -3.173728], 11);
 //render map tile layer
@@ -71,10 +67,14 @@ var data = [
     {'host_name':'Bird life','event_title':'Do you know these birds?','event_description':'','event_cover':'birds.jpg','event_viewer':'30000','host_icon':'birds.jpg','category':'Pet',lat:51.481023,lng:-3.155490},
     {'host_name':'Bird life','event_title':'Do you know these birds?','event_description':'','event_cover':'birds.jpg','event_viewer':'2000','host_icon':'birds.jpg','category':'Game',lat:51.487023,lng:-3.170190},
 ]
-// define a marker cluster to support heat map
-var parentGroup = new L.MarkerClusterGroup({
-    spiderLegPolylineOptions:{opacity: 0},
-    showCoverageOnHover:false}).addTo(map)
+// define a marker cluster group to support heat map and Compatibility with layers
+var mcgLayerSupportGroup = L.markerClusterGroup.layerSupport({spiderLegPolylineOptions:{opacity: 0},showCoverageOnHover:false}),
+    petGroup = L.layerGroup(),
+    lifeGroup = L.layerGroup(),
+    gameGroup = L.layerGroup(),
+    control = L.control.layers(null, null, { collapsed: false })
+
+mcgLayerSupportGroup.addTo(map);
 
 //resolve data and put them in our marker and popup
 for (let i = 0;data.length>i;i++) {
@@ -83,34 +83,27 @@ for (let i = 0;data.length>i;i++) {
     popupContent = `<div id="event-img-container" style="background-image: url(${eventCoverImg})"></div><div id="event-title">${data[i].event_title}</div>
 <div id="host-name" class="event-text">${data[i].host_name}</div><div id="event-viewers" class="event-text">${data[i].event_viewer} viewers</div><div class="event-text">47 minutes ago</div>`
     myIcon.options.html = `<img id="custom-div-icon" class="custom-div-icon" src= ${eventIconImg}>`
-    // determine the category and put them into different groups
+    // determine the category and put them into different layer groups
     if (data[i].category === 'Pet'){
-        petGroup.push(L.marker([data[i].lat,data[i].lng], {icon: myIcon,tags:['Pet']}).bindPopup(popupContent,{closeButton:false})) ;
+        L.marker([data[i].lat,data[i].lng], {icon: myIcon,tags:['Pet']}).bindPopup(popupContent,{closeButton:false}).addTo(petGroup) ;
     }
     else if (data[i].category === 'Life'){
-        lifeGroup.push(L.marker([data[i].lat,data[i].lng], {icon: myIcon,tags:['Life']}).bindPopup(popupContent,{closeButton:false}));
+        L.marker([data[i].lat,data[i].lng], {icon: myIcon,tags:['Life']}).bindPopup(popupContent,{closeButton:false}).addTo(lifeGroup);
     }
     else if (data[i].category === 'Game'){
-        gameGroup.push(L.marker([data[i].lat,data[i].lng], {icon: myIcon,tags:['Game']}).bindPopup(popupContent,{closeButton:false}));
+        L.marker([data[i].lat,data[i].lng], {icon: myIcon,tags:['Game']}).bindPopup(popupContent,{closeButton:false}).addTo(gameGroup);
     }
 }
-//nest parentGroup and subGroups
-overlays['Pet'] = L.featureGroup.subGroup(
-    parentGroup,
-    petGroup
-).addTo(map);
-overlays['Life'] = L.featureGroup.subGroup(
-    parentGroup,
-    lifeGroup
-).addTo(map);
-overlays['Game'] = L.featureGroup.subGroup(
-    parentGroup,
-    gameGroup
-).addTo(map);
-//add layer controller to the map
-L.control.layers(null, overlays, {
-    collapsed: false,
-}).addTo(map);
+var subGroupList = [gameGroup,petGroup,lifeGroup]
+mcgLayerSupportGroup.checkIn(subGroupList); //check in these groups
+//add to control layers
+control.addOverlay(petGroup, 'Pet');
+control.addOverlay(lifeGroup, 'Life');
+control.addOverlay(gameGroup, 'Game');
+control.addTo(map);
+petGroup.addTo(map); // Adding to map or to AutoMCG are now equivalent.
+lifeGroup.addTo(map);
+gameGroup.addTo(map);
 
 var filterSidebar = L.control.sidebar('filter-sidebar', {
     position: 'left',
@@ -122,7 +115,20 @@ L.easyButton('filter-button',function(){
     filterSidebar.toggle();
 }).setPosition('bottomright').addTo(map);
 
-setTimeout(function () {
-    filterSidebar.show();
-}, 500);
+// setTimeout(function () {
+//     filterSidebar.show();
+// }, 500);
 
+for (let i = 0; i < subGroupList.length; i++) {
+    categoryElements[i].addEventListener("click",toggleGroup)}
+
+function toggleGroup(i) {
+    for (i=0;i<=subGroupList.length;i++){
+        if (categoryElements[i].checked){
+            mcgLayerSupportGroup.addLayer(subGroupList[i])
+        }
+        else {
+            mcgLayerSupportGroup.removeLayer(subGroupList[i])
+        }
+    }
+}
