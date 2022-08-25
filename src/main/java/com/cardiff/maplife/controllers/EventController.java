@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -30,6 +31,12 @@ public class EventController {
         this.twilioService = twilioService;
         this.userService=userService;
         this.liveService = liveService;
+    }
+    @GetMapping("/EventList")
+    private List<Event> GetEventList(){
+        Timestamp datetime = new Timestamp(System.currentTimeMillis());
+        return eventService.findCustom(datetime);
+
     }
     @PostMapping("/RoomLocationUpdate")
     private void updateEventLocation(@RequestBody Event event) {
@@ -67,7 +74,14 @@ public class EventController {
     }
     @PostMapping("/RoomFutureCreation")//for event in future
     private ResponseEntity<Event> addFutureEvent(@RequestBody Event event){
-        if(twilioService.CheckRoomExist(event) || eventService.findByName(event.getTitle()) != null) { //If there is existing room with the same name
+        Event ServerEvent;
+        try{ //Check if the room exist
+            ServerEvent = eventService.findById(event.getId());
+        }
+        catch(Exception e){
+            ServerEvent = null;
+        }
+        if(twilioService.CheckRoomExist(event) || ServerEvent != null) { //If there is existing room with the same name
             event.setTitle("Error");
             System.out.println("Room exist");
             return new ResponseEntity<>(event, HttpStatus.OK);
@@ -95,7 +109,13 @@ public class EventController {
     @PostMapping("/RoomCreation")
     private ResponseEntity<Event> addEvent(@RequestBody Event event){
 //        System.out.println(event.getTitle());
-        Event eventCache = eventService.findByName(event.getTitle());
+        Event eventCache;
+        try{
+            eventCache = eventService.findByName(event.getTitle());
+        }
+        catch (Exception e){
+            eventCache = null;
+        }
         if (twilioService.CheckRoomExist(event)) { //If there is existing twilio room with the same name
             event.setTitle("Error");
             System.out.println("Room exist");

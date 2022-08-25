@@ -13,7 +13,7 @@
 <body th:replace="navigator/bars::common-body(~{::#steaming-page},~{},~{::script})">
 <div id="steaming-page">
     <main id="panel">
-        <div class="row">
+        <div class="row" style="position: absolute;">
             <section id="left_display" class="main_card">
                 <button id="video_rm">Join Stream</button>
                 <button id="partycheck">Check participant</button>
@@ -25,7 +25,7 @@
                 <div id="stream"></div>
 
             </section>
-            <aside id="right_option" class="main_card">
+            <aside id="right_option" class="main_card" >
                 <button id="setting">Setting</button>
                 <button id="delete_room">Delete</button>
                 <div id="viewer_number" class="counter">0 views</div>
@@ -45,7 +45,23 @@
                 <div id="chat"></div>
             </aside>
         </div>
-        <section id="bottom_other_stream"></section>
+        <section id="bottom_other_stream" style="position: absolute;"></section>
+		<div id="blackscreen" style="position: absolute;">
+			<select id="user_video" name="video_preview"></select>
+			<div id="video_target"></div>
+			<select id="user_mic" name="mic_preview"></select>
+			<label class="switch" id="mic_switch">
+				<input type="checkbox" id="audioreplay">
+				<span class="slider round"></span>
+			</label>
+
+			<select id="user_speaker" name="speaker_preview"></select>
+			<button id="test_audio">Test speaker</button>
+            <div id="speaker_target">
+                <audio id="audiodemo"> <source th:src="@{/audio/testmusic.mp3}" type="audio/mp3" ></audio>
+            </div>
+			<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+		</div>
     </main>
 
 </div>

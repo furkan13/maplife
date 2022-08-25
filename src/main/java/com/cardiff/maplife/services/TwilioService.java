@@ -39,6 +39,7 @@ public class TwilioService {
                 .setStatusCallback(URI.create("https://8b35-131-251-33-213.eu.ngrok.io/roomStatus"))
                 .setStatusCallbackMethod(HttpMethod.POST)
                 .setUniqueName(event.getTitle())
+                .setEmptyRoomTimeout(15)//15 minutes timeout
                 .create();
 
         return room.getUrl().toString();
