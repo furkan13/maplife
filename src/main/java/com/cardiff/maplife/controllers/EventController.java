@@ -10,11 +10,14 @@ import com.cardiff.maplife.services.LiveService;
 import com.cardiff.maplife.services.TwilioService;
 import com.cardiff.maplife.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -91,7 +94,7 @@ public class EventController {
 
             try{
                 //set host_id as the current user id
-                event.setHost_id(userService.findUserByUsername(userService.getAuthentication()).getId());
+               /* event.setHost_id(userService.findUserByUsername(userService.getAuthentication()).getId());*/
                 event.setLive(false); //Not in live
                 event.setEvent_link("");//Empty link as twilio api is not called
                 Event savedEvent = eventService.save(event);
@@ -107,7 +110,7 @@ public class EventController {
         return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
     }
     @PostMapping("/RoomCreation")
-    private ResponseEntity<Event> addEvent(@RequestBody Event event){
+    private ResponseEntity<Event> addEvent(@RequestBody Event event, UriComponentsBuilder builder){
 //        System.out.println(event.getTitle());
         Event eventCache;
         try{
@@ -126,38 +129,40 @@ public class EventController {
 //        System.out.println(twilioService.CreateRoom(event));
             try {
                 //set host_id as the current user id
-                event.setHost_id(userService.findUserByUsername(userService.getAuthentication()).getId());
+                /*event.setHost_id(userService.findUserByUsername(userService.getAuthentication()).getId());*/
                 //Set event_date as current time
-                Timestamp datetime = new Timestamp(System.currentTimeMillis());
-                event.setEvent_date(datetime);
+               /* java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
+                event.setEvent_date(date);*/
+               /* Timestamp datetime = new Timestamp(System.currentTimeMillis());
+                event.setEvent_date(datetime);*/
                 event.setLive(true);
                 //Create twilio room and get url of the created room from twilio
                 String link = (twilioService.CreateRoom(event));
                 event.setEvent_link(link);
-                Event savedEvent = eventService.save(event);
+                eventService.save(event);
 //            System.out.println(savedEvent.getEvent_link());
 //            System.out.println(savedEvent.getEvent_title());
-                return new ResponseEntity<>(savedEvent, HttpStatus.OK);
+                return new ResponseEntity<>(HttpStatus.CREATED);
             } catch (Exception e) {
                 System.out.println("some error here...");
                 return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
             }
         }
         else{ //Future event but host call it now
-            if(userService.findUserByUsername(userService.getAuthentication()).getId() == eventCache.getHost_id()) {
+            if(event.getHost_id() == eventCache.getHost_id()) {
                 try {
                     //Turn event into live
                     eventCache.setLive(true);
                     //Create twilio room and get url of the created room from twilio
                     String link = (twilioService.CreateRoom(eventCache));
                     eventCache.setEvent_link(link);
-                    Event savedEvent = eventService.save(eventCache);
+                    eventService.save(eventCache);
 //            System.out.println(savedEvent.getEvent_link());
 //            System.out.println(savedEvent.getEvent_title());
-                    return new ResponseEntity<>(savedEvent, HttpStatus.OK);
+                    return new ResponseEntity<>(HttpStatus.CREATED);
                 } catch (Exception e) {
                     System.out.println("some error here...");
-                    return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
                 }
             }
         }
@@ -339,6 +344,16 @@ public class EventController {
 
 
     }
+
+
+
+
+  
+
+
+
+
+
     //token generation
     //Live player implementation
 }

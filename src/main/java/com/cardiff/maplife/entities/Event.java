@@ -3,7 +3,8 @@ package com.cardiff.maplife.entities;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
-import java.sql.Date;
+
+import java.util.Date;
 
 
 @Entity
@@ -13,7 +14,6 @@ import java.sql.Date;
 @Component
 public class Event {
     public Event() {
-
     }
     public Event(Long id, long host_id, String event_link, String title, double longitude, double latitude, boolean room_type, Date event_date, String event_dis, boolean live) {
         this.id = id;

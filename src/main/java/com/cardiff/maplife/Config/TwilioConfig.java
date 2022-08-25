@@ -1,4 +1,4 @@
-package com.cardiff.maplife.config;
+package com.cardiff.maplife.Config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
