@@ -1,0 +1,55 @@
+#subscriptions-page{
+    padding: 50px 0 0 70px;
+    height: calc(100vh);
+}
+.following-list{
+    width: 80%;
+    margin: 40px auto 0px auto;
+    background: white;
+    height: calc(100vh);
+    display: flex;
+    flex-direction: column;
+}
+.following-list-title{
+    margin: 25px;
+}
+.following-list-title label{
+    font-size: 23px;
+    font-weight: 700;
+}
+.following-block{
+    display: flex;
+    flex-direction: row;
+    padding: 15px;
+    border-bottom: solid 1px #d7d7d7;
+    align-items: center;
+}
+.following-icon{
+    margin: 10px 10px 0px 30px;
+    width: 15%;
+}
+.following-icon img{
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+}
+.following-userDetails{
+    width: 65%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.following-username{
+    font-weight: 500;
+    font-size: 17px;
+}
+.following-button{
+    border: solid 2px #d7d7d7;
+    height: 30px;
+    width: 85px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333333;
+    font-family: 'Roboto', sans-serif;
+    background: #d7d7d7;
+}
