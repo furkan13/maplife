@@ -1,7 +1,7 @@
 let popupContent
 let currentLocation
 const categoryElements= document.getElementsByName('cat-group-chips')
-categoryElements.checked=true;
+// categoryElements.checked=true;
 // display the map layer
 var map = L.map('map',{zoomControl:false}).setView([51.483396, -3.173728], 11);
 //render map tile layer
@@ -119,16 +119,13 @@ L.easyButton('filter-button',function(){
 //     filterSidebar.show();
 // }, 500);
 
+//functions for bind checkbox and layers
 for (let i = 0; i < subGroupList.length; i++) {
-    categoryElements[i].addEventListener("click",toggleGroup)}
-
-function toggleGroup(i) {
-    for (i=0;i<=subGroupList.length;i++){
-        if (categoryElements[i].checked){
+    categoryElements[i].addEventListener("click",function (){
+        if (event.currentTarget.checked){
             mcgLayerSupportGroup.addLayer(subGroupList[i])
         }
         else {
             mcgLayerSupportGroup.removeLayer(subGroupList[i])
         }
-    }
-}
+    })}

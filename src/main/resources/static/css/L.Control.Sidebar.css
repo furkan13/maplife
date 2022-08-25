@@ -88,6 +88,10 @@
 #filter-sidebar form{
   display: flex;
   flex-direction: column;
+  -moz-user-select:none;/*firefox*/
+  -webkit-user-select:none;/*webkit*/
+  -ms-user-select:none;/*IE10*/
+  user-select:none;
 }
 #filter-sidebar hr{
   margin: 1.5rem 0;
