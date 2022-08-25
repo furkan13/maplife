@@ -9,6 +9,7 @@ if(room != null){
 	roomName = room;
 }
 let roomObj = {room:"", tracks:"", token:"",VideoRoom:""};
+let local_track = [[[],[],[]],[[],[],[]]];//[n][0]:Video,[n][1]:Speaker,[n][2]:Mic, n=0: id, n=1: tag
 let count = 0;
 //user_name should be local stroage/cookie which is obtained when logging in
 function main(){
@@ -31,12 +32,28 @@ function main(){
 
     $("#cohost_request").click(function(){cohost_send();});
     $("#cohost_list").click(function(){fetchCoHostRequest();});
-
+	$("#user_video").change(function(){switch_video($("#video_target"),$("#user_video"))})
+	$("#user_mic").change(function(){switch_mic($("#speaker_target"),$("#user_mic"),"Testing")})
+	$("#user_speaker").change(function(){switch_speaker($("#speaker_target"),$("#user_speaker"))})
+	$("#test_audio").click(function(){$("#audiodemo")[0].play();});
+	$("#audioreplay").click(function(){mic_replay($(".Testing"),$("#audioreplay"))})
 //    live_token(liveToken)
 
 }
+function mic_replay(target,source){
+	target[0].muted = true;
+	if(source.is(":checked")){
+		target[0].muted = false;
+	}
+}
 const initlise = async function(){
 	await video_room(); //Get the event from server
+	//Show black screen for loading, hide it after obtaining token
+	//Create function for user to choose tracks, listen to playback and video
+	//Cancel button to return to live/main page according to users' identity(host/cohost)
+	let blackscreen = $("#blackscreen"); //Default blackscreen before connecting to the room
+	loading_page();
+	
 	if(roomObj.VideoRoom["title"] == ""){ //Server doesn't have the event entry of this roomname
 		alert("Room name: "+roomName +" may be closed or not exist.\n Return to main page.");
 		window.location.href = '../'; //Go back to main page
@@ -46,8 +63,7 @@ const initlise = async function(){
 		
 	}
 	else{//Potential co-host, validate the user's id to server and check for token
-		//Show black screen for loading, hide it after obtaining token
-		
+
 		//Call get token every minute, if server doesn't provide it for 5 times, return to live
 		await co_host_token();
 		//Checking for any token receive
@@ -55,13 +71,109 @@ const initlise = async function(){
 			alert("Host has not replied at the moment. Please try it again or watch the streaming instead.")
 			window.location.href = '../live?room='+roomName; //Go back to live page
 		}
-		//Hide the black screen 
+
+		//Hide the black screen after clicking join button
 		
 		//Join the video room
 		room_join(roomObj);
 	}
 }
+function switch_video(target, listvideo){ //User changing video source, input: target of the video, select list
+	roomObj.tracks[1].stop();//Stop current video stream
+	Twilio.Video.createLocalTracks({video:{deviceId:{exact:listvideo.val()}}}).then((stream)=>{
+		roomObj.tracks[1] = stream[0];
+		target.empty();//Clear the previous track in show
+		target.append(roomObj.tracks[1].attach());
+	})
+}
+function switch_mic(target, listmic, className){ //Change the device for audio
+	roomObj.tracks[0].stop();
+	Twilio.Video.createLocalTracks({audio:{deviceId:{exact:listmic.val()}}}).then((stream)=>{
+		roomObj.tracks[0] = stream[0];
+		//Make an id for the audio, so doesn't delete all
+		let cache = roomObj.tracks[0].attach();
+		cache.className = (className) ;
+		$("."+className).remove();//Clear the previous track in show
+		target.append(cache);
+	})
+}
+function switch_speaker(target, listspeaker){
+	for(let i =0; i< target[0].childNodes.length; i++){
+		if(target[0].childNodes[i].tagName == "AUDIO"){
+			target[0].childNodes[i].setSinkId(listspeaker.val())
+		}
+	}
+}
+function get_track_list(){ //Doesn't work in local file, try localhost
+	local_track =[[[],[],[]],[[],[],[]]];
+	let stream;
+	return navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(s=>{
+		stream = s;
+		if (!navigator.mediaDevices?.enumerateDevices) {
+			console.log("enumerateDevices() not supported.");
+		} else {
+			return navigator.mediaDevices.enumerateDevices()
+			.then((devices) => {
+				devices.forEach((device) => {
+					// console.log(device.label);
+					if(device.kind == "videoinput"){
+						local_track[0][0].push(device.deviceId);
+						local_track[1][0].push(device.label);
+					}
+					if(device.kind == "audiooutput"){
+						local_track[0][1].push(device.deviceId);
+						local_track[1][1].push(device.label);
+					}
+					if(device.kind == "audioinput"){
+						local_track[0][2].push(device.deviceId);
+						local_track[1][2].push(device.label);
+					}
+					
+				}
 
+				);
+			})
+
+		}
+
+	})
+
+}
+const loading_page = async function(){ //Setup for the blackscreen, provide video,audio preview
+	await get_track_list();
+
+	let target_list = [$("#user_video"),$("#user_speaker"),$("#user_mic")]
+	let cache;
+	for(let i =0; i< 3;i++){
+		target_list[i].empty(); //Empty the child list if this function called more than once
+		// 	console.log(local_track[0][i]);
+		for(let j=0; j<local_track[0][i].length; j++){ //Create an option for each possible tracks
+			//Option tag for media choices
+			cache = "<option value='"+local_track[0][i][j]+"'>"+local_track[1][i][j]+"</option>";
+
+			// console.log(cache);
+			target_list[i].append(cache);
+		}
+	}
+	//Set to default video/microphone, show it on webpage
+
+	Twilio.Video.createLocalTracks({audio:{deviceId:{exact:local_track[0][2][0]}}, video:{deviceId:{exact:local_track[0][0][0]}}})
+		.then((stream)=> {
+			roomObj.tracks = stream; //Store the tracks in roomObj
+
+			$("#video_target").empty();//Clear the previous track in show
+			$(".Testing").remove();
+
+
+
+			//Make an id for the audio, so doesn't delete all
+			let cache = roomObj.tracks[0].attach();
+			cache.className = "Testing";
+			$("#speaker_target").append(cache); //Attach the track for preview
+			$("#video_target").append(roomObj.tracks[1].attach());
+		})
+
+}
 function cohost_accept(){
     //get username from button's id to username
     let cohost_name;
@@ -131,7 +243,7 @@ function GetTracks(roomObj){ //Obtain local audio/video tracks
 			}
 		});
 	})
-	if(device_check[0] and device_check[1]){
+	if(device_check[0] && device_check[1]){
 		return Twilio.Video.createLocalTracks({audio: true, video: true}).then(function(localTracks){
 			roomObj.tracks = localTracks;
 			console.log(localTracks);
