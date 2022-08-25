@@ -4,7 +4,9 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -73,6 +75,9 @@ public class Event {
 
 
 
+    @ManyToOne  //creating Many to one relation with user
+    @JoinColumn(name = "user_id",nullable = false) //UserId from user class will be the foreign key in the booking table
+    private User user;
     @Column(name = "host_id")
     private Long host_id;
     @Column(name = "event_link")
@@ -131,6 +136,13 @@ public class Event {
     }
 
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 
     public void setId(Long id) {
         this.id = id;
@@ -171,4 +183,10 @@ public class Event {
     public void setEvent_dis(String event_dis) {
         this.event_dis = event_dis;
     }
+
+    public void setUserId(Long id)
+    {
+        this.getUser().setId(id);
+    }
+
 }

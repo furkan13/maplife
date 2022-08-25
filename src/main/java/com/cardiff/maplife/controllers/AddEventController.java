@@ -100,6 +100,10 @@ public class AddEventController {
 
             }
 
+            event.setUser(userService.findUserByUsername(user.getUsername()));
+
+
+
             eventService.save(event);
 
 
