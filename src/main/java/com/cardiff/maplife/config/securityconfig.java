@@ -27,7 +27,7 @@ public class securityconfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers("/authform","/","/api/addUser","/api/getUser").permitAll()
-                .antMatchers("/js/**","/css/**","/image/*","/fonts/**","/**/*.png","/**/*.jpg").permitAll();
+                .antMatchers("/js/**","/css/**","/image/*","/fonts/**","/**/*.png","/**/*.jpg","/roomStatus").permitAll();
 
                 http.csrf().disable();
         http.logout()

@@ -13,6 +13,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         // images save location
         registry.addResourceHandler("/image/**")
                 .addResourceLocations("file:C:\\Users\\c21086851\\OneDrive - Cardiff University\\dissertation\\project_44b_party_watch\\src\\main\\resources\\static\\image\\");
+                //Jeff's location
+//                .addResourceLocations("file:C:\\Users\\c21045768\\OneDrive - Cardiff University\\Cardiff uni\\Final project\\Stream_current\\project_44b_party_watch\\src\\main\\resources\\static\\image\\");
 
     }
 }

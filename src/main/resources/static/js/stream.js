@@ -12,7 +12,7 @@ let roomObj = {room:"", tracks:"", token:"",VideoRoom:""};
 let local_track = [[[],[],[]],[[],[],[]]];//[n][0]:Video,[n][1]:Speaker,[n][2]:Mic, n=0: id, n=1: tag
 let count = 0;
 //user_name should be local stroage/cookie which is obtained when logging in
-let userJsonId=2;
+let userJsonId=userJson.userId;
 function main(){
 	//What to do for connecting in twilio video room:
 	//1. Create a room with unique room name
