@@ -1,6 +1,6 @@
 package com.cardiff.maplife.credentials;
 
-import com.cardiff.maplife.Config.TwilioConfig;
+import com.cardiff.maplife.config.TwilioConfig;
 import com.twilio.Twilio;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

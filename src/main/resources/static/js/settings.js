@@ -120,9 +120,15 @@ async function getNewIcon() {
     }
 }
 
+function linkYT(introVideo) {
+    let tmpUrl  = introVideo.replace('https:','')
+    introVideo = tmpUrl.replace('watch?v=','embed/')+'?wmode=transparent'
+    return introVideo
+}
 const updateVideo = async function () {
+    introVideo=linkYT(introVideo)
     const userObject = {
-        video: introVideo,
+        video: introVideo
     }
     const response = await fetch("/api/updateVideo", {
         method: "POST",
@@ -268,7 +274,6 @@ const updatePassword = async function () {
     }
 
 }
-
 
 uploadIconButton.addEventListener("click",getNewIcon)
 inputChoose.addEventListener("change",changeUserIcon)
