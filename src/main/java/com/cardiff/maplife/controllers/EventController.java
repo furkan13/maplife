@@ -112,44 +112,45 @@ public class EventController {
     @PostMapping("/RoomCreation")
     private ResponseEntity<Event> addEvent(@RequestBody Event event, UriComponentsBuilder builder){
 //        System.out.println(event.getTitle());
-        Event eventCache;
-        try{
-            eventCache = eventService.findByName(event.getTitle());
-        }
-        catch (Exception e){
-            eventCache = null;
-        }
+
+        /*long newHost=eventService.findById(event.getId()).getHost_id();*/
+        Event eventCache = eventService.findByName(event.getTitle());
+
         if (twilioService.CheckRoomExist(event)) { //If there is existing twilio room with the same name
             event.setTitle("Error");
             System.out.println("Room exist");
             return new ResponseEntity<>(event, HttpStatus.OK);
         }
-        if(eventCache == null) { //If there is no entry in database, create Event and twilio room
+
+        if( event.getHost_id() == eventCache.getHost_id()) {
+
+            if (eventCache.isLive()) { //If there is no entry in database, create Event and twilio room
 
 //        System.out.println(twilioService.CreateRoom(event));
-            try {
-                //set host_id as the current user id
-                /*event.setHost_id(userService.findUserByUsername(userService.getAuthentication()).getId());*/
-                //Set event_date as current time
+                try {
+
+
+                    //set host_id as the current user id
+                    /*event.setHost_id(userService.findUserByUsername(userService.getAuthentication()).getId());*/
+                    //Set event_date as current time
                /* java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
                 event.setEvent_date(date);*/
                /* Timestamp datetime = new Timestamp(System.currentTimeMillis());
                 event.setEvent_date(datetime);*/
-                event.setLive(true);
-                //Create twilio room and get url of the created room from twilio
-                String link = (twilioService.CreateRoom(event));
-                event.setEvent_link(link);
-                eventService.save(event);
+                    event.setLive(true);
+                    //Create twilio room and get url of the created room from twilio
+                    String link = (twilioService.CreateRoom(event));
+                    event.setEvent_link(link);
+                    eventService.save(event);
 //            System.out.println(savedEvent.getEvent_link());
 //            System.out.println(savedEvent.getEvent_title());
-                return new ResponseEntity<>(HttpStatus.CREATED);
-            } catch (Exception e) {
-                System.out.println("some error here...");
-                return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-            }
-        }
-        else{ //Future event but host call it now
-            if(event.getHost_id() == eventCache.getHost_id()) {
+                    return new ResponseEntity<>(HttpStatus.CREATED);
+                } catch (Exception e) {
+                    System.out.println("some error here...");
+                    return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+                }
+            } else { //Future event but host call it now
+
                 try {
                     //Turn event into live
                     eventCache.setLive(true);
@@ -164,6 +165,7 @@ public class EventController {
                     System.out.println("some error here...");
                     return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
                 }
+
             }
         }
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
