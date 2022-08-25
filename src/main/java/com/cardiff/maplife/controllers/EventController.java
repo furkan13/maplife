@@ -72,7 +72,8 @@ public class EventController {
             eventService.save(ServerEvent);
         }
     }
-    @PostMapping("/RoomFutureCreation")//for event in future
+    
+     @PostMapping("/RoomFutureCreation")//for event in future
     private ResponseEntity<Event> addFutureEvent(@RequestBody Event event){
         Event ServerEvent;
         try{ //Check if the room exist
@@ -106,6 +107,7 @@ public class EventController {
         }
         return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
     }
+
     @PostMapping("/RoomCreation")
     private ResponseEntity<Event> addEvent(@RequestBody Event event){
 //        System.out.println(event.getTitle());
