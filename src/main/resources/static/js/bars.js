@@ -1,7 +1,5 @@
-let userJsonIcon = null
-let userJson = {}
-let userJsonName = null
-let userJsonEmail = null
+var userJson = {}
+
 const headerButtonLogged=document.getElementById("header-button").getElementsByTagName("ul")[1]
 const userIcon = document.getElementById("user-icon-img-current")
 const headerButton=document.getElementById("header-button").getElementsByTagName("ul")[0]
@@ -13,27 +11,38 @@ const getUser = async function () {
         if (response.status == "200") {
             // headerButton.style.display="none"
             const data = await response.json();
-            console.log(data);
+            // console.log(data);
             userJson = {
+                "userId":data.id,
                 "username":data.username,
                 "icon":data.icon,
                 "email":data.email
             }
-            userJsonIcon = userJson.icon;
-            userJsonName = userJson.username;
-            userJsonEmail = userJson.email;
-            if (userJsonIcon!==null){
-                headerButtonLogged.style.display="flex"
-                userIcon.setAttribute("src","image/"+userJsonIcon)
-            }
+            // userJsonIcon = userJson.icon;
+            // userJsonName = userJson.username;
+            // userJsonEmail = userJson.email;
+            // if (userJsonIcon!==null){
+            //     headerButtonLogged.style.display="flex"
+            //     userIcon.setAttribute("src","image/"+userJsonIcon)
+            // }
         } else {
-            headerButton.style.display="flex"
+            // headerButton.style.display="flex"
             console.log("not 200");
-            return null;
+        }
+        return userJson;
+}
+const showUserIcon =  async function (){
+        userJson = await getUser()
+        if (userJson.icon!=null){
+            headerButtonLogged.style.display="flex"
+            userIcon.setAttribute("src","/image/"+userJson.icon)
+        }
+        else {
+            headerButton.style.display="flex"
+            console.log("can not get icon");
         }
 }
-
-getUser().then();
+showUserIcon().then()
 
 function showDropDown(){
     if(userIcon.id === "user-icon-img-current"){
@@ -49,5 +58,9 @@ function mounted() {
     });
 }
 mounted()
+
+function showProfile(){
+    window.location.href="/profile/"+userJson.username;
+}
 
 userIcon.addEventListener("click", showDropDown);

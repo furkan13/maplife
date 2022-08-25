@@ -51,7 +51,7 @@
                     <li class="nav-item">
                         <button id="signup-button" class="btn btn-sm signup-btn" type="button" onclick="window.location.href='/authform?button=signup-button'">Sign Up</button>
                     </li>
-                    <li class="nav-item user-icon">
+                    <li class="user-icon">
                         <img  src="https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u259.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762">
                     </li>
                 </ul>
@@ -59,7 +59,7 @@
                     <li class="nav-item">
                         <button id="steam-button" class="btn btn-sm signup-btn" type="button">Stream</button>
                     </li>
-                    <li class="nav-item user-icon">
+                    <li class="nav-item user-icon" style="margin-left: 1rem">
                         <img id="user-icon-img-current">
                     </li>
                 </ul>
@@ -69,7 +69,7 @@
         <div class="dropdown" id="dropdown">
             <ul class="navbar-nav dropdown-content">
                 <li class="nav-item">
-                    <a class="nav-link nav-link-box" th:href="@{/profile}">
+                    <a class="nav-link nav-link-box" onclick="showProfile()">
                         <div class="nav-link-icon">
                             <i class="fi fi-rr-user"></i>
                         </div>
@@ -337,9 +337,8 @@
 <div class="body__container">
     <th:block th:replace="${body}"/>
 </div>
-
+<script type="text/javascript" th:src="@{/js/bars.js}"></script>
 <th:block th:replace="${script}"/>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
-<script type="text/javascript" th:src="@{/js/bars.js}"></script>
 </body>
 </html>
