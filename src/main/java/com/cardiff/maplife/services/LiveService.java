@@ -8,6 +8,7 @@ import com.cardiff.maplife.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -23,9 +24,13 @@ public class LiveService {
     public Live findLiveByUserid(long userId){
         return liveRepository.findByCohostid(userId);
     }
-    public Set<Live> findLiveByEventid(long eventid){
+    public List<Live> findAllLiveByEventid(long eventid){
         return liveRepository.findByEventid(eventid);
     }
+    public List<Live> findPendingLiveByEventid(long eventid){
+        return liveRepository.findPendingByEventid(eventid);
+    }
+
     public void deleteLiveByCohostid(long userId){
         liveRepository.deleteByCohostid(userId);
     }

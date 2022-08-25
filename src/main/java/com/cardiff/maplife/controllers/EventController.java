@@ -187,7 +187,7 @@ public class EventController {
 
     }
     @GetMapping("/CoHostRequest")
-    private Set<Live> showLiveRequest(@RequestParam(value = "RoomName", defaultValue = "null") String RoomName){
+    private List<Live> showLiveRequest(@RequestParam(value = "RoomName", defaultValue = "null") String RoomName){
         //Send all request to be cohost to host
         Event eventCache;
         try{ //Check if the room exist
@@ -198,7 +198,12 @@ public class EventController {
         }
         //If the user is the host of the room
         if(userService.findUserByUsername(userService.getAuthentication()).getId() == eventCache.getHost_id()){
-            return liveService.findLiveByEventid( eventService.findByName(RoomName).getId());
+            List<Live> return_set= liveService.findPendingLiveByEventid( eventService.findByName(RoomName).getId());
+            for(int i =0; i< return_set.size(); i++){
+                return_set.get(i).setUserName(userService.findUserByUserId(return_set.get(i).getCohostid()).getUsername());
+//
+            }
+            return return_set;
         }
         return null;
     }
@@ -206,6 +211,8 @@ public class EventController {
     private void LiveAccept(@RequestParam(value="RoomName", defaultValue = "null")String RoomName, @RequestParam(value="username", defaultValue = "null")String UserName){
         //Accept the requested user as cohost
         Event eventCache;
+        System.out.println(RoomName);
+        System.out.println(UserName);
         try{ //Check if the room exist
             eventCache = eventService.findByName(RoomName);
         }
@@ -329,7 +336,14 @@ public class EventController {
 
             if(eventCache.isLive()) { //If the room is streaming
                 Live liveCache = liveService.findLiveByUserid(user.getId());
-                if (user.getId() == eventCache.getHost_id() || liveCache.isApproved()) {
+                boolean approved;
+                try{
+                    approved = liveCache.isApproved();
+                }
+                catch(Exception e){
+                    approved = false;
+                }
+                if (user.getId() == eventCache.getHost_id() || approved) {
                     //Check if the user is host or approved live user by host(cohost)
                     return twilioService.EventAccessToken(user.getUsername(), RoomName);
                 }

@@ -38,7 +38,7 @@
                             <th>Decline</th>
                         </tr>
                     </thead>
-                    <tbody class="scroll">
+                    <tbody class="scroll" id="cohost_requests">
 
                     </tbody>
                 </table>
@@ -60,8 +60,10 @@
             <div id="speaker_target">
                 <audio id="audiodemo"> <source th:src="@{/audio/testmusic.mp3}" type="audio/mp3" ></audio>
             </div>
-			<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-		</div>
+			<div style="display:none" class="lds-roller" id="loading_animation"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+            <button style="display:none" type="button" id="join_room_btn">Join Room</button>
+            <button type="button" id="cancel_btn">Cancel</button>
+        </div>
     </main>
 
 </div>
