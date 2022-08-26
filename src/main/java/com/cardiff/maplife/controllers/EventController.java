@@ -116,17 +116,15 @@ public class EventController {
 
         /*long newHost=eventService.findById(event.getId()).getHost_id();*/
         Event eventCache = eventService.findByName(event.getTitle());
-        System.out.println(event.getHost_id());
-        System.out.println(eventCache.getHost_id());
+
         if (twilioService.CheckRoomExist(event)) { //If there is existing twilio room with the same name
             event.setTitle("Error");
             System.out.println("Room exist");
             return new ResponseEntity<>(event, HttpStatus.OK);
         }
-        System.out.println(event.getHost_id());
-        System.out.println(eventCache.getHost_id());
+
         if( event.getHost_id() == eventCache.getHost_id()) {
-            System.out.println("Room identity checked");
+
             if (eventCache.isLive()) { //If there is no entry in database, create Event and twilio room
 
 //        System.out.println(twilioService.CreateRoom(event));
