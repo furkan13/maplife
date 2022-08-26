@@ -13,6 +13,7 @@ const getUser = async function () {
             const data = await response.json();
             // console.log(data);
             userJson = {
+                "userId":data.id,
                 "username":data.username,
                 "icon":data.icon,
                 "email":data.email
@@ -34,7 +35,7 @@ const showUserIcon =  async function (){
         userJson = await getUser()
         if (userJson.icon!=null){
             headerButtonLogged.style.display="flex"
-            userIcon.setAttribute("src","image/"+userJson.icon)
+            userIcon.setAttribute("src","/image/"+userJson.icon)
         }
         else {
             headerButton.style.display="flex"
@@ -57,5 +58,9 @@ function mounted() {
     });
 }
 mounted()
+
+function showProfile(){
+    window.location.href="/profile/"+userJson.username;
+}
 
 userIcon.addEventListener("click", showDropDown);

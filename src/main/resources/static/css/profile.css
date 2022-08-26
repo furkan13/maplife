@@ -1,0 +1,168 @@
+body{
+    margin: 0;
+}
+#profile-page{
+    padding: 50px 0 0 70px;
+    height: calc(100vh);
+    /*background-color: rgba(223, 222, 222, 0.12);*/
+    display: flex;
+    flex-direction: column;
+}
+/*test*/
+/*.back-img{*/
+/*    z-index: -1;*/
+/*    position: absolute;*/
+/*    width: 100%;*/
+/*}*/
+.user-Info{
+    display: flex;
+    width: 90%;
+    height: 40%;
+    padding: 35px 0 35px 0;
+    margin: 0px auto 30px auto;
+    background-color: white;
+    border: solid 1px gainsboro;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    flex-direction: row;
+}
+.dom-1{
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.user-details{
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    justify-content: space-around;
+}
+.dom-2{
+    width: 220px;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.dom-3{
+    width: 65%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.user-video{
+    margin-top: 30px;
+    height: 230px;
+    border: solid 1px gainsboro;
+    border-radius: 5px;
+    background-color: white;
+
+}
+/*.editBtn{*/
+/*    position: absolute;*/
+/*    left: 14%;*/
+/*    top: 11%;*/
+/*}*/
+.edit-btn{
+    border: solid 2px #d7d7d7;
+    height: 33px;
+    width: 98px;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #333333;
+    font-family: 'Roboto', sans-serif;
+    background: #d7d7d7;
+}
+.profile-user-icon{
+    width: 130px;
+    height: 130px;
+    margin: 0 auto 0 auto;
+}
+.profile-user-image{
+    border-radius: 50%;
+    width: 100%;
+    height: 100%;
+    border: solid 5px #de5b19;
+}
+.userInfo-block{
+    display: flex;
+    gap: 0.5rem;
+    flex-direction: row;
+    align-items: center;
+}
+.userInfo-label{
+    font-weight: 700;
+}
+
+
+.user-Event-body{
+    display: flex;
+    /* width: 70%; */
+    height: 200px;
+    /* margin: 30px auto 30px auto; */
+    background-color: white;
+    flex-direction: row;
+    border: solid 1px gainsboro;
+    border-radius: 5px;
+    margin-bottom: 30px;
+}
+
+.upcoming-event-image{
+    margin: 20px;
+    width: 35%;
+    background-image: url("../image/cat.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
+.upcomingEvent-label{
+    margin: 15px auto 0 22px;
+}
+
+.profile-title-font{
+    font-size: 17px;
+    font-weight: 700;
+}
+.user-bio{
+    /*width: 35%;*/
+    height: 200px;
+    border: solid 1px gainsboro;
+    border-radius: 5px;
+    background-color: white;
+}
+.user-information{
+    width: 35%;
+    /*height: 200px;*/
+    /*border: solid 1px gainsboro;*/
+    /*border-radius: 5px;*/
+}
+.upcoming-event-body{
+    display: flex;
+    flex-direction: row;
+    width: 90%;
+    margin: 0 auto 0 auto;
+}
+.user-Event{
+    width: 65%;
+    margin-right: 30px;
+}
+.user-bio-label{
+    padding: 10px 10px 5px 15px;
+}
+.upcoming-event-header{
+    width: 90%;
+    margin: 0px auto 30px auto;
+    font-weight: 700;
+    font-size: 20px;
+}
+.user-video-body{
+    width: 90%;
+    margin: auto;
+    padding: 10px 0 10px 0;
+    height: 186px;
+}
+.user-video-body iframe{
+    width: 100%;
+    height: 100%;
+}
