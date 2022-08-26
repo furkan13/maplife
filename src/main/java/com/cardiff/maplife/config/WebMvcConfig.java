@@ -11,7 +11,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         // images save location                 //static location for test, will be replaced by Furkan's
-//        registry.addResourceHandler("/image/**")
-//                .addResourceLocations("file:C:\\Users\\c21086851\\OneDrive - Cardiff University\\dissertation\\project_44b_party_watch\\src\\main\\resources\\static\\image\\");
+        registry.addResourceHandler("/image/**")
+                .addResourceLocations("file:C:\\Users\\c21106784\\OneDrive - Cardiff University\\Study\\Dissertation\\maplife\\src\\main\\resources\\static\\image\\");
     }
 }

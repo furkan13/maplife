@@ -1,7 +1,8 @@
 let popupContent
 let currentLocation
 const categoryElements= document.getElementsByName('cat-group-chips')
-// categoryElements.checked=true;
+const resetButtonElement = document.getElementById("reset-filter-btn")
+
 // display the map layer
 var map = L.map('map',{zoomControl:false}).setView([51.483396, -3.173728], 11);
 //render map tile layer
@@ -97,10 +98,10 @@ for (let i = 0;data.length>i;i++) {
 var subGroupList = [gameGroup,petGroup,lifeGroup]
 mcgLayerSupportGroup.checkIn(subGroupList); //check in these groups
 //add to control layers
-control.addOverlay(petGroup, 'Pet');
-control.addOverlay(lifeGroup, 'Life');
-control.addOverlay(gameGroup, 'Game');
-control.addTo(map);
+// control.addOverlay(petGroup, 'Pet');
+// control.addOverlay(lifeGroup, 'Life');
+// control.addOverlay(gameGroup, 'Game');
+// control.addTo(map);
 petGroup.addTo(map); // Adding to map or to AutoMCG are now equivalent.
 lifeGroup.addTo(map);
 gameGroup.addTo(map);
@@ -129,3 +130,9 @@ for (let i = 0; i < subGroupList.length; i++) {
             mcgLayerSupportGroup.removeLayer(subGroupList[i])
         }
     })}
+
+let clearAll = function () {
+    document.getElementById('distance-range-value').innerHTML='50'
+    mcgLayerSupportGroup.addLayer(subGroupList)
+}
+resetButtonElement.addEventListener("click",clearAll)
