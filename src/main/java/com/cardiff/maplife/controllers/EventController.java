@@ -169,6 +169,7 @@ public class EventController {
                     System.out.println("some error here...");
                     return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
                 }
+
             }
         }
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
@@ -221,6 +222,8 @@ public class EventController {
     private void LiveAccept(@RequestParam(value="RoomName", defaultValue = "null")String RoomName, @RequestParam(value="username", defaultValue = "null")String UserName){
         //Accept the requested user as cohost
         Event eventCache;
+        System.out.println(RoomName);
+        System.out.println(UserName);
         try{ //Check if the room exist
             eventCache = eventService.findByName(RoomName);
         }
