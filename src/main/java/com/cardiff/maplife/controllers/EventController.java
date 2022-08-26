@@ -39,7 +39,6 @@ public class EventController {
     private List<Event> GetEventList(){
         Timestamp datetime = new Timestamp(System.currentTimeMillis());
         return eventService.findCustom(datetime);
-
     }
     @PostMapping("/RoomLocationUpdate")
     private void updateEventLocation(@RequestBody Event event) {
@@ -75,102 +74,27 @@ public class EventController {
             eventService.save(ServerEvent);
         }
     }
-    @PostMapping("/RoomFutureCreation")//for event in future
-    private ResponseEntity<Event> addFutureEvent(@RequestBody Event event){
-        Event ServerEvent;
+    @GetMapping("/HostJoin") //Mostly used for future event, create twilio room when host join the room
+    private void TwilioCheck(@RequestParam(value = "RoomName", defaultValue = "null") String RoomName ){
+        Event eventCache;
         try{ //Check if the room exist
-            ServerEvent = eventService.findById(event.getId());
+            eventCache = eventService.findByName(RoomName);
         }
         catch(Exception e){
-            ServerEvent = null;
+            return;
         }
-        if(twilioService.CheckRoomExist(event) || ServerEvent != null) { //If there is existing room with the same name
-            event.setTitle("Error");
-            System.out.println("Room exist");
-            return new ResponseEntity<>(event, HttpStatus.OK);
-        }
-        Timestamp datetime = new Timestamp(System.currentTimeMillis());
-        if(event.getEvent_date().getTime() > datetime.getTime()){ //If the event time is in future
-
-            try{
-                //set host_id as the current user id
-                event.setHost_id(userService.findUserByUsername(userService.getAuthentication()).getId());
-                //How can we make sure the event form host id is valid without this checking?
-                event.setLive(false); //Not in live
-                event.setEvent_link("");//Empty link as twilio api is not called
-                Event savedEvent = eventService.save(event);
-    //            System.out.println(savedEvent.getEvent_link());
-    //            System.out.println(savedEvent.getEvent_title());
-                return new ResponseEntity<>(savedEvent, HttpStatus.OK);
+        //If the user is the host of the room
+        if(userService.findUserByUsername(userService.getAuthentication()).getId() == eventCache.getHost_id()){
+            //Check if the room is created without twilio link (Created for future event)
+            if( eventCache.getEvent_link() ==""){
+                //Set the room to live and create twilio video room
+                eventCache.setLive(true);
+                String link = (twilioService.CreateRoom(eventCache));
+                eventCache.setEvent_link(link);
+                eventService.save(eventCache);
             }
-            catch(Exception e){
-                System.out.println("some error here...");
-                return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
-            }
+
         }
-        return new ResponseEntity<>(null,HttpStatus.BAD_REQUEST);
-    }
-    @PostMapping("/RoomCreation")
-    private ResponseEntity<Event> addEvent(@RequestBody Event event, UriComponentsBuilder builder){
-//        System.out.println(event.getTitle());
-
-        /*long newHost=eventService.findById(event.getId()).getHost_id();*/
-        Event eventCache = eventService.findByName(event.getTitle());
-
-        if (twilioService.CheckRoomExist(event)) { //If there is existing twilio room with the same name
-            event.setTitle("Error");
-            System.out.println("Room exist");
-            return new ResponseEntity<>(event, HttpStatus.OK);
-        }
-
-        if( event.getHost_id() == eventCache.getHost_id()) {
-
-            if (eventCache.isLive()) { //If there is no entry in database, create Event and twilio room
-
-//        System.out.println(twilioService.CreateRoom(event));
-                try {
-
-
-                    //set host_id as the current user id
-                    /*event.setHost_id(userService.findUserByUsername(userService.getAuthentication()).getId());*/
-                    //Set event_date as current time
-               /* java.sql.Date date = new java.sql.Date(Calendar.getInstance().getTime().getTime());
-                event.setEvent_date(date);*/
-               /* Timestamp datetime = new Timestamp(System.currentTimeMillis());
-                event.setEvent_date(datetime);*/
-                    event.setLive(true);
-                    //Create twilio room and get url of the created room from twilio
-                    String link = (twilioService.CreateRoom(event));
-                    event.setEvent_link(link);
-                    eventService.save(event);
-//            System.out.println(savedEvent.getEvent_link());
-//            System.out.println(savedEvent.getEvent_title());
-                    return new ResponseEntity<>(HttpStatus.CREATED);
-                } catch (Exception e) {
-                    System.out.println("some error here...");
-                    return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-                }
-            }
-            else { //Future event but host call it now
-
-                try {
-                    //Turn event into live
-                    eventCache.setLive(true);
-                    //Create twilio room and get url of the created room from twilio
-                    String link = (twilioService.CreateRoom(eventCache));
-                    eventCache.setEvent_link(link);
-                    eventService.save(eventCache);
-//            System.out.println(savedEvent.getEvent_link());
-//            System.out.println(savedEvent.getEvent_title());
-                    return new ResponseEntity<>(HttpStatus.CREATED);
-                } catch (Exception e) {
-                    System.out.println("some error here...");
-                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-                }
-
-            }
-        }
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/RoomDeletion")

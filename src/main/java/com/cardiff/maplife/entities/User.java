@@ -1,5 +1,7 @@
 package com.cardiff.maplife.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
@@ -38,6 +40,7 @@ public class User implements UserDetails, Serializable {
 
     @Column(name = "username")
     private String username;
+
 
     @Column(name = "password")
     private String password;
@@ -116,6 +119,7 @@ public class User implements UserDetails, Serializable {
     public String getUsername() {
         return username;
     }
+    @JsonIgnore
     public String getPassword() {
         return password;
     }

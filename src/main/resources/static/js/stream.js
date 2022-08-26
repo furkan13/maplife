@@ -8,11 +8,11 @@ let roomName = "TestingRoom";
 if(room != null){
 	roomName = room;
 }
-let roomObj = {room:"", tracks:"", token:"",VideoRoom:""};
+let roomObj = {room:"", tracks:[], token:"",VideoRoom:""};
 let local_track = [[[],[],[]],[[],[],[]]];//[n][0]:Video,[n][1]:Speaker,[n][2]:Mic, n=0: id, n=1: tag
 let count = 0;
 //user_name should be local stroage/cookie which is obtained when logging in
-let userJsonId=userJson.userId;
+
 function main(){
 	//What to do for connecting in twilio video room:
 	//1. Create a room with unique room name
@@ -59,7 +59,7 @@ const initlise = async function(){
 		alert("Room name: "+roomName +" may be closed or not exist.\n Return to main page.");
 		window.location.href = '../'; //Go back to main page
 	}
-	if(userJsonId == roomObj.VideoRoom["host_id"]){ //If the user is the host of this room
+	if(userJson.userId == roomObj.VideoRoom["user"].id){ //If the user is the host of this room
 		//Build the host page accordingly
 		//Show submit button and add event listener
 		await video_token(); //Get token before letting host to join the room
@@ -67,6 +67,7 @@ const initlise = async function(){
 			blackscreen.hide();
 			$("#speaker_target").empty();
 			$("#video_target").empty();
+			room_final_check();
 			room_join(roomObj);
 		})
 		$("#join_room_btn").show();
@@ -150,7 +151,7 @@ function switch_speaker(target, listspeaker){
 function get_track_list(){ //Doesn't work in local file, try localhost
 	local_track =[[[],[],[]],[[],[],[]]];
 	let stream;
-	return navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(s=>{
+	return navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then(s=>{
 		stream = s;
 		if (!navigator.mediaDevices?.enumerateDevices) {
 			console.log("enumerateDevices() not supported.");
@@ -236,6 +237,12 @@ function cohost_send(){
     $.post("/CoHostSubmit?RoomName="+roomName, function(data, status){
 
     });
+}
+function room_final_check(){
+
+	$.post("/HostJoin?RoomName="+roomName, function(data, status){
+
+	});
 }
 function video_block(){ //Create block for multiple streamers' video
 	$("#bottom_other_stream") //Target div
