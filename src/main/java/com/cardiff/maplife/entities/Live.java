@@ -28,6 +28,16 @@ public class Live {
     private long cohostid;
     @Column(name = "approved")
     private boolean approved;
+    @Transient
+    private String userName;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     public Long getId() {
         return id;

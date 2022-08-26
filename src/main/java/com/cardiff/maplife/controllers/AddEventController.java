@@ -142,7 +142,7 @@ public class AddEventController {
         }
 
 
-        modelAndView = new ModelAndView("/events/addevents");
+        modelAndView = new ModelAndView("redirect:/streaming?room="+event.getTitle());
 
         return modelAndView;
     }
