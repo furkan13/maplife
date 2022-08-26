@@ -12,6 +12,7 @@ let roomObj = {room:"", tracks:"", token:"",VideoRoom:""};
 let local_track = [[[],[],[]],[[],[],[]]];//[n][0]:Video,[n][1]:Speaker,[n][2]:Mic, n=0: id, n=1: tag
 let count = 0;
 //user_name should be local stroage/cookie which is obtained when logging in
+let userJsonId=userJson.userId;
 function main(){
 	//What to do for connecting in twilio video room:
 	//1. Create a room with unique room name
@@ -32,13 +33,8 @@ function main(){
 
     $("#cohost_request").click(function(){cohost_send();});
     $("#cohost_list").click(function(){fetchCoHostRequest();});
-	$("#user_video").change(function(){switch_video($("#video_target"),$("#user_video"))})
-	$("#user_mic").change(function(){switch_mic($("#speaker_target"),$("#user_mic"),"Testing")})
-	$("#user_speaker").change(function(){switch_speaker($("#speaker_target"),$("#user_speaker"))})
-	$("#test_audio").click(function(){$("#audiodemo")[0].play();});
-	$("#audioreplay").click(function(){mic_replay($(".Testing"),$("#audioreplay"))})
 //    live_token(liveToken)
-
+	initlise();
 }
 function mic_replay(target,source){
 	target[0].muted = true;
@@ -48,35 +44,82 @@ function mic_replay(target,source){
 }
 const initlise = async function(){
 	await video_room(); //Get the event from server
+	$("#user_video").change(function(){switch_video($("#video_target"),$("#user_video"))})
+	$("#user_mic").change(function(){switch_mic($("#speaker_target"),$("#user_mic"),"Testing")})
+	$("#user_speaker").change(function(){switch_speaker($("#speaker_target"),$("#user_speaker"))})
+	$("#test_audio").click(function(){$("#audiodemo")[0].play();});
+	$("#audioreplay").click(function(){mic_replay($(".Testing"),$("#audioreplay"))})
 	//Show black screen for loading, hide it after obtaining token
 	//Create function for user to choose tracks, listen to playback and video
 	//Cancel button to return to live/main page according to users' identity(host/cohost)
 	let blackscreen = $("#blackscreen"); //Default blackscreen before connecting to the room
 	loading_page();
 	
-	if(roomObj.VideoRoom["title"] == ""){ //Server doesn't have the event entry of this roomname
+	if(roomObj.VideoRoom["title"] == null){ //Server doesn't have the event entry of this roomname
 		alert("Room name: "+roomName +" may be closed or not exist.\n Return to main page.");
 		window.location.href = '../'; //Go back to main page
 	}
 	if(userJsonId == roomObj.VideoRoom["host_id"]){ //If the user is the host of this room
 		//Build the host page accordingly
-		
+		//Show submit button and add event listener
+		await video_token(); //Get token before letting host to join the room
+		$("#join_room_btn").click(function(){
+			blackscreen.hide();
+			$("#speaker_target").empty();
+			$("#video_target").empty();
+			room_join(roomObj);
+		})
+		$("#join_room_btn").show();
+		//Set cancel button to delete the room and return to main page. Also ask to confirm.
+		$("#cancel_btn").click(function(){
+			let answer = window.confirm("Return to main page? Room will be deleted");
+			if(answer){
+				room_delete();
+				window.location.href = '../';
+			}
+		})
 	}
 	else{//Potential co-host, validate the user's id to server and check for token
+		//Set cancel button to go back live page.
+		$("#cancel_btn").click(function(){
+			let answer = window.confirm("Return to live page?");
+			if(answer){
+				window.location.href = '../live?room='+roomName;
+			}
+		})
+		$("#loading_animation").show(); //Show the loading animation
 
-		//Call get token every minute, if server doesn't provide it for 5 times, return to live
-		await co_host_token();
+		//Call get token every 15s, if server doesn't provide it for 5 minutes, return to live
+		await video_token();
+		while(count < 19 && roomObj.token ==""){
+
+			await sleep(15000);
+			video_token();
+			// console.log("ha")
+			count+=1;
+		}
+
 		//Checking for any token receive
 		if(roomObj.token == ""){ //Alert user that host has not processed the request at the moment
 			alert("Host has not replied at the moment. Please try it again or watch the streaming instead.")
 			window.location.href = '../live?room='+roomName; //Go back to live page
 		}
-
+		$("#loading_animation").hide(); //Hide the loading animation
 		//Hide the black screen after clicking join button
+		$("#join_room_btn").click(function(){
+			blackscreen.hide();
+			$("#speaker_target").empty();
+			$("#video_target").empty();
+			room_join(roomObj);
+		})
+		$("#join_room_btn").show();
+
 		
-		//Join the video room
-		room_join(roomObj);
+
 	}
+}
+function sleep(ms){
+	return new Promise(resolve => setTimeout(resolve,ms));
 }
 function switch_video(target, listvideo){ //User changing video source, input: target of the video, select list
 	roomObj.tracks[1].stop();//Stop current video stream
@@ -164,8 +207,6 @@ const loading_page = async function(){ //Setup for the blackscreen, provide vide
 			$("#video_target").empty();//Clear the previous track in show
 			$(".Testing").remove();
 
-
-
 			//Make an id for the audio, so doesn't delete all
 			let cache = roomObj.tracks[0].attach();
 			cache.className = "Testing";
@@ -174,13 +215,22 @@ const loading_page = async function(){ //Setup for the blackscreen, provide vide
 		})
 
 }
-function cohost_accept(){
+function cohost_accept(source){
     //get username from button's id to username
-    let cohost_name;
-    $.post("/CoHostAccept?RoomName="+roomName+"username="+cohost_name, function(data, status){
+    let cohost_name = source.attr("id");
+    console.log()
+    $.post("/CoHostAccept?RoomName="+roomName+"&username="+cohost_name, function(data, status){
 
     });
 }
+function cohost_decline(source){
+	//get username from button's id to username
+	let cohost_name = source.attr("id");
+	$.post("/CoHostDecline?RoomName="+roomName+"&username="+cohost_name, function(data, status){
+
+	});
+}
+
 function cohost_send(){
 
     $.post("/CoHostSubmit?RoomName="+roomName, function(data, status){
@@ -252,7 +302,7 @@ function GetTracks(roomObj){ //Obtain local audio/video tracks
 
 }
 const room_join =async function(roomObj){ //Join the room with tracks
-    await GetTracks(roomObj); //Get local tracks from user, saved in roomObj.tracks
+    // await GetTracks(roomObj); //Get local tracks from user, saved in roomObj.tracks
     console.log(roomObj.tracks);
 
     await Twilio.Video.connect(roomObj.token, {name: roomName, tracks:roomObj.tracks}).then(room => {
@@ -293,10 +343,28 @@ function fetchCoHostRequest(){
     let cohostList = $.get("/CoHostRequest?RoomName="+roomName, function(data, status){
         console.log(data);
         setTimeout(fetchCoHostRequest,interval);
-        for(let i =0; i < data.length(); i++){
-
+        //delete all entry in the list, then append the user list to the list
+		$("#cohost_requests").empty()
+        for(let i =0; i < data.length; i++){ //For each request, create with username, accept/decline button
+			let row = $("<tr></tr>>")
+			row.attr("id", i);
+			let name_entry = $("<td>"+data[i].userName+"</td>");
+			let accept_btn = $("<button class='acp_btn' id='"+data[i].userName+"'>Accept</button>");
+			let decline_btn = $("<button class='dec_btn' id='"+data[i].userName+"'>decline</button>");
+			accept_btn.click(function(){
+				cohost_accept(accept_btn);
+				accept_btn.parent().parent().remove(); //Delete the whole row after choice has made
+			})
+			decline_btn.click(function(){
+				cohost_decline(decline_btn);
+				decline_btn.parent().parent().remove();
+			})
+			row.append(name_entry);
+			row.append($("<td></td>").append(accept_btn));
+			row.append($("<td></td>").append(decline_btn));
+			$("#cohost_requests").append(row);
         }
-        return data;
+        return;
     });
 }
 const room_delete = async function(e){ //Delete the room, should only allow host to do it
@@ -324,27 +392,14 @@ function video_room(){ //Get event detail from server
 	});
 	
 }
-function co_host_token(){
-	let interval = 60000; //60 second per request
-	
-    let cohostList = $.get("/EventAccessToken?RoomName="+roomName, function(data, status){
-        // console.log(data);
-		if(data !="" || count > 4){ //If host approved or 5 minutes passed
-			roomObj.token = data;
-			clearTimeout(co_host_token);
-		}
-		count +=1;
-		setTimeout(co_host_token,interval);
-    })
-	
-}
+
 const video_token = async function(){ // Get video token if grant access
     //Backend: 1. Check if the user is allowed to stream
     //2. Check with host to see if they allow this user to stream
-    let token = $.get("/EventAccessToken?RoomName="+roomName, function(data, status){
-		return data;
+    return $.get("/EventAccessToken?RoomName="+roomName, function(data, status){
+		roomObj.token = data;
+
 	}); //Get the access token or reject if user is not authorised
-    return token;
 }
 
 function live_token(token) { //Get live token for the room, required for all users

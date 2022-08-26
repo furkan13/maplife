@@ -118,11 +118,11 @@ public class AddEventController {
             HttpEntity<Event> requestEntity = new HttpEntity<>(event, headers);
             System.out.println(event.getId());
 
-
+            System.out.println(diff);
             if(diff<5)
             {
 
-
+                System.out.println("Live event created");
                 String uri = "http://localhost:8080/RoomCreation";
                 RestTemplate restTemplate = new RestTemplate();
                 ResponseEntity<Event> resp = new ResponseEntity(headers, HttpStatus.OK);
@@ -130,7 +130,7 @@ public class AddEventController {
 
             }
             else {
-
+                System.out.println("Future event created");
                 String uri = "http://localhost:8080/RoomFutureCreation";
                 RestTemplate restTemplate = new RestTemplate();
                 ResponseEntity<Event> resp = new ResponseEntity(headers, HttpStatus.OK);
@@ -142,7 +142,7 @@ public class AddEventController {
         }
 
 
-        modelAndView = new ModelAndView("/events/addevents");
+        modelAndView = new ModelAndView("redirect:/streaming?room="+event.getTitle());
 
         return modelAndView;
     }

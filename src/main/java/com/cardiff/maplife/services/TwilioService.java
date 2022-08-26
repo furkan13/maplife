@@ -1,8 +1,7 @@
 package com.cardiff.maplife.services;
 
-import com.cardiff.maplife.Config.TwilioConfig;
+import com.cardiff.maplife.config.TwilioConfig;
 import com.cardiff.maplife.entities.Event;
-import com.twilio.Twilio;
 import com.twilio.http.HttpMethod;
 import com.twilio.jwt.accesstoken.AccessToken;
 import com.twilio.jwt.accesstoken.VideoGrant;
