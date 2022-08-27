@@ -5,12 +5,22 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "user")
 
 public class User implements UserDetails, Serializable {
+
+//    //create a join table to implement the ManyToMany relation between user and following_user.
+//    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//    @JoinTable(
+//            name = "following_user",
+//            joinColumns = @JoinColumn(name = "userId"),
+//            inverseJoinColumns = @JoinColumn(name = "following_user_id"))
+//    private Set<FollowingUser> followingUserSet = new HashSet<>();
 
 
     public User() {
