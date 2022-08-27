@@ -15,7 +15,7 @@ class EventUnitTest {
     void eventDTOTest()  {
         Event event = new Event(1l,"Iron Maiden");
         assertEquals(event.getHost_id(), 1l);
-        assertEquals(event.getEvent_title(), "Iron Maiden");
+        assertEquals(event.getTitle(), "Iron Maiden");
 
     }
 

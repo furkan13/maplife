@@ -1,4 +1,4 @@
-
+/*
 CREATE TABLE `event` (
                          `event_id` bigint(20) NOT NULL,
                          `event_date` datetime DEFAULT NULL,
@@ -16,3 +16,4 @@ CREATE TABLE `event` (
 
 
 INSERT INTO `user` (`user_id`, `coins`, `email`, `icon`, `password`, `roles`, `user_type`, `username`, `views`) VALUES ('2', '100', 'y@g.c', 'xyz', 'password', 'USER', b'0000', 'user', '11');
+*/

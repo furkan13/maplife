@@ -4,6 +4,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -27,7 +28,7 @@ public class User implements UserDetails, Serializable {
 
     }
     public User(Long id, String username, String password, String email, boolean userType, int coins, int views, String icon, String roles, String video, String bio) {
-        this.id = id;
+        this.user_id = id;
         this.username = username;
         this.password = password;
         this.email = email;
@@ -42,8 +43,8 @@ public class User implements UserDetails, Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "userId")
-    private Long id;
+    @Column(name = "use_Id")
+    private Long user_id;
 
     @Column(name = "username")
     private String username;
@@ -74,6 +75,10 @@ public class User implements UserDetails, Serializable {
 
     @Column(name = "bio")
     private String bio;
+
+
+    @OneToMany(mappedBy = "user")  //Creating one to many relation with booking class and Using user object from Booking class
+    List<Event> eventList=new ArrayList<>();
 
 
 
@@ -113,10 +118,10 @@ public class User implements UserDetails, Serializable {
     }
 
     public Long getId() {
-        return id;
+        return user_id;
     }
     public void setId(Long id) {
-        this.id = id;
+        this.user_id = id;
     }
     public String getUsername() {
         return username;
