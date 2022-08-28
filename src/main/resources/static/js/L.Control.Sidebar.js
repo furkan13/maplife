@@ -14,9 +14,9 @@ L.Control.Sidebar = L.Control.extend({
         // Find content container
         var content = this._contentContainer = L.DomUtil.get(placeholder);
 
-        // Remove the content container from its original parent
+        // Remove the content container from its original parent        
         if(content.parentNode != undefined){
-            content.parentNode.removeChild(content);
+          content.parentNode.removeChild(content);
         }
         var l = 'leaflet-';
 

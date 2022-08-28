@@ -72,12 +72,12 @@ body{
 }
 .form-control{
     line-height: 0rem;
-    border: 2px solid #8c8c8c;
+    border: 1px solid #ced4da;
     font-size: 0.925rem;
 }
 .form-control:focus{
     border-color: #de5b19;
-    box-shadow: 0 0 0 0;
+    box-shadow: 0 0 0 0.25rem rgb(222 91 25 / 25%) !important;
 }
 .input-group>.form-floating:not(:first-child)>.form-control, .input-group>.form-floating:not(:first-child)>.form-select, .input-group>:not(:first-child):not(.dropdown-menu):not(.form-floating):not(.valid-tooltip):not(.valid-feedback):not(.invalid-tooltip):not(.invalid-feedback) {
     margin-left: 0px;
