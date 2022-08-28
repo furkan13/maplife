@@ -45,7 +45,7 @@ public class MainController {
     }
     @GetMapping("/streaming")
     public ModelAndView showStreamingPage(ModelAndView modelAndView) {
-        modelAndView = new ModelAndView("/streaming");
+        modelAndView = new ModelAndView("Streaming/HostStream");
         return modelAndView;
     }
     @RequestMapping("/profile/{username}")

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head th:replace="navigator/bars::common-header(~{::title}, ~{::link})">
+    <meta charset="UTF-8">
+    <title>Subscriptions</title>
+    <link th:href= "@{/css/form.css}" rel="stylesheet" />
+  <!--  <link th:href= "@{/css/subscription.css}" rel="stylesheet" />-->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+
+</head>
+<body th:replace="navigator/bars::common-body(~{::#addevents-page},~{},~{})">
+<div id="addevents-page" >
+    <div class="content">
+
+        <div class="container">
+            <div class="row align-items-stretch no-gutters contact-wrap">
+                <div class="col-md-12">
+                    <div class="form h-100">
+                        <h3>Create Your Event</h3>
+                        <form class="mb-5" method="post" th:action="@{/addevents}" th:object="${events}" id="contactForm" name="contactForm" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-md-6 form-group mb-3">
+                                    <label for="" class="col-form-label">Title *</label>
+                                    <input type="text" class="form-control" name="name" id="Title" th:field="${events.title}" placeholder="Event Title" required>
+                                </div>
+                                <div class="col-md-6 form-group mb-3">
+                                    <label for="" class="col-form-label">Date *</label>
+                                    <input type="datetime-local" class="form-control-plaintext" name="time" id="time"   th:attr="min=${#dates.format(#dates.createNow(), 'yyyy-MM-dd')}"  required>
+                                </div>
+                                <!--<div class="col-md-6 form-group mb-3">
+                                    <label for="" class="col-form-label">Date *</label>
+                                    <input type="time" class="form-control-plaintext" name="time" id="time"   required>
+                                </div>
+                            </div>-->
+
+                            <div class="row">
+                                <div class="col-md-12 form-group mb-3">
+                                    <label for="Type" class="col-form-label">Event Type</label>
+                                    <select class="custom-select" id="Type" th:field="${events.room_type}" name="Type">
+                                        <option th:value="false" selected>Choose...</option>
+                                        <option th:value="true">Private</option>
+                                        <option th:value="false">Public</option>
+
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12 form-group mb-3">
+                                    <label for="Details" class="col-form-label">Event Details</label>
+                                    <textarea class="form-control-plaintext" name="message" id="Details" cols="30" rows="4" th:field="${events.event_dis}" placeholder="Write Event Description"></textarea>
+                                </div>
+                                <div  class="col-md-12 form-group mb-3">
+                                    <div class="form-group">
+                                        <label>Choose Your Cover: </label>
+                                        <input type="file" value="upload" name="image" accept="image/png, image/jpeg" />
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="row">
+                                <div class="col-md-12 form-group">
+                                    <input type="submit" value="Add Event" class="button button-primary rounded-0 py-2 px-4">
+                                    <span class="submitting"></span>
+                                </div>
+                            </div>
+                        </form>
+
+                        <div id="form-message-warning mt-4"></div>
+                        <div class="alert alert-primary" role="alert" th:text="${success}" th:if="${success}"></div>
+                        <div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

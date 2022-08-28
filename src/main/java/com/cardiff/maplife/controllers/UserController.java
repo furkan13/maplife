@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+
 
 @RestController
 public class UserController {
@@ -131,4 +133,25 @@ public class UserController {
         }
     }
 
+    @PutMapping("/api/followUser")
+    private  ResponseEntity<User> followUser(@RequestBody User user){
+       try {
+           User loggedUser = userService.findUserByUsername(userService.getAuthentication());
+
+//           String usernameFromUser = userService.getAuthentication();
+//           User loggedUser = (User) userService.loadUserByUsername(usernameFromUser);
+           //followingUser = user you want to follow
+           User followerUser=userService.findUserByUserId(user.getUser_id());
+           Set<User> followerUserSet = followerUser.getFollowerUserSet();
+           followerUserSet.add(loggedUser);
+           followerUser.setFollowerUserSet(followerUserSet);
+           User updatedUser = userService.saveUser(followerUser);
+           return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+
+       }
+       catch (Exception e){
+           return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+       }
+
+    }
 }
