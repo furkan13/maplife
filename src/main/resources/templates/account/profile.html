@@ -18,17 +18,27 @@
         <div class="user-details">
             <div class="dom-2">
                 <div>
-                    <label style="font-weight: 800;font-size: 25px;" th:text="${username}"></label>
+                    <label id="profileUsername" style="font-weight: 800;font-size: 25px;" th:text="${username}"></label>
                 </div>
                 <a class="editBtn" th:href="@{/settings}">
                     <div>
                         <input type="button" class="edit-btn" value="Edit Profile" th:if="${loggedUsername==username}">
                     </div>
                 </a>
-                <a class="editBtn">
+                <a class="editBtn" id="followUserBtn">
                 <div>
-                    <input type="button" class="edit-btn" value="Follow" th:if="${loggedUsername!=username}">
+                    <input type="button" class="edit-btn" value="Follow" th:if="${loggedUsername!=username&&followedUsername!=username}">
                 </div>
+                </a>
+                <a class="editBtn" id="cancelFollowBtn" style="display: none">
+                    <div>
+                        <input type="button" class="edit-btn" value="Followed" >
+                    </div>
+                </a>
+                <a class="editBtn"  th:if="${followedUsername==username}">
+                    <div>
+                        <input type="button" class="edit-btn" value="Followed" >
+                    </div>
                 </a>
             </div>
             <div class="dom-3">
@@ -52,42 +62,42 @@
     </div>
     <div class="upcoming-event-body">
         <div class="user-Event">
-            <div class="user-Event-body">
+            <div class="user-Event-body" th:each="upcomingEvent:${upcomingEventList}" th:if="${upcomingEvent.getUser().getUsername()==username}">
                 <div class="upcoming-event-image">
                 </div>
                 <div>
                     <div class="upcomingEvent-label profile-title-font">
-                        <label>there is the upcoming event title</label>
+                        <label th:text="${upcomingEvent.getTitle()}" ></label>
                     </div>
                     <div class="upcomingEvent-label">
-                        <label>there is the upcoming event</label>
+                        <label th:text="${upcomingEvent.getEvent_dis()}"></label>
                     </div>
                 </div>
             </div>
-            <div class="user-Event-body">
-                <div class="upcoming-event-image">
-                </div>
-                <div>
-                    <div class="upcomingEvent-label profile-title-font">
-                        <label>there is the upcoming event title</label>
-                    </div>
-                    <div class="upcomingEvent-label">
-                        <label>there is the upcoming event</label>
-                    </div>
-                </div>
-            </div>
-            <div class="user-Event-body">
-                <div class="upcoming-event-image">
-                </div>
-                <div>
-                    <div class="upcomingEvent-label profile-title-font">
-                        <label>there is the upcoming event title</label>
-                    </div>
-                    <div class="upcomingEvent-label">
-                        <label>there is the upcoming event</label>
-                    </div>
-                </div>
-            </div>
+<!--            <div class="user-Event-body">-->
+<!--                <div class="upcoming-event-image">-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <div class="upcomingEvent-label profile-title-font">-->
+<!--                        <label>there is the upcoming event title</label>-->
+<!--                    </div>-->
+<!--                    <div class="upcomingEvent-label">-->
+<!--                        <label>there is the upcoming event</label>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="user-Event-body">-->
+<!--                <div class="upcoming-event-image">-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <div class="upcomingEvent-label profile-title-font">-->
+<!--                        <label>there is the upcoming event title</label>-->
+<!--                    </div>-->
+<!--                    <div class="upcomingEvent-label">-->
+<!--                        <label>there is the upcoming event</label>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
         <div class="user-information">
             <div class="user-bio">
@@ -116,6 +126,5 @@
 
 </div>
 <script type="text/javascript" th:src="@{/js/profile.js}"></script>
-<!--<script src="../../static/js/profile.js"></script>-->
 </body>
 </html>
