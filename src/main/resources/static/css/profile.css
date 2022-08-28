@@ -56,6 +56,7 @@ body{
     height: 230px;
     border: solid 1px gainsboro;
     border-radius: 5px;
+    background-color: white;
 
 }
 /*.editBtn{*/
@@ -128,6 +129,7 @@ body{
     height: 200px;
     border: solid 1px gainsboro;
     border-radius: 5px;
+    background-color: white;
 }
 .user-information{
     width: 35%;
