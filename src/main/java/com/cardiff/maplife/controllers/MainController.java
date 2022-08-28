@@ -1,6 +1,7 @@
 package com.cardiff.maplife.controllers;
 
 
+import com.cardiff.maplife.entities.User;
 import com.cardiff.maplife.services.UserService;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -32,11 +33,11 @@ public class MainController {
         modelAndView = new ModelAndView("authform/authform");
         return modelAndView;
     }
-    @GetMapping("/profile")
-    public ModelAndView showProfilePage(ModelAndView modelAndView) {
-        modelAndView = new ModelAndView("account/profile");
-        return modelAndView;
-    }
+//    @GetMapping("/profile")
+//    public ModelAndView showProfilePage(ModelAndView modelAndView) {
+//        modelAndView = new ModelAndView("account/profile");
+//        return modelAndView;
+//    }
     @GetMapping("/settings")
     public ModelAndView showSettingsPage(ModelAndView modelAndView) {
         modelAndView = new ModelAndView("account/settings");
@@ -44,8 +45,23 @@ public class MainController {
     }
     @GetMapping("/streaming")
     public ModelAndView showStreamingPage(ModelAndView modelAndView) {
-        modelAndView = new ModelAndView("/streaming");
+        modelAndView = new ModelAndView("Streaming/HostStream");
         return modelAndView;
     }
+    @RequestMapping("/profile/{username}")
+    public ModelAndView getProfile(ModelAndView modelAndView, @PathVariable String username) {
+        User searchUser = (User) userService.loadUserByUsername(username);
+        String loggedUsername = userService.getAuthentication();
+        modelAndView.setViewName("account/profile");
+        modelAndView.addObject("loggedUsername",loggedUsername);
+        modelAndView.addObject("username", searchUser.getUsername());
+        modelAndView.addObject("video",searchUser.getVideo());
+        modelAndView.addObject("total_view",searchUser.getViews());
+        modelAndView.addObject("bio",searchUser.getBio());
+        modelAndView.addObject("userIcon",searchUser.getIcon());
+//        Set<Event> upcomingEvent = project.getEvent();
+        return modelAndView;
+    }
+
 
 }

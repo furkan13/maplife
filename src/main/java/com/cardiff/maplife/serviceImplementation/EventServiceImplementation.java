@@ -6,6 +6,7 @@ import com.cardiff.maplife.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,7 +14,7 @@ import java.util.Optional;
 public class EventServiceImplementation implements EventService {
     @Autowired
     private EventRepository eventRepository;
-
+    private EventService eventService;
 
     @Override
     public List<Event> findAll()
@@ -22,7 +23,13 @@ public class EventServiceImplementation implements EventService {
     }
 
     @Override
-    public Event findById(int eventId)
+    public List<Event> findCustom(Timestamp serverTime)
+    {
+        return eventRepository.findCustom(serverTime);
+    }
+
+    @Override
+    public Event findById(long eventId)
     {
         Optional<Event> result = eventRepository.findById(eventId);
 
@@ -41,6 +48,7 @@ public class EventServiceImplementation implements EventService {
     @Override
     public Event findByName(String name)
     {
+
         Optional<Event> result = eventRepository.findByTitle(name);
 
         Event event = null;
@@ -61,7 +69,7 @@ public class EventServiceImplementation implements EventService {
         return eventRepository.save(event);
     }
     @Override
-    public void deleteById(int eventId)
+    public void deleteById(long eventId)
     {
         eventRepository.deleteById(eventId);
     }
