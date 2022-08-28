@@ -145,6 +145,23 @@ public class UserController {
         } catch (Exception e) {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
-
     }
+    @PutMapping("/api/unFollowUser")
+    private ResponseEntity<User> unFollowUser(@RequestBody User user) {
+        try {
+            User loggedUser = userService.findUserByUsername(userService.getAuthentication());
+            //followingUser = user you want to follow
+            User followerUser = userService.findUserByUsername(user.getUsername());
+            Set<User> followerUserSet = followerUser.getFollowerUserSet();
+            followerUserSet.remove(loggedUser);
+            followerUser.setFollowerUserSet(followerUserSet);
+            User followedUser = userService.saveUser(followerUser);
+            return new ResponseEntity<>(followedUser, HttpStatus.OK);
+
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

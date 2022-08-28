@@ -42,8 +42,9 @@ body{
     width: 40%;
     display: flex;
     flex-wrap: wrap;
-    flex-direction: row;
     justify-content: space-between;
+    flex-direction: row;
+    align-items: flex-end;
 }
 .dom-3{
     width: 65%;

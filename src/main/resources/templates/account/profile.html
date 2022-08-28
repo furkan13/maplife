@@ -22,22 +22,27 @@
                 </div>
                 <a class="editBtn" th:href="@{/settings}">
                     <div>
-                        <input type="button" class="edit-btn" value="Edit Profile" th:if="${loggedUsername==username}">
+                        <input type="button" class="btn btn-sm btn-outline-secondary" value="Edit Profile" th:if="${loggedUsername==username}">
+                    </div>
+                </a>
+                <a class="editBtn" id="followUserBtn-forPage" style="display: none">
+                    <div>
+                        <input type="button" class="btn btn-sm btn-outline-secondary" value="Follow" >
                     </div>
                 </a>
                 <a class="editBtn" id="followUserBtn">
                 <div>
-                    <input type="button" class="edit-btn" value="Follow" th:if="${loggedUsername!=username&&followedUsername!=username}">
+                    <input type="button" class="btn btn-sm btn-outline-secondary" value="Follow" th:if="${loggedUsername!=username&&followedUsername!=username}">
                 </div>
                 </a>
-                <a class="editBtn" id="cancelFollowBtn" style="display: none">
+                <a class="editBtn" id="unFollowBtn-forPage" style="display: none">
                     <div>
-                        <input type="button" class="edit-btn" value="Followed" >
+                        <input type="button" class="btn btn-sm btn-outline-secondary" value="Followed" >
                     </div>
                 </a>
-                <a class="editBtn"  th:if="${followedUsername==username}">
+                <a class="editBtn" id="unFollowBtn" th:if="${followedUsername==username}">
                     <div>
-                        <input type="button" class="edit-btn" value="Followed" >
+                        <input type="button" class="btn btn-sm btn-outline-secondary" value="Followed" >
                     </div>
                 </a>
             </div>
@@ -74,30 +79,6 @@
                     </div>
                 </div>
             </div>
-<!--            <div class="user-Event-body">-->
-<!--                <div class="upcoming-event-image">-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                    <div class="upcomingEvent-label profile-title-font">-->
-<!--                        <label>there is the upcoming event title</label>-->
-<!--                    </div>-->
-<!--                    <div class="upcomingEvent-label">-->
-<!--                        <label>there is the upcoming event</label>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="user-Event-body">-->
-<!--                <div class="upcoming-event-image">-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                    <div class="upcomingEvent-label profile-title-font">-->
-<!--                        <label>there is the upcoming event title</label>-->
-<!--                    </div>-->
-<!--                    <div class="upcomingEvent-label">-->
-<!--                        <label>there is the upcoming event</label>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
         </div>
         <div class="user-information">
             <div class="user-bio">
