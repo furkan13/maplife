@@ -20,7 +20,7 @@ public class UserController {
     private ResponseEntity<User> addUser(@RequestBody User user){
        String usernameFromUser = user.getUsername();
        try{
-           user.setIcon("default icon.png");
+           user.setIcon("default-icon.png");
            user.setRoles("ROLE_USER");
            /*validation for username*/
            User signingUser = (User) userService.loadUserByUsername(usernameFromUser);
