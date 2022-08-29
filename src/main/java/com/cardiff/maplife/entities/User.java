@@ -5,11 +5,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.*;
 
 @Entity
 @Table(name = "user")
@@ -50,6 +47,9 @@ public class User implements UserDetails, Serializable {
 
     @Column(name = "bio")
     private String bio;
+
+    private LocalDate lastLogin;
+    private int coin;
 
 
     @OneToMany(mappedBy = "user")  //Creating one to many relation with booking class and Using user object from Booking class
@@ -235,5 +235,21 @@ public class User implements UserDetails, Serializable {
 
     public void setFollowingUserSet(Set<User> followingUserSet) {
         this.followingUserSet = followingUserSet;
+    }
+
+    public LocalDate getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(LocalDate lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+    public int getCoin() {
+        return coin;
+    }
+
+    public void setCoin(int coin) {
+        this.coin = coin;
     }
 }

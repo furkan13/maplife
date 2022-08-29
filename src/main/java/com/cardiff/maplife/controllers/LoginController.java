@@ -13,6 +13,11 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
 
 @RestController
 public class LoginController {
@@ -28,6 +33,32 @@ public class LoginController {
 
         User gotUser = userService.findUserByUsername(userService.getAuthentication());
         if (gotUser != null) {
+
+            if(gotUser.getLastLogin()!=null)
+            {
+
+                if(gotUser.getLastLogin().equals(java.time.LocalDate.now().minusDays(1)))
+                {
+                    gotUser.setCoin(gotUser.getCoin()+10);
+                    gotUser.setLastLogin(java.time.LocalDate.now());
+                }
+                else
+                {
+                    gotUser.setLastLogin(java.time.LocalDate.now());
+                }
+
+            }
+
+            else
+            {
+                gotUser.setLastLogin(java.time.LocalDate.now());
+                gotUser.setCoin(100);
+            }
+
+
+
+                userService.saveUser(gotUser);
+
             return new ResponseEntity<>(gotUser, HttpStatus.OK);
         }
         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
