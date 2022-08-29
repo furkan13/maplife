@@ -39,7 +39,7 @@ public class EventServiceImplementation implements EventService {
             event= result.get();
         } else {
 
-            throw new RuntimeException("Did not find desk - " + eventId);
+            throw new RuntimeException("Did not find room - " + eventId);
         }
 
         return event;
@@ -48,19 +48,15 @@ public class EventServiceImplementation implements EventService {
     @Override
     public Event findByName(String name)
     {
+        //There might be event with same name since one event may close
+        Timestamp datetime = new Timestamp(System.currentTimeMillis());
+        List<Event> result = eventRepository.findTitleCustom(name,datetime);
 
-        Optional<Event> result = eventRepository.findByTitle(name);
 
-        Event event = null;
-
-        if (result.isPresent()) {
-            event= result.get();
-        } else {
-
-            throw new RuntimeException("Did not find desk - " + name);
+        if (result ==null || result.size() != 1) {
+            throw new RuntimeException("Did not find room - " + name);
         }
-
-        return event;
+        return result.get(0);
     }
 
     @Override
@@ -78,7 +74,8 @@ public class EventServiceImplementation implements EventService {
     {
         eventRepository.deleteAll();
     }
-
+    @Override
+    public List<Event> finduserCustom(Timestamp serverTime, String username){return eventRepository.finduserCustom(serverTime, username);}
 
 
 

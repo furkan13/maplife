@@ -18,8 +18,15 @@ import java.util.Optional;
 public interface EventRepository extends JpaRepository<Event, Long> {
 
     Event save(Event event);
-    Optional <Event> findByTitle(String name);
+    @Modifying
+    @Transactional
+    @Query("select u from Event u where (u.live=true or u.event_date > (:serverTime)) and u.title =(:name)")
+    List<Event> findTitleCustom(String name, Timestamp serverTime);
 
+    @Modifying
+    @Transactional
+    @Query("select u from Event u where (u.live=true or u.event_date > (:serverTime)) and u.user.username =(:username)")
+    List<Event> finduserCustom(Timestamp serverTime, String username);
     @Modifying
     @Transactional
     @Query("select u from Event u where u.live=true or u.event_date > (:serverTime)")
