@@ -8,11 +8,11 @@ let roomName = "TestingRoom";
 if(room != null){
 	roomName = room;
 }
-let roomObj = {room:"", tracks:"", token:"",VideoRoom:""};
+let roomObj = {room:"", tracks:[], token:"",VideoRoom:""};
 let local_track = [[[],[],[]],[[],[],[]]];//[n][0]:Video,[n][1]:Speaker,[n][2]:Mic, n=0: id, n=1: tag
 let count = 0;
 //user_name should be local stroage/cookie which is obtained when logging in
-let userJsonId=userJson.userId;
+
 function main(){
 	//What to do for connecting in twilio video room:
 	//1. Create a room with unique room name
@@ -59,7 +59,7 @@ const initlise = async function(){
 		alert("Room name: "+roomName +" may be closed or not exist.\n Return to main page.");
 		window.location.href = '../'; //Go back to main page
 	}
-	if(userJsonId == roomObj.VideoRoom["host_id"]){ //If the user is the host of this room
+	if(userJson.userId == roomObj.VideoRoom["user"].id){ //If the user is the host of this room
 		//Build the host page accordingly
 		//Show submit button and add event listener
 		await video_token(); //Get token before letting host to join the room
@@ -67,7 +67,7 @@ const initlise = async function(){
 			blackscreen.hide();
 			$("#speaker_target").empty();
 			$("#video_target").empty();
-			room_join(roomObj);
+			host_join();
 		})
 		$("#join_room_btn").show();
 		//Set cancel button to delete the room and return to main page. Also ask to confirm.
@@ -80,6 +80,10 @@ const initlise = async function(){
 		})
 	}
 	else{//Potential co-host, validate the user's id to server and check for token
+		if(!roomObj.VideoRoom["live"]){ //If the room is not live, it must be a future event as server only provide valid event
+			alert("This is a future event and the host has not launched it yet. Please wait until the host start the event.")
+			window.location.href = '../'; //Go back to live page
+		}
 		//Set cancel button to go back live page.
 		$("#cancel_btn").click(function(){
 			let answer = window.confirm("Return to live page?");
@@ -118,11 +122,27 @@ const initlise = async function(){
 
 	}
 }
+const host_join = async function(){
+	await room_final_check(); //Create a twilio room if future event
+	await video_room(); //Get the room detail again
+	room_join(roomObj);
+}
 function sleep(ms){
 	return new Promise(resolve => setTimeout(resolve,ms));
 }
 function switch_video(target, listvideo){ //User changing video source, input: target of the video, select list
 	roomObj.tracks[1].stop();//Stop current video stream
+	// console.log(listvideo.val());
+	if(listvideo.val() == "screen"){ //If user selected for screen sharing
+		navigator.mediaDevices.getDisplayMedia().then((streams) => {
+			let Screen_video = new Twilio.Video.LocalVideoTrack(streams.getTracks()[0]);
+			roomObj.tracks[1] = Screen_video;
+			target.empty();//Clear the previous track in show
+			target.append(Screen_video.attach());
+
+		});
+		return;
+	}
 	Twilio.Video.createLocalTracks({video:{deviceId:{exact:listvideo.val()}}}).then((stream)=>{
 		roomObj.tracks[1] = stream[0];
 		target.empty();//Clear the previous track in show
@@ -150,7 +170,7 @@ function switch_speaker(target, listspeaker){
 function get_track_list(){ //Doesn't work in local file, try localhost
 	local_track =[[[],[],[]],[[],[],[]]];
 	let stream;
-	return navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(s=>{
+	return navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then(s=>{
 		stream = s;
 		if (!navigator.mediaDevices?.enumerateDevices) {
 			console.log("enumerateDevices() not supported.");
@@ -172,10 +192,11 @@ function get_track_list(){ //Doesn't work in local file, try localhost
 						local_track[1][2].push(device.label);
 					}
 					
-				}
-
-				);
+				});
+				local_track[0][0].push("screen");
+				local_track[1][0].push("Screen capture");
 			})
+
 
 		}
 
@@ -184,6 +205,7 @@ function get_track_list(){ //Doesn't work in local file, try localhost
 }
 const loading_page = async function(){ //Setup for the blackscreen, provide video,audio preview
 	await get_track_list();
+
 
 	let target_list = [$("#user_video"),$("#user_speaker"),$("#user_mic")]
 	let cache;
@@ -236,6 +258,12 @@ function cohost_send(){
     $.post("/CoHostSubmit?RoomName="+roomName, function(data, status){
 
     });
+}
+function room_final_check(){
+
+	return $.post("/HostJoin?RoomName="+roomName, function(data, status){
+
+	});
 }
 function video_block(){ //Create block for multiple streamers' video
 	$("#bottom_other_stream") //Target div

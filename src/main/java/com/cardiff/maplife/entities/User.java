@@ -1,6 +1,8 @@
 package com.cardiff.maplife.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
@@ -13,6 +15,24 @@ import java.util.*;
 
 public class User implements UserDetails, Serializable {
 
+
+    public User() {
+
+    }
+    public User(Long id, String username, String password, String email, boolean userType, int coins, int views, String icon, String roles, String video, String bio) {
+        this.user_id = id;
+        this.username = username;
+        this.password = password;
+        this.email = email;
+        this.userType = userType;
+        this.coins = coins;
+        this.views = views;
+        this.icon = icon;
+        this.roles=roles;
+        this.video=video;
+        this.bio=bio;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_Id")
@@ -21,6 +41,7 @@ public class User implements UserDetails, Serializable {
     @Column(name = "username")
     private String username;
 
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "password")
     private String password;
 
@@ -122,6 +143,7 @@ public class User implements UserDetails, Serializable {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
+
     public Long getId() {
         return user_id;
     }
@@ -142,6 +164,7 @@ public class User implements UserDetails, Serializable {
     public String getUsername() {
         return username;
     }
+    @JsonIgnore
 
     public void setUsername(String username) {
         this.username = username;
@@ -151,55 +174,42 @@ public class User implements UserDetails, Serializable {
     public String getPassword() {
         return password;
     }
-
     public void setPassword(String password) {
         this.password = password;
     }
-
     public String getEmail() {
         return email;
     }
-
     public void setEmail(String email) {
         this.email = email;
     }
-
     public boolean isUserType() {
         return userType;
     }
-
     public void setUserType(boolean userType) {
         this.userType = userType;
     }
-
     public int getCoins() {
         return coins;
     }
-
     public void setCoins(int coins) {
         this.coins = coins;
     }
-
     public int getViews() {
         return views;
     }
-
     public void setViews(int views) {
         this.views = views;
     }
-
     public String getIcon() {
         return icon;
     }
-
     public void setIcon(String icon) {
         this.icon = icon;
     }
-
     public String getRoles() {
         return roles;
     }
-
     public void setRoles(String roles) {
         this.roles = roles;
     }
