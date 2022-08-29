@@ -101,11 +101,12 @@ public class AddEventController {
 				
 				String fileName = "";
 				fileName = StringUtils.cleanPath(file.getOriginalFilename()); //get the acrual file name
-				String uploadDir = "event/" + event.getId();
-				EventFileUploadUtil.saveFile(uploadDir, fileName, file);
 				event.setEventImageName(fileName);
-				
+
 				Event savedEvent = eventService.save(event);
+				String uploadDir = "event/" + savedEvent.getId();
+				EventFileUploadUtil.saveFile(uploadDir, fileName, file);
+
 
 				return new ModelAndView("redirect:/streaming?room="+event.getTitle());
 			}
@@ -128,11 +129,12 @@ public class AddEventController {
 				
 				String fileName = "";
 				fileName = StringUtils.cleanPath(file.getOriginalFilename()); //get the acrual file name
-				String uploadDir = "event/" + event.getId();
-				EventFileUploadUtil.saveFile(uploadDir, fileName, file);
 				event.setEventImageName(fileName);
-				
-				eventService.save(event);
+
+				Event savedEvent = eventService.save(event);
+				String uploadDir = "event/" + savedEvent.getId();
+				EventFileUploadUtil.saveFile(uploadDir, fileName, file);
+
 				return new ModelAndView("redirect:/streaming?room="+event.getTitle());
 			}
 			catch (Exception e) {

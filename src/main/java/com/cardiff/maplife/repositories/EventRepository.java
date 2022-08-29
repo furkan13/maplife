@@ -17,7 +17,7 @@ import java.util.Optional;
 @Repository
 public interface EventRepository extends JpaRepository<Event, Long> {
 
-
+    Event save(Event event);
     Optional <Event> findByTitle(String name);
 
     @Modifying

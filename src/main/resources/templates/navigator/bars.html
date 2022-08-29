@@ -189,12 +189,16 @@
                         </li>
                     </ul>
                     <hr class="sidebar-hr">
-                    <a th:href="@{/subscriptions}" class="nav-link">
+                    <a th:href="@{/subscriptions}" class="nav-link" th:if="${eventList!=null}">
                         <div class="offcanvas-header subscription-header">
                             <h5>SUBSCRIPTIONS</h5><img src="https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u233.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762">
                         </div>
                     </a>
-
+                    <a th:href="@{/subscriptions}" class="nav-link" th:if="${eventList==null}">
+                        <div class="offcanvas-header subscription-header">
+                            <h5>RECOMMENDATIONS</h5><img src="https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u233.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762">
+                        </div>
+                    </a>
                     <ul class="subscription-list navbar-nav" th:if="${eventList==null}">
                         <li id="recommendation-detail-0">
                             <a class="nav-link nav-link-box" th:href="@{/}">
