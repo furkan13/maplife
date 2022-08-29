@@ -4,17 +4,22 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-
-    // Configure Virtual Path Mapping Access
+    
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // images save location
-        registry.addResourceHandler("/image/**")
-                .addResourceLocations("file:C:\\Users\\c21086851\\OneDrive - Cardiff University\\dissertation\\Maplife_Project\\project_44b_party_watch\\src\\main\\resources\\static\\image\\");
-                //Jeff's location
-//                .addResourceLocations("file:C:\\Users\\c21045768\\OneDrive - Cardiff University\\Cardiff uni\\Final project\\Stream_current\\project_44b_party_watch\\src\\main\\resources\\static\\image\\");
-
+        exposeDirectory("image", registry);
+    }
+    private void exposeDirectory(String dirName, ResourceHandlerRegistry registry) {
+        Path uploadDir2 = Paths.get(dirName);
+        String uploadPath = uploadDir2.toFile().getAbsolutePath();
+        String realUploadPath="\\src\\main\\resources\\static\\image";
+        uploadPath = uploadPath.replace("image", realUploadPath);
+        System.out.println(uploadPath);
+        registry.addResourceHandler("/image/**").addResourceLocations("file:/"+ uploadPath + "/");
     }
 }
