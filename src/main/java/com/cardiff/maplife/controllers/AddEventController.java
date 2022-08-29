@@ -68,6 +68,13 @@ public class AddEventController {
 
 		
 		Event ServerEvent = null;
+		try{
+			ServerEvent = eventService.findByName(event.getTitle());
+			//If there are event in server, do not allow adding event
+		}
+		catch(Exception e){
+			ServerEvent = null;
+		}
 		//Check if the room title exist in database, check with live or future event(live = false)
 		//!!!!! need new function in eventrepo!!!!!
 		
@@ -89,8 +96,8 @@ public class AddEventController {
 		catch(Exception e){
 			return new ModelAndView("redirect:/");
 		}
-		System.out.println(event.getTitle());
-		System.out.println(event.getEvent_date());
+//		System.out.println(event.getTitle());
+//		System.out.println(event.getEvent_date());
 		Timestamp datetime = new Timestamp(System.currentTimeMillis());
 		long diff=event.getEvent_date().getTime()-datetime.getTime();
 		if(diff > 5){//Future event
@@ -98,14 +105,15 @@ public class AddEventController {
 				event.setLive(false); //Not in live
 				event.setEvent_link("");//Empty link as twilio api is not called
 
-				
 				String fileName = "";
 				fileName = StringUtils.cleanPath(file.getOriginalFilename()); //get the acrual file name
-				String uploadDir = "event/" + event.getId();
-				EventFileUploadUtil.saveFile(uploadDir, fileName, file);
 				event.setEventImageName(fileName);
-				
+
 				Event savedEvent = eventService.save(event);
+
+				String uploadDir = "event/" + savedEvent.getId();
+				EventFileUploadUtil.saveFile(uploadDir, fileName, file);
+
 
 				return new ModelAndView("redirect:/streaming?room="+event.getTitle());
 			}
@@ -118,6 +126,7 @@ public class AddEventController {
 		else{ //Live event
 			try {
 				//Set event_date as current time
+
 				datetime = new Timestamp(System.currentTimeMillis());
 				event.setEvent_date(datetime);
 				event.setLive(true);
@@ -128,11 +137,12 @@ public class AddEventController {
 				
 				String fileName = "";
 				fileName = StringUtils.cleanPath(file.getOriginalFilename()); //get the acrual file name
-				String uploadDir = "event/" + event.getId();
-				EventFileUploadUtil.saveFile(uploadDir, fileName, file);
 				event.setEventImageName(fileName);
-				
-				eventService.save(event);
+				Event savedEvent = eventService.save(event);
+				String uploadDir = "event/" + savedEvent.getId();
+				EventFileUploadUtil.saveFile(uploadDir, fileName, file);
+
+
 				return new ModelAndView("redirect:/streaming?room="+event.getTitle());
 			}
 			catch (Exception e) {
