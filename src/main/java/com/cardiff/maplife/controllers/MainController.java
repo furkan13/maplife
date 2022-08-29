@@ -10,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -18,14 +19,30 @@ public class MainController {
     private final UserService userService;
     private final EventService eventService;
 
-    public MainController(UserService userService, EventService eventService) {
+    public MainController(UserService userService,EventService eventService) {
         this.userService = userService;
         this.eventService = eventService;
+
     }
 
     @GetMapping("/")
     public ModelAndView showMapPage(ModelAndView modelAndView, HttpServletResponse response) {
         modelAndView = new ModelAndView("landing/map");
+        if (userService.getAuthentication()!=null){
+            List<Event> newEventList = new ArrayList<>();
+            User loggedUser = userService.findUserByUsername(userService.getAuthentication());
+            Set<User> followingUserSet = loggedUser.getFollowingUserSet();
+            Timestamp datetime = new Timestamp(System.currentTimeMillis());
+            List<Event> eventList = eventService.findCustom(datetime);
+            for (User followingUser : followingUserSet){
+                for (Event event : eventList){
+                    if (event.getUser().getUser_id().equals(followingUser.getUser_id())){
+                        newEventList.add(event);
+                    }
+                }
+            }
+            modelAndView.addObject("eventList",newEventList);
+        }
         return modelAndView;
     }
 

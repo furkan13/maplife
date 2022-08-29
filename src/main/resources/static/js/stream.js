@@ -8,11 +8,11 @@ let roomName = "TestingRoom";
 if(room != null){
 	roomName = room;
 }
-let roomObj = {room:"", tracks:"", token:"",VideoRoom:""};
+let roomObj = {room:"", tracks:[], token:"",VideoRoom:""};
 let local_track = [[[],[],[]],[[],[],[]]];//[n][0]:Video,[n][1]:Speaker,[n][2]:Mic, n=0: id, n=1: tag
 let count = 0;
 //user_name should be local stroage/cookie which is obtained when logging in
-let userJsonId=userJson.userId;
+
 function main(){
 	//What to do for connecting in twilio video room:
 	//1. Create a room with unique room name
@@ -28,7 +28,6 @@ function main(){
 	});
     $("#exit").click(function(){ room_exit(roomObj);});
     $("#partycheck").click(function(){ participant_video(roomObj);});
-    $("#create_room").click(function(){room_create();});
 	$("#delete_room").click(function(){room_delete();});
 
     $("#cohost_request").click(function(){cohost_send();});
@@ -59,7 +58,7 @@ const initlise = async function(){
 		alert("Room name: "+roomName +" may be closed or not exist.\n Return to main page.");
 		window.location.href = '../'; //Go back to main page
 	}
-	if(userJsonId == roomObj.VideoRoom["host_id"]){ //If the user is the host of this room
+	if(userJson.userId == roomObj.VideoRoom["user"].id){ //If the user is the host of this room
 		//Build the host page accordingly
 		//Show submit button and add event listener
 		await video_token(); //Get token before letting host to join the room
@@ -67,7 +66,7 @@ const initlise = async function(){
 			blackscreen.hide();
 			$("#speaker_target").empty();
 			$("#video_target").empty();
-			room_join(roomObj);
+			host_join();
 		})
 		$("#join_room_btn").show();
 		//Set cancel button to delete the room and return to main page. Also ask to confirm.
@@ -80,6 +79,10 @@ const initlise = async function(){
 		})
 	}
 	else{//Potential co-host, validate the user's id to server and check for token
+		if(!roomObj.VideoRoom["live"]){ //If the room is not live, it must be a future event as server only provide valid event
+			alert("This is a future event and the host has not launched it yet. Please wait until the host start the event.")
+			window.location.href = '../'; //Go back to live page
+		}
 		//Set cancel button to go back live page.
 		$("#cancel_btn").click(function(){
 			let answer = window.confirm("Return to live page?");
@@ -112,17 +115,33 @@ const initlise = async function(){
 			$("#video_target").empty();
 			room_join(roomObj);
 		})
-		$("#join_room_btn").show();
+		$("#join_room_btn").show(); 
 
 		
 
 	}
+}
+const host_join = async function(){
+	await room_final_check(); //Create a twilio room if future event
+	await video_room(); //Get the room detail again
+	room_join(roomObj);
 }
 function sleep(ms){
 	return new Promise(resolve => setTimeout(resolve,ms));
 }
 function switch_video(target, listvideo){ //User changing video source, input: target of the video, select list
 	roomObj.tracks[1].stop();//Stop current video stream
+	// console.log(listvideo.val());
+	if(listvideo.val() == "screen"){ //If user selected for screen sharing
+		navigator.mediaDevices.getDisplayMedia().then((streams) => {
+			let Screen_video = new Twilio.Video.LocalVideoTrack(streams.getTracks()[0]);
+			roomObj.tracks[1] = Screen_video;
+			target.empty();//Clear the previous track in show
+			target.append(Screen_video.attach());
+
+		});
+		return;
+	}
 	Twilio.Video.createLocalTracks({video:{deviceId:{exact:listvideo.val()}}}).then((stream)=>{
 		roomObj.tracks[1] = stream[0];
 		target.empty();//Clear the previous track in show
@@ -150,7 +169,7 @@ function switch_speaker(target, listspeaker){
 function get_track_list(){ //Doesn't work in local file, try localhost
 	local_track =[[[],[],[]],[[],[],[]]];
 	let stream;
-	return navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(s=>{
+	return navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then(s=>{
 		stream = s;
 		if (!navigator.mediaDevices?.enumerateDevices) {
 			console.log("enumerateDevices() not supported.");
@@ -172,10 +191,11 @@ function get_track_list(){ //Doesn't work in local file, try localhost
 						local_track[1][2].push(device.label);
 					}
 					
-				}
-
-				);
+				});
+				local_track[0][0].push("screen");
+				local_track[1][0].push("Screen capture");
 			})
+
 
 		}
 
@@ -184,6 +204,7 @@ function get_track_list(){ //Doesn't work in local file, try localhost
 }
 const loading_page = async function(){ //Setup for the blackscreen, provide video,audio preview
 	await get_track_list();
+
 
 	let target_list = [$("#user_video"),$("#user_speaker"),$("#user_mic")]
 	let cache;
@@ -237,12 +258,18 @@ function cohost_send(){
 
     });
 }
+function room_final_check(){
+
+	return $.post("/HostJoin?RoomName="+roomName, function(data, status){
+
+	});
+}
 function video_block(){ //Create block for multiple streamers' video
 	$("#bottom_other_stream") //Target div
 
 	
 }
-function participant_video_on_connect(){
+function participant_video_on_connect(){ //function for on connect 
 	room.on('participantConnected', participant => {
 	  console.log(`Participant "${participant.identity}" connected`);
 
@@ -258,18 +285,228 @@ function participant_video_on_connect(){
 	  });
 	});
 }
-function participant_video(roomObj){ //Show all the video of participant in the room
-    roomObj.room.participants.forEach(participant => {
-        participant.tracks.forEach(publication => {
-            if(publication.track){
-                document.getElementById("stream").appendChild(publication.track.attach());
-            }
-        });
-        participant.on("trackSubscribed",track =>{
-            document.getElementById("stream").appendChild(track.attach());
-        });
+function create_main_audio(participant){
+	
+	let localAudio = "";
+	participant.audioTracks.forEach((tracks)=>{localAudio = tracks}); //Need to debug
+	localAudio.id = "main_audio"; //added id to control with volume slider
+	localAudio.volume = 0;
+	// Volume control and mute button 
+	// slider
+	let volume_slider = $("<input></input>");
+	volume_slider.attr("input", "range");
+	volume_slider.val = 0; //default muted
+	volume_slider.data("volume", 100);//storing the restoring volume as id
+	volume_slider.attr("min", 0);
+	volume_slider.attr("max", 100);
+	volume_slider.change(function(){volume_adjust(volume_slider)});
+	//mute 
+	let volume_mute_btn = $("<button></button>");
+	
+	volume_mute_btn.html("mute");//!!!Should implement mute icon
+	
+	volume_mute_btn.click(function(){volume_mute(volume_mute_btn,volume_slider)});
+	
+	let audio_related = $("<div></div>");
+	audio_related.attr("id", "stream_audio");
+	audio_related.data("userid", participant.sid);
+	audio_related.data("username", participant.identity);
+	audio_related.append(localAudio);
+	audio_related.append(volume_slider);
+	audio_related.append(volume_mute_btn);
+	
+	return audio_related;
+}
+function create_cohost_function(participant){
+	
+	//red cross button for not showing/kick
+	//Host: kicking the user
+	//cohost: hide the video 
+	let hide_kick_btn = $("<button></button>");
+	hide_kick_btn.html("hide");//!!!Should implement red cross icon
+	hide_kick_btn.data("username", participant.identity);
+	hide_kick_btn.click(function(){hide_kick(hide_kick_btn)});
+	//Clickable div, call switching function if click
+	//Create a div overlay to ease deleting it 
+	let cache = $("<div></div>");
+	cache.data("username", participant.identity);
+	cache.data("userid", participant.sid);
+	cache.click(function(){stream_switch(cache)});
+	cache.append(hide_kick_btn);
+	
+	return cache;
+}
+function participant_video(roomObj){ //Show all the video of participant in the room, call when join the room
+    //Empty the existing video
+	$("#bottom_other_stream").empty();
+	$("#stream").empty();
+	
+	let video_window = $("<div></div>");//Div for video; //Storage for each video element
+	//Main display: attach video and audio tracks, allow to mute volume 
+	//Create whole object here, then append to stream div
+	
+	// Host show their video as main as default
+	roomObj.room.localParticipant.tracks.forEach(publication => { 
+		
+		if(publication.videoTracks){ //video element, add audio control on it
+			video_window.append(publication.videoTracks.attach());
+			
+		}
+		if(publication.audioTracks){ //Audio element, put in different container
+			// Should mute in default to prevent echo
+			
+			let audio_related = create_main_audio(localParticipant);
+			video_window.append(audio_related);
+		}
+	});
+	//Localtrack appending
+	//If host: append in main panel, if cohost: append in bottom stream
+	
+	if(roomObj.VideoRoom.user.id == userJson.userId ){ 
+		$("#stream").append(video_window);
+	}
+	else{
+		$("#stream_audio").remove();//remove the audio from local user
+		let cache = create_cohost_function(roomObj.room.localParticipant);
+		video_window.append(cache);
+		$("#bottom_other_stream").append(video_window);
+	}
+	
+	
+	//Looping for all other user in the video room
+	roomObj.room.participants.forEach((participant) => { 
+		
+		
+		//Only attach video tracks, attach audio when user click the window, allow delete if host
+		participant.tracks.forEach((publication) => {
+			if(publication.kind == "video"){
+				video_window = $("<div></div>");//Div for video
+				video_window.append(publication.track.attach());//Add video in the div
+				
+				
+				
+				
+				//Attaching it to user interface
+				if(participant.identity != roomObj.VideoRoom.user.username){ 
+					//Filter host as it is shown in main stream
+					if(participant.audioTracks){
+						let audio_related = create_main_audio(participant);
+						video_window.append(audio_related);
+					}
+					$("#stream").append(video_window);
+				}
+				else{
+					let cache = create_cohost_function(participant);
+					video_window.append(cache);
+					$("#bottom_other_stream").append(video_window);;
+				}
+			}
+		});
+
+        // participant.on("trackSubscribed",track =>{
+            // $("#bottom_other_stream").append(track.attach());
+        // });
     });
 }
+function stream_switch(source){//Swap the source to main stream panel
+	//Remove stream audio first, add swap and remove functionality after swap 
+	//host allow promote after switch
+	let main_display = $("#stream_audio").parent(); //Switch to buttom_other_stream
+	let side_display = source.parent(); //Switch to main stream
+
+	let main_id = $("#stream_audio").data("userid"); //Get twilio participant sid to retrieve the audio track
+	let main_name = $("#stream_audio").data("username");
+	let source_id = source.data("userid"); //Get twilio participant sid to retrieve the audio track
+	let source_name = source.data("username");
+	//Remove audio control in main and sup function in other
+	$("#stream_audio").remove();
+	source.remove();
+	let audio_track = "";
+	
+	//Get the audio track from clicked user
+	//Identifying whether it is a local user: if so: get it from local participant, else: get it fomr participant
+	if(source_name == userJson.username){ //if the selected user is local participant
+		if(roomObj.room.localParticipant.audioTracks){
+			audio_track = create_main_audio(roomObj.room.localParticipant);
+		}
+		
+	}
+	else{
+		if(roomObj.room.participants.get(source_id).tracks.audioTracks){//the selected user is remoted
+			audio_track = create_main_audio(roomObj.room.participants.get(source_id));
+		}
+		
+	}
+	side_display.append(audio_track);
+	
+	//Get swap function for the new side display
+	let cache = "";
+	if(main_name == userJson.username){ //if the current displaying main window is self
+		cache = create_cohost_function(roomObj.room.localParticipant);
+		
+	}
+	else{
+		cache = create_cohost_function(roomObj.room.participants.get(main_id));
+	}
+	main_display.append(cache);
+	
+	let clone_main = main_display.clone();
+	let clone_side = side_display.clone();
+	
+	main_display.replaceWith(clone_side);
+	side_display.replaceWith(clone_main);
+}
+function hide_kick(source){//host: expand to ask confirm kicking, cohost: ask confirm hiding
+	//Confirm dialog popup
+	let reply = "hiding";
+	if(roomObj.VideoRoom.user.id == userJson.userId){ //host
+		reply = "kicking"
+	}
+	//Create a chat with title and inner span
+	let cache = $("<div></div>");
+	cache.attr("title", "Confirm "+reply+" ?");
+	
+	//
+	$(function(){
+    cache.dialog({ //Target to the chat
+		resizable: false,
+		height: "auto", //Should be size of the window
+		width: "auto",
+		modal: true,
+		buttons: {
+			"Confirm": function() {
+				//Hide the video
+				source.parent().remove(); //Remove the whole video div(video_window)
+				if(roomObj.VideoRoom.user.id == userJson.userId){//host
+					//Kick the target user in twilio room
+					$.post("/CoHostKick?RoomName="+roomObj.VideoRoom["title"]+"&username="+source.data("username"), function(data, status){});
+
+				}
+				$( this ).dialog( "close" );
+				
+			},
+			Cancel: function() {
+				$( this ).dialog( "close" );
+			}
+		  }
+		});
+	});
+	
+}
+function volume_adjust(source){ //Only change input volume, twilio does not allow output volume setting
+	$("#main_audio")[0].volume = source.val;
+}
+function volume_mute(btn,slider){ //Mute function 
+	if(slider.data("volume") == 0){ //Mute 
+		slider.data("volume",slider[0].volume);//Set the restoring volume 
+		$("#main_audio")[0].volume = 0; 
+	}
+	else{ //unmute
+		$("#main_audio")[0].volume = slider.data("volume"); //Remove a in id and convert to nubmer
+		slider.data("volume", 0);
+	}
+}
+
 function room_exit(roomObj){ //Exit the room
     roomObj.room.on("disconnected", room =>{ //Notify other participant that this client is leaving
         room.localParticipant.tracks.forEach(publication => {
@@ -317,27 +554,7 @@ const room_join =async function(roomObj){ //Join the room with tracks
 	});
 	participant_video(roomObj);
 }
-const room_create = async function(e){
-    const event_object= {
-        title: roomName
-    }
-    console.log(event_object);
-    const response = await fetch("/RoomCreation", {
-                method: "POST",
-                headers: {
-                    "Content-type": "application/json"
-                },
-                body: JSON.stringify(event_object),
-            })
-            if (response.status == "200") {
-                        const data = await response.json();
-                        console.log(data);
-                        // window.location.href="/stream"
-                    }
 
-
-//    $.post("/RoomCreation", event_object);
-}
 function fetchCoHostRequest(){
     let interval = 5000; //5 second per request
     let cohostList = $.get("/CoHostRequest?RoomName="+roomName, function(data, status){
