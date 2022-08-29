@@ -115,7 +115,7 @@ const initlise = async function(){
 			$("#video_target").empty();
 			room_join(roomObj);
 		})
-		$("#join_room_btn").show();
+		$("#join_room_btn").show(); 
 
 		
 
