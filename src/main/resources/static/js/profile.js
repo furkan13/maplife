@@ -1,8 +1,6 @@
-let followUserBtn= document.getElementById("followUserBtn")
-let followUserForPage=document.getElementById("followUserBtn-forPage")
+const followBtn = document.getElementById("followBtn")
+
 let profileUsername=document.getElementById("profileUsername").innerText
-let unFollowBtnForPage=document.getElementById("unFollowBtn-forPage")
-let unFollowBtn=document.getElementById("unFollowBtn")
 
 
 const unFollowUser = async function () {
@@ -17,9 +15,8 @@ const unFollowUser = async function () {
         body: JSON.stringify(userObject),
     })
     if (response.status == "200") {
-        followUserForPage.style.display="flex"
-        unFollowBtn.style.display="none"
-        unFollowBtnForPage.style.display="none"
+        followBtn.value="Follow"
+        console.log("unfo success")
     }
     else {
         console.log("not 200")
@@ -38,18 +35,21 @@ const followUser = async function () {
         body: JSON.stringify(userObject),
     })
     if (response.status == "200") {
-        followUserBtn.style.display="none"
-        followUserForPage.style.display="none"
-        unFollowBtnForPage.style.display="flex"
+        followBtn.value="Followed"
+        console.log("follow success")
     }
     else {
         console.log("not 200")
     }
 }
 
+const toggleFollow = async function(e){
+    if(e.target.value === "Follow"){
+        await followUser()
+    }
+    else if(e.target.value === "Followed"){
+        await unFollowUser()
+    }
+}
 
-
-followUserBtn.addEventListener("click",followUser)
-followUserForPage.addEventListener("click",followUser)
-unFollowBtn.addEventListener("click",unFollowUser)
-unFollowBtnForPage.addEventListener("click",unFollowUser)
+followBtn.addEventListener("click",toggleFollow)

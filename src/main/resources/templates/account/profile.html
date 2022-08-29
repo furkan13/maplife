@@ -25,27 +25,10 @@
                         <input type="button" class="btn btn-sm btn-outline-secondary" value="Edit Profile" th:if="${loggedUsername==username}">
                     </div>
                 </a>
-                <a class="editBtn" id="followUserBtn-forPage" style="display: none">
-                    <div>
-                        <input type="button" class="btn btn-sm btn-outline-secondary" value="Follow" >
-                    </div>
-                </a>
-                <a class="editBtn" id="followUserBtn">
-                <div>
-                    <input type="button" class="btn btn-sm btn-outline-secondary" value="Follow" th:if="${loggedUsername!=username&&followedUsername!=username}">
+                <div class="editBtn">
+                    <input id="followBtn" type="button" class="btn btn-sm btn-outline-secondary" th:value="${followToggle}" th:if="${loggedUsername!=username}">
                 </div>
-                </a>
-                <a class="editBtn" id="unFollowBtn-forPage" style="display: none">
-                    <div>
-                        <input type="button" class="btn btn-sm btn-outline-secondary" value="Followed" >
-                    </div>
-                </a>
-                <a class="editBtn" id="unFollowBtn" th:if="${followedUsername==username}">
-                    <div>
-                        <input type="button" class="btn btn-sm btn-outline-secondary" value="Followed" >
-                    </div>
-                </a>
-            </div>
+                </div>
             <div class="dom-3">
                 <div class="userInfo-block">
                     <label class="userInfo-label">50</label>
@@ -60,7 +43,7 @@
                     <label class="userInfo-label">Total views</label>
                 </div>
             </div>
-        </div>
+            </div>
     </div>
     <div class="upcoming-event-header">
         <label>Upcoming Events</label>

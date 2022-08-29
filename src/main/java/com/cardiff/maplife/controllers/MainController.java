@@ -59,11 +59,14 @@ public class MainController {
         User searchUser = (User) userService.loadUserByUsername(username);
         String loggedUsername = userService.getAuthentication();
         //check whether logged user followed the search user or not.
-        User gotUser = userService.findUserByUsername(userService.getAuthentication());
+        User gotUser = userService.findUserByUsername(loggedUsername);
         Set<User> followingUserSet = gotUser.getFollowingUserSet();
+        modelAndView.addObject("followToggle","Follow");
         for (User followedUser : followingUserSet) {
-            if(searchUser.getUsername().equals(followedUser.getUsername())){
+            if(username.equals(followedUser.getUsername())){
                 modelAndView.addObject("followedUsername",followedUser.getUsername());
+                modelAndView.addObject("followToggle","Followed");
+                break;
             }
         }
         //get upcoming event
@@ -72,7 +75,7 @@ public class MainController {
 
         modelAndView.setViewName("account/profile");
         modelAndView.addObject("loggedUsername",loggedUsername);
-        modelAndView.addObject("username", searchUser.getUsername());
+        modelAndView.addObject("username", username);
         modelAndView.addObject("video",searchUser.getVideo());
         modelAndView.addObject("total_view",searchUser.getViews());
         modelAndView.addObject("bio",searchUser.getBio());

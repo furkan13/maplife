@@ -138,7 +138,6 @@ public class User implements UserDetails, Serializable {
         this.user_id = user_id;
     }
 
-    @Override
     public String getUsername() {
         return username;
     }
@@ -147,7 +146,6 @@ public class User implements UserDetails, Serializable {
         this.username = username;
     }
 
-    @Override
     public String getPassword() {
         return password;
     }
