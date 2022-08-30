@@ -65,14 +65,12 @@ const showEventsOnMap = async function () {
             console.log(data);
             //resolve data and put them in our marker and popup
             for (let i = 0;data.length>i;i++) {
-                let eventCoverImg = "../../../" + data[i].photosImagePath
-                let eventIconImg = "image/" + data[i].user.icon
                 //define the custom icon for hosts
                 let myIcon = L.divIcon({className:'custom-div-icon',iconAnchor: [25, 25],popupAnchor: [2, -28]});
                 //custom the popup for hosts
-                popupContent = `<div id="event-img-container" style="background-image: url(${eventCoverImg})"></div><div id="event-title">${data[i].title}</div>
+                popupContent = `<div id="event-img-container" style="background-image: url('../../../${data[i].photosImagePath}')"></div><div id="event-title">${data[i].title}</div>
 <div id="host-name" class="event-text">${data[i].user.username}</div><div id="event-viewers" class="event-text">${data[i].user.views} viewers</div><div class="event-text">${data[i].event_date}</div>`
-                myIcon.options.html = `<img id="custom-div-icon" class="custom-div-icon" src= ${eventIconImg}>`
+                myIcon.options.html = `<img id="custom-div-icon" class="custom-div-icon" src= "image/${data[i].user.icon}">`
                 // determine the category and put them into different layer groups
                 // if (data[i].category === 'Pet'){
                     L.marker([51,-3], {icon: myIcon,tags:['Pet']}).bindPopup(popupContent,{closeButton:false}).addTo(petGroup) ;
