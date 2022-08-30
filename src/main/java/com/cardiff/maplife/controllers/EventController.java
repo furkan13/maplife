@@ -152,17 +152,18 @@ public class EventController {
     private void LiveAccept(@RequestParam(value="RoomName", defaultValue = "null")String RoomName, @RequestParam(value="username", defaultValue = "null")String UserName){
         //Accept the requested user as cohost
         Event eventCache;
-        System.out.println(RoomName);
-        System.out.println(UserName);
+        User userCache;
+
         try{ //Check if the room exist
             eventCache = eventService.findByName(RoomName);
+            userCache = userService.findUserByUsername(UserName);
         }
         catch(Exception e){
             return;
         }
         //If the user is host
         if(userService.findUserByUsername(userService.getAuthentication()).getId() == eventCache.getUser().getId()){
-            Live liveCache = liveService.findLiveByUserid(userService.findUserByUsername(UserName).getId(),eventCache.getId() );
+            Live liveCache = liveService.findLiveByUserid(userCache.getId(),eventCache.getId() );
             try{
                 liveCache.setApproved(true);
                 liveService.saveLive(liveCache);
@@ -192,6 +193,8 @@ public class EventController {
     private void LiveKick(@RequestParam(value="RoomName", defaultValue = "null")String RoomName, @RequestParam(value="username", defaultValue = "null")String UserName){
         //Kick the existing cohost
         Event eventCache;
+//        System.out.println(RoomName);
+//        System.out.println(UserName);
         try{ //Check if the room exist
             eventCache = eventService.findByName(RoomName);
         }
@@ -261,7 +264,7 @@ public class EventController {
             eventCache = eventService.findByName(RoomName);
             //Check if the room closed. Only allow future room for host and live room for host&cohost
             //Checking is now done in sql
-            System.out.println(eventCache.getTitle());
+//            System.out.println(eventCache.getTitle());
         }
         catch(Exception e){
             return null;
