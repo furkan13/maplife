@@ -1,6 +1,7 @@
 package com.cardiff.maplife.controllers;
 
 
+import com.baomidou.mybatisplus.extension.api.R;
 import com.cardiff.maplife.entities.Event;
 
 import com.cardiff.maplife.entities.Live;
@@ -17,10 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 public class EventController {
@@ -291,6 +289,27 @@ public class EventController {
         return "";
 
 
+    }
+
+
+
+
+
+    @GetMapping("/EventTags")
+    private List<String> GetEventTags(@RequestParam(value = "RoomName", defaultValue = "null") String RoomName) {
+        System.out.println(RoomName);
+        if(RoomName.equals(null))
+        {return null;}
+        else {
+            String[] stringArray = eventService.findByName(RoomName).getCat().split(",");
+            List<String> tagList = Arrays.asList(stringArray);
+            for (int i = 0; i < tagList.size(); i++) {
+                System.out.println(tagList.get(i));
+            }
+
+
+            return tagList;
+        }
     }
 
 

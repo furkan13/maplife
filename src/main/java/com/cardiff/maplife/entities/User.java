@@ -111,9 +111,7 @@ public class User implements UserDetails, Serializable {
     }
 
 
-    public User() {
 
-    }
 
     public User(Long user_id, String username, String password, String email, boolean userType, int coins, int views, String icon, String roles, String video, String bio, List<Event> eventList, Set<User> followerUserSet, Set<User> followingUserSet, List<GrantedAuthority> authorities) {
         this.user_id = user_id;

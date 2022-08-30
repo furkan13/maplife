@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.net.BindException;
 import java.net.URI;
 import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.Date;
 import java.sql.Time;
 import java.text.DateFormat;
@@ -40,6 +41,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Period;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -64,9 +66,11 @@ public class AddEventController {
 
 
     @PostMapping("/addevents")
-    public ModelAndView addEvent(ModelAndView modelAndView, @ModelAttribute("events") Event event, Model model, @RequestParam(value = "image", required = false) MultipartFile file, @AuthenticationPrincipal User user, HttpSession session, RedirectAttributes redirAttrs,@RequestParam (required = false) String time) throws IOException, NullPointerException{
+    public ModelAndView addEvent(ModelAndView modelAndView, @ModelAttribute("events") Event event, Model model, @RequestParam(value = "image", required = false) MultipartFile file, @AuthenticationPrincipal User user, HttpSession session, RedirectAttributes redirAttrs,@RequestParam (required = false) String time,@RequestParam("tags")String checkboxValue) throws IOException, NullPointerException{
 
-		
+		event.setCat(checkboxValue);
+
+
 		Event ServerEvent = null;
 		//Check if the room title exist in database, check with live or future event(live = false)
 		//!!!!! need new function in eventrepo!!!!!
@@ -127,7 +131,7 @@ public class AddEventController {
 				
 				
 				String fileName = "";
-				fileName = StringUtils.cleanPath(file.getOriginalFilename()); //get the acrual file name
+				fileName = StringUtils.cleanPath(file.getOriginalFilename()); //get the actual file name
 				String uploadDir = "event/" + event.getId();
 				EventFileUploadUtil.saveFile(uploadDir, fileName, file);
 				event.setEventImageName(fileName);
