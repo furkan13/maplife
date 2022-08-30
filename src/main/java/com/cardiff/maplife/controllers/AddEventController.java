@@ -6,6 +6,7 @@ import com.cardiff.maplife.entities.Event;
 import com.cardiff.maplife.entities.User;
 import com.cardiff.maplife.fileUpload.EventFileUploadUtil;
 import com.cardiff.maplife.services.EventService;
+import com.cardiff.maplife.services.TwilioService;
 import com.cardiff.maplife.services.UserService;
 import net.sf.jsqlparser.expression.DateTimeLiteralExpression;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -48,7 +50,8 @@ public class AddEventController {
     EventService eventService;
     @Autowired
     UserService userService;
-
+    @Autowired
+    TwilioService twilioService;
 
     @GetMapping("/addevents")
     public ModelAndView showForm(ModelAndView modelAndView, @ModelAttribute("events") Event event, Model model, @RequestParam(value = "image", required = false) MultipartFile file, @AuthenticationPrincipal User user, HttpSession session, RedirectAttributes redirAttrs, BindingResult result) throws IOException, NullPointerException{
@@ -62,89 +65,94 @@ public class AddEventController {
 
     @PostMapping("/addevents")
     public ModelAndView addEvent(ModelAndView modelAndView, @ModelAttribute("events") Event event, Model model, @RequestParam(value = "image", required = false) MultipartFile file, @AuthenticationPrincipal User user, HttpSession session, RedirectAttributes redirAttrs,@RequestParam (required = false) String time) throws IOException, NullPointerException{
-        LocalDate now = LocalDate.now();
+
+		
+		Event ServerEvent = null;
+		try{
+			ServerEvent = eventService.findByName(event.getTitle());
+			//If there are event in server, do not allow adding event
+		}
+		catch(Exception e){
+			ServerEvent = null;
+		}
+		//Check if the room title exist in database, check with live or future event(live = false)
+		//!!!!! need new function in eventrepo!!!!!
+		
+		//Check with twilio room if the room name exist
+		if(twilioService.CheckRoomExist(event) || ServerEvent != null) { //If there is existing room with the same name
+			event.setTitle("Error");
+			System.out.println("Room exist");
+			
+			//Show popup and Return to main page if room exist
+			return new ModelAndView("redirect:/");
+		}
+		
+		event.setUser(userService.findUserByUsername(user.getUsername()));
+		try{
+			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm");
+			Date date = (Date) formatter.parse(time);
+			event.setEvent_date(date);
+		}
+		catch(Exception e){
+			return new ModelAndView("redirect:/");
+		}
+//		System.out.println(event.getTitle());
+//		System.out.println(event.getEvent_date());
+		Timestamp datetime = new Timestamp(System.currentTimeMillis());
+		long diff=event.getEvent_date().getTime()-datetime.getTime();
+		if(diff > 5){//Future event
+			try{
+				event.setLive(false); //Not in live
+				event.setEvent_link("");//Empty link as twilio api is not called
+
+				String fileName = "";
+				fileName = StringUtils.cleanPath(file.getOriginalFilename()); //get the acrual file name
+				event.setEventImageName(fileName);
+
+				Event savedEvent = eventService.save(event);
+
+				String uploadDir = "event/" + savedEvent.getId();
+				EventFileUploadUtil.saveFile(uploadDir, fileName, file);
 
 
-        System.out.println(time);
+				return new ModelAndView("redirect:/streaming?room="+event.getTitle());
+			}
+			catch(Exception e){
+				System.out.println("some error here...");
+			
+			}
+			
+		}
+		else{ //Live event
+			try {
+				//Set event_date as current time
+
+				datetime = new Timestamp(System.currentTimeMillis());
+				event.setEvent_date(datetime);
+				event.setLive(true);
+				//Create twilio room and get url of the created room from twilio
+				String link = (twilioService.CreateRoom(event));
+				event.setEvent_link(link);
+				
+				
+				String fileName = "";
+				fileName = StringUtils.cleanPath(file.getOriginalFilename()); //get the acrual file name
+				event.setEventImageName(fileName);
+				Event savedEvent = eventService.save(event);
+				String uploadDir = "event/" + savedEvent.getId();
+				EventFileUploadUtil.saveFile(uploadDir, fileName, file);
 
 
-        String fileName = "";
-        try {
-            fileName = StringUtils.cleanPath(file.getOriginalFilename()); //get the acrual file name
-            event.setEventImageName(fileName);
-            System.out.println(fileName);
+				return new ModelAndView("redirect:/streaming?room="+event.getTitle());
+			}
+			catch (Exception e) {
+				System.out.println("some error here...");
+				
+			}
+		}
+		//Return to main page if error 
 
-
-        } catch (Exception e) {
-
-        }
-
-
-        if (event.getTitle() != null) {
-
-
-            event.setHost_id(user.getId());
-
-
-
-
-            Timestamp datetime = new Timestamp(System.currentTimeMillis());
-            try {
-                DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm");
-                Date date = (Date) formatter.parse(time);
-                event.setEvent_date(date);
-
-            }
-            catch (Exception e)
-            {
-
-            }
-
-            event.setUser(userService.findUserByUsername(user.getUsername()));
-
-
-
-            eventService.save(event);
-
-
-
-            //sending upload dir,filename and the file to the upload utility
-
-
-            long diff=event.getEvent_date().getTime()-datetime.getTime();
-            long minutes = TimeUnit.MILLISECONDS.toMinutes(diff);
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-            HttpEntity<Event> requestEntity = new HttpEntity<>(event, headers);
-            System.out.println(event.getId());
-
-
-            if(diff<5)
-            {
-
-
-                String uri = "http://localhost:8080/RoomCreation";
-                RestTemplate restTemplate = new RestTemplate();
-                ResponseEntity<Event> resp = new ResponseEntity(headers, HttpStatus.OK);
-                resp = restTemplate.postForObject(uri,requestEntity,ResponseEntity.class);
-
-            }
-            else {
-
-                String uri = "http://localhost:8080/RoomFutureCreation";
-                RestTemplate restTemplate = new RestTemplate();
-                ResponseEntity<Event> resp = new ResponseEntity(headers, HttpStatus.OK);
-                resp = restTemplate.postForObject(uri, requestEntity, ResponseEntity.class);
-            }
-            String uploadDir = "event/" + event.getId();
-            EventFileUploadUtil.saveFile(uploadDir, fileName, file);
-
-        }
-
-
-        modelAndView = new ModelAndView("redirect:/streaming?room="+event.getTitle());
-
-        return modelAndView;
+        return new ModelAndView("redirect:/");
     }
 }
 
