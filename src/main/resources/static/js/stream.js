@@ -115,7 +115,7 @@ const initlise = async function(){
 			$("#video_target").empty();
 			room_join(roomObj);
 		})
-		$("#join_room_btn").show(); 
+		$("#join_room_btn").show();
 
 		
 
@@ -169,7 +169,36 @@ function switch_speaker(target, listspeaker){
 function get_track_list(){ //Doesn't work in local file, try localhost
 	local_track =[[[],[],[]],[[],[],[]]];
 	let stream;
-	return navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then(s=>{
+	
+	navigator.mediaDevices.getUserMedia({ audio: false, video: true })
+	.then(s=>{
+		stream = s;
+		if (!navigator.mediaDevices?.enumerateDevices) {
+		console.log("enumerateDevices() not supported.");
+		} 
+		else {
+			navigator.mediaDevices.enumerateDevices()
+			.then((devices) => {
+				devices.forEach((device) => {
+					// console.log(device.label);
+					if(device.kind == "videoinput"){
+						local_track[0][0].push(device.deviceId);
+						local_track[1][0].push(device.label);
+					}
+				});
+				local_track[0][0].push("screen");
+				local_track[1][0].push("Screen capture");
+			})
+
+
+		}
+	})
+	.catch(err =>{ //If user do not have any camera
+		local_track[0][0].push("screen");
+		local_track[1][0].push("Screen capture");
+	});
+
+	return navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(s=>{
 		stream = s;
 		if (!navigator.mediaDevices?.enumerateDevices) {
 			console.log("enumerateDevices() not supported.");
@@ -178,10 +207,10 @@ function get_track_list(){ //Doesn't work in local file, try localhost
 			.then((devices) => {
 				devices.forEach((device) => {
 					// console.log(device.label);
-					if(device.kind == "videoinput"){
-						local_track[0][0].push(device.deviceId);
-						local_track[1][0].push(device.label);
-					}
+					// if(device.kind == "videoinput"){
+						// local_track[0][0].push(device.deviceId);
+						// local_track[1][0].push(device.label);
+					// }
 					if(device.kind == "audiooutput"){
 						local_track[0][1].push(device.deviceId);
 						local_track[1][1].push(device.label);
@@ -192,8 +221,8 @@ function get_track_list(){ //Doesn't work in local file, try localhost
 					}
 					
 				});
-				local_track[0][0].push("screen");
-				local_track[1][0].push("Screen capture");
+				// local_track[0][0].push("screen");
+				// local_track[1][0].push("Screen capture");
 			})
 
 
@@ -219,20 +248,38 @@ const loading_page = async function(){ //Setup for the blackscreen, provide vide
 			target_list[i].append(cache);
 		}
 	}
+	
 	//Set to default video/microphone, show it on webpage
+	$("#video_target").empty();//Clear the previous track in show
+	if(local_track[0][0][0] == "screen"){ //If user do not have any camera, set camera as screen capture
+		navigator.mediaDevices.getDisplayMedia().then((streams) => {
+			let Screen_video = new Twilio.Video.LocalVideoTrack(streams.getTracks()[0]);
+			roomObj.tracks[1] = Screen_video;
 
-	Twilio.Video.createLocalTracks({audio:{deviceId:{exact:local_track[0][2][0]}}, video:{deviceId:{exact:local_track[0][0][0]}}})
+			$("#video_target").append(roomObj.tracks[1].attach());
+		});
+	}
+	else{
+		Twilio.Video.createLocalTracks({audio:false, video:{deviceId:{exact:local_track[0][0][0]}}})
+			.then((stream)=> {
+				roomObj.tracks[1] = stream[0]; //Store the tracks in roomObj
+				$("#video_target").append(roomObj.tracks[1].attach());
+			})
+		
+	}
+	
+	
+	Twilio.Video.createLocalTracks({audio:{deviceId:{exact:local_track[0][2][0]}}, video:false})
 		.then((stream)=> {
-			roomObj.tracks = stream; //Store the tracks in roomObj
-
-			$("#video_target").empty();//Clear the previous track in show
+			roomObj.tracks[0] = stream[0]; //Store the tracks in roomObj
+			
 			$(".Testing").remove();
 
 			//Make an id for the audio, so doesn't delete all
 			let cache = roomObj.tracks[0].attach();
 			cache.className = "Testing";
 			$("#speaker_target").append(cache); //Attach the track for preview
-			$("#video_target").append(roomObj.tracks[1].attach());
+			
 		})
 
 }
@@ -288,17 +335,18 @@ function participant_video_on_connect(){ //function for on connect
 function create_main_audio(participant){
 	
 	let localAudio = "";
-	participant.audioTracks.forEach((tracks)=>{localAudio = tracks}); //Need to debug
+	participant.audioTracks.forEach((tracks)=>{localAudio = tracks.track.attach()}); //Need to debug
 	localAudio.id = "main_audio"; //added id to control with volume slider
 	localAudio.volume = 0;
 	// Volume control and mute button 
 	// slider
 	let volume_slider = $("<input></input>");
-	volume_slider.attr("input", "range");
-	volume_slider.val = 0; //default muted
-	volume_slider.data("volume", 100);//storing the restoring volume as id
+	volume_slider.attr("type", "range");
+	volume_slider.attr("value", 0); //default muted
+	volume_slider.data("volume", 1);//storing the restoring volume as id
 	volume_slider.attr("min", 0);
 	volume_slider.attr("max", 100);
+	volume_slider.attr("step", 1);
 	volume_slider.change(function(){volume_adjust(volume_slider)});
 	//mute 
 	let volume_mute_btn = $("<button></button>");
@@ -348,14 +396,14 @@ function participant_video(roomObj){ //Show all the video of participant in the 
 	// Host show their video as main as default
 	roomObj.room.localParticipant.tracks.forEach(publication => { 
 		
-		if(publication.videoTracks){ //video element, add audio control on it
-			video_window.append(publication.videoTracks.attach());
+		if(publication.kind == "video"){ //video element, add audio control on it
+			video_window.append(publication.track.attach());
 			
 		}
-		if(publication.audioTracks){ //Audio element, put in different container
+		if(publication.kind == "audio"){ //Audio element, put in different container
 			// Should mute in default to prevent echo
 			
-			let audio_related = create_main_audio(localParticipant);
+			let audio_related = create_main_audio(roomObj.room.localParticipant);
 			video_window.append(audio_related);
 		}
 	});
@@ -408,6 +456,7 @@ function participant_video(roomObj){ //Show all the video of participant in the 
         // });
     });
 }
+
 function stream_switch(source){//Swap the source to main stream panel
 	//Remove stream audio first, add swap and remove functionality after swap 
 	//host allow promote after switch
@@ -493,16 +542,24 @@ function hide_kick(source){//host: expand to ask confirm kicking, cohost: ask co
 	});
 	
 }
+//Checking with volume_adjust & volume_mute finished
 function volume_adjust(source){ //Only change input volume, twilio does not allow output volume setting
-	$("#main_audio")[0].volume = source.val;
+	if(parseInt(source[0].value) >0){
+		$("#main_audio")[0].muted = false;
+	}
+	source.data("volume", 0);
+	$("#main_audio")[0].volume = parseFloat(source[0].value/100);
 }
 function volume_mute(btn,slider){ //Mute function 
-	if(slider.data("volume") == 0){ //Mute 
-		slider.data("volume",slider[0].volume);//Set the restoring volume 
+	if(slider.data("volume") == 0){ //Mute, data("volume") will only be 0 if audio is playing
+		slider[0].value = 0;//Move the slider to 0
+		slider.data("volume",$("#main_audio")[0].volume);//Set the restoring volume 
 		$("#main_audio")[0].volume = 0; 
 	}
 	else{ //unmute
+		$("#main_audio")[0].muted = false;
 		$("#main_audio")[0].volume = slider.data("volume"); //Remove a in id and convert to nubmer
+		slider[0].value = slider.data("volume")*100; //Move the slider back to original 
 		slider.data("volume", 0);
 	}
 }
