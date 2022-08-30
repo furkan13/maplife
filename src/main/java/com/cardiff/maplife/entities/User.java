@@ -1,5 +1,7 @@
 package com.cardiff.maplife.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -54,6 +56,9 @@ public class User implements UserDetails, Serializable {
 
     @Column(name = "bio")
     private String bio;
+
+    private LocalDate lastLogin;
+    private int coin;
 
 
     @OneToMany(mappedBy = "user")  //Creating one to many relation with booking class and Using user object from Booking class
@@ -158,39 +163,51 @@ public class User implements UserDetails, Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
+
     public String getEmail() {
         return email;
     }
+
     public void setEmail(String email) {
         this.email = email;
     }
+
     public boolean isUserType() {
         return userType;
     }
+
     public void setUserType(boolean userType) {
         this.userType = userType;
     }
+
     public int getCoins() {
         return coins;
     }
+
     public void setCoins(int coins) {
         this.coins = coins;
     }
+
     public int getViews() {
         return views;
     }
+
     public void setViews(int views) {
         this.views = views;
     }
+
     public String getIcon() {
         return icon;
     }
+
     public void setIcon(String icon) {
         this.icon = icon;
     }
+
     public String getRoles() {
         return roles;
     }
+
     public void setRoles(String roles) {
         this.roles = roles;
     }
@@ -226,5 +243,21 @@ public class User implements UserDetails, Serializable {
 
     public void setFollowingUserSet(Set<User> followingUserSet) {
         this.followingUserSet = followingUserSet;
+    }
+
+    public LocalDate getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(LocalDate lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+    public int getCoin() {
+        return coin;
+    }
+
+    public void setCoin(int coin) {
+        this.coin = coin;
     }
 }

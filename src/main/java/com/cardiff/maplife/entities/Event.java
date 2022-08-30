@@ -106,14 +106,14 @@ public class Event {
     private boolean live;
 
     @Column(name = "cat")
-    private Integer cat;
+    private String cat;
 
 
-    public Integer getCat() {
+    public String getCat() {
         return cat;
     }
 
-    public void setCat(Integer cat) {
+    public void setCat(String cat) {
         this.cat = cat;
     }
 
