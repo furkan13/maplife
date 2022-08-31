@@ -4,6 +4,7 @@ let currentLocation
 const categoryElements= document.getElementsByName('cat-group-chips')
 const resetButtonElement = document.getElementById("reset-filter-btn")
 const streamNowButtonElement = document.getElementById("live-switch")
+
 // display the map layer
 var map = L.map('map',{zoomControl:false}).setView([51.483396, -3.173728], 11);
 //render map tile layer
@@ -57,18 +58,15 @@ map.on('locationfound', getCurrentLocation);
 
 // define a marker cluster group to support heat map and Compatibility with layers
 var mcgLayerSupportGroup = L.markerClusterGroup.layerSupport({spiderLegPolylineOptions:{opacity: 0},showCoverageOnHover:false}),
-    petGroup = L.layerGroup(),
-    lifeGroup = L.layerGroup(),
-    gameGroup = L.layerGroup(),
-    otherGroup = L.layerGroup(),
-    liveNowGroup = L.layerGroup(),
-    upcomingGroup = L.layerGroup(),
+    petGroup = L.layerGroup(), lifeGroup = L.layerGroup(), gameGroup = L.layerGroup(), sportGroup = L.layerGroup(),travelGroup = L.layerGroup(),otherGroup = L.layerGroup(),
+    liveNowGroup = L.layerGroup(), upcomingGroup = L.layerGroup(),
     control = L.control.layers(null, null, { collapsed: false })
+
 mcgLayerSupportGroup.addTo(map);
-var categoryGroupList = [gameGroup,petGroup,lifeGroup,otherGroup]
-var switchLiveGroupList = [upcomingGroup,liveNowGroup]
+var categoryGroupList = [gameGroup,petGroup,lifeGroup,sportGroup,travelGroup,otherGroup]
+// var switchLiveGroupList = [upcomingGroup,liveNowGroup]
 //retrieve and show the streaming event data
-const showEventsOnMap = async function () {
+const getEvents = async function () {
     const response = await fetch("/EventList")
     if (response.status == "200") {
         const data = await response.json();
@@ -81,16 +79,53 @@ const showEventsOnMap = async function () {
             popupContent = `<div id="event-img-container" style="background-image: url('../../../${data[i].photosImagePath}')"></div><div id="event-title">${data[i].title}</div>
 <div id="host-name" class="event-text">${data[i].user.username}</div><div id="event-viewers" class="event-text">${data[i].user.views} viewers</div><div class="event-text">${data[i].event_date}</div>`
             myIcon.options.html = `<img id="custom-div-icon" class="custom-div-icon" src= "image/${data[i].user.icon}">`
-
-
-                    if (data[i].cat=="Other"){
+            const marker = L.marker([51.583396,-3.273728], {icon: myIcon}).bindPopup(popupContent,{closeButton:false})
+            let category =  data[i].cat.split(",");
+            console.log(category)
+            for (let j=0;j<category.length;j++){
+                switch (category[j]){
+                    case "Other":
+                        otherGroup.addLayer(marker)
                         if(data[i].live===false){
-                            L.marker([51.583396,-3.273728], {icon: myIcon,tags:['Pet']}).bindPopup(popupContent,{closeButton:false}).addTo(otherGroup).addTo(upcomingGroup) ;
-                        }
-                        if(data[i].live===true){
-                            L.marker([51.583396,-3.273728], {icon: myIcon,tags:['Pet']}).bindPopup(popupContent,{closeButton:false}).addTo(otherGroup).addTo(liveNowGroup);
-                        }
-                    }
+                            upcomingGroup.addLayer(marker)
+                        }   break
+                    case "Pet":
+                        petGroup.addLayer(marker)
+                        if(data[i].live===false){
+                            upcomingGroup.addLayer(marker)
+                        }break
+                        // else if (data[i].live===true){
+                        //     liveNowGroup
+                        //  }
+                    case "Game":
+                        gameGroup.addLayer(marker)
+                        if(data[i].live===false){
+                            upcomingGroup.addLayer(marker)
+                        }   break
+                    case "Life":
+                        lifeGroup.addLayer(marker)
+                        if(data[i].live===false){
+                            upcomingGroup.addLayer(marker)
+                        }   break
+                }
+
+
+                // if (category[j]=="Other"){
+                //     if(data[i].live===false){
+                //         L.marker([51.583396,-3.273728], {icon: myIcon,tags:['Pet']}).bindPopup(popupContent,{closeButton:false}).addTo(otherGroup).addTo(upcomingGroup) ;
+                //     }
+                //     else if(data[i].live===true){
+                //         L.marker([51.583396,-3.273728], {icon: myIcon,tags:['Pet']}).bindPopup(popupContent,{closeButton:false}).addTo(otherGroup).addTo(liveNowGroup);
+                //     }
+                // }
+                // if (category[j]=="Pet"){
+                //     if(data[i].live===false){
+                //         L.marker([51.583396,-3.273728], {icon: myIcon,tags:['Pet']}).bindPopup(popupContent,{closeButton:false}).addTo(petGroup).addTo(upcomingGroup) ;
+                //     }
+                //     else if(data[i].live===true){
+                //         L.marker([51.583396,-3.273728], {icon: myIcon,tags:['Pet']}).bindPopup(popupContent,{closeButton:false}).addTo(petGroup).addTo(liveNowGroup);
+                //     }
+                // }
                 // if(data[i].live===false){
                 //     // L.marker([51.583396,-3.273728], {icon: myIcon,tags:['Pet']}).bindPopup(popupContent,{closeButton:false}).addTo(upcomingGroup) ;
                 //     if (data[i].cat=="Other"){
@@ -110,6 +145,8 @@ const showEventsOnMap = async function () {
                 //     }
                 //     // petArray.push(L.marker([51.583396,-3.273728], {icon: myIcon,tags:['Pet']}).bindPopup(popupContent,{closeButton:false})) ;
                 // }
+            }
+
         }
     } else {
         console.log("get events not 200");
@@ -148,14 +185,9 @@ const showEventsOnMap = async function () {
 //     }
 // }
 
-//check in these groups
-mcgLayerSupportGroup.checkIn(switchLiveGroupList);
-// Adding to map or to AutoMCG are now equivalent.
-// petGroup.addTo(map);
-// lifeGroup.addTo(map);
-// otherGroup.addTo(map);
-liveNowGroup.addTo(map);
-upcomingGroup.addTo(map);
+
+
+
 var filterSidebar = L.control.sidebar('filter-sidebar', {
     position: 'left',
     autoPan:false
@@ -166,32 +198,74 @@ L.easyButton('filter-button',function(){
     filterSidebar.toggle();
 }).setPosition('bottomright').addTo(map);
 
-//functions for bind checkbox and category layers
-for (let i = 0; i < categoryElements.length; i++) {
-    categoryElements[i].addEventListener("click",function (){
-        if (event.currentTarget.checked){
-            mcgLayerSupportGroup.addLayer(categoryGroupList[i])
-        }
-        else {
-            mcgLayerSupportGroup.removeLayer(categoryGroupList[i])
-        }
-    })}
+
 
 //function for clear all conditions in map filter
 let clearAll = function () {
     document.getElementById('distance-range-value').innerHTML='50'
     mcgLayerSupportGroup.addLayer(categoryGroupList)
 }
+
 //function for switch streaming now
 let switchToLiveNow = function () {
     if (streamNowButtonElement.checked){
         mcgLayerSupportGroup.removeLayer(upcomingGroup)
     }
     else {
-        mcgLayerSupportGroup.addLayer(upcomingGroup)
-
+        for (let i = 0; i < categoryElements.length; i++) {
+                if (categoryElements[i].checked){
+                    mcgLayerSupportGroup.addLayer(categoryGroupList[i])
+                }
+                else {
+                    mcgLayerSupportGroup.removeLayer(categoryGroupList[i])
+                }
+            }
     }
 }
+//To check which categories are selected
+let checkCategories =  function () {
+    mcgLayerSupportGroup.removeLayers(categoryGroupList)
+    let checkedCategories = []
+    for (let i = 0; i < categoryElements.length; i++) {
+        if (categoryElements[i].checked) {
+            checkedCategories.push(categoryGroupList[i])
+        }
+    }
+    mcgLayerSupportGroup.addLayers(checkedCategories)
+    console.log("These categories are checked",checkedCategories)
+}
+//add everything to the map
+let showEventsOnMap=async function (){
+ //check in these groups
+ mcgLayerSupportGroup.checkIn(categoryGroupList);
+ // Adding to map or to AutoMCG are now equivalent.
+ petGroup.addTo(map);
+ lifeGroup.addTo(map);
+ otherGroup.addTo(map);
+ gameGroup.addTo(map);
+ sportGroup.addTo(map);
+ travelGroup.addTo(map);
+ checkCategories();
+}
+
+getEvents().then(showEventsOnMap)
+
+//polling every 30 seconds to refresh the markers
+setInterval(() => {
+    clearInterval(this)
+    travelGroup.clearLayers()
+    sportGroup.clearLayers()
+    petGroup.clearLayers()
+    lifeGroup.clearLayers()
+    otherGroup.clearLayers()
+    gameGroup.clearLayers()
+    mcgLayerSupportGroup.clearLayers()
+    getEvents().then(showEventsOnMap)},3000)
+
+/* EventListeners */
 resetButtonElement.addEventListener("click",clearAll)
 streamNowButtonElement.addEventListener("click", switchToLiveNow)
-setTimeout(showEventsOnMap, 500);
+//add listeners to bind checkbox and category layers
+for (let i = 0; i < categoryElements.length; i++) {
+ categoryElements[i].addEventListener("click",checkCategories)
+}
