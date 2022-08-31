@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.sql.Timestamp;
@@ -310,11 +311,20 @@ public class EventController {
 
             return tagList;
         }
+
+
+
+
     }
 
 
 
-
+    @GetMapping("/test")
+    private ModelAndView mapTest(ModelAndView modelAndView)
+    {
+        modelAndView= new ModelAndView("/events/test");
+        return modelAndView;
+    }
   
 
 

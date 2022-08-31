@@ -1,4 +1,4 @@
-let popupContent
+    let popupContent
 let currentLocation
 const categoryElements= document.getElementsByName('cat-group-chips')
 // categoryElements.checked=true;
