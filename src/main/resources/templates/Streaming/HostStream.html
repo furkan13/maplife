@@ -17,22 +17,17 @@
     <main id="panel">
         <div class="row" style="position: absolute;">
             <section id="left_display" class="main_card">
-                <button id="video_rm">Join Stream</button>
-                <button id="partycheck">Check participant</button>
-                <button id="exit">Exit Stream</button>
-                <button id="create_room">Create Room</button>
-                <button id="cohost_request">Request cohost</button>
-                <button id="cohost_list">Request list</button>
-
+                <button id="partycheck">Reload video</button>
+				<button style="display:none" type="button" id="mute_publish_audio">Stop audio publish</button>
                 <div id="stream"></div>
 
             </section>
             <aside id="right_option" class="main_card" >
                 <button id="setting">Setting</button>
-                <button id="delete_room">Delete</button>
+                <button id="delete_exit_room">Delete</button>
                 <div id="viewer_number" class="counter">0 views</div>
                 <div id="streamer_number" class="counter">1 streamers</div>
-                <table>
+                <table id="cohost_list">
                     <thead class="fixed">
                         <tr>
                             <th>Username</th>
