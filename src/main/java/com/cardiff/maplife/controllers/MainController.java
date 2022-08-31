@@ -28,21 +28,6 @@ public class MainController {
     @GetMapping("/")
     public ModelAndView showMapPage(ModelAndView modelAndView, HttpServletResponse response) {
         modelAndView = new ModelAndView("landing/map");
-        if (userService.getAuthentication()!=null){
-            List<Event> newEventList = new ArrayList<>();
-            User loggedUser = userService.findUserByUsername(userService.getAuthentication());
-            Set<User> followingUserSet = loggedUser.getFollowingUserSet();
-            Timestamp datetime = new Timestamp(System.currentTimeMillis());
-            List<Event> eventList = eventService.findCustom(datetime);
-            for (User followingUser : followingUserSet){
-                for (Event event : eventList){
-                    if (event.getUser().getUser_id().equals(followingUser.getUser_id())){
-                        newEventList.add(event);
-                    }
-                }
-            }
-            modelAndView.addObject("eventList",newEventList);
-        }
         return modelAndView;
     }
 
