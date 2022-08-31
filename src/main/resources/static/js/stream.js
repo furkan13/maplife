@@ -704,8 +704,9 @@ const room_join =async function(roomObj){ //Join the room with tracks
 	}, error => {
 		console.error(`Unable to connect to Room: ${error.message}`);
 	});
-	participant_video(roomObj);
-	participant_video_on_connect(roomObj);
+	participant_video(roomObj); //Get existing user's video
+	participant_video_on_connect(roomObj); //Get user's video when they connect
+	auto_location_sender();//Update host location
 }
 
 function fetchCoHostRequest(){
@@ -772,6 +773,21 @@ const video_token = async function(){ // Get video token if grant access
 	}); //Get the access token or reject if user is not authorised
 }
 
+const auto_location_sender = async function(){
+	navigator.geolocation.getCurrentPosition(location_update);
+	// await sleep(30000);//Call every 5 minutes
+	setTimeout(auto_location_sender,30000);
+}
+function location_update(position){
+	roomObj.VideoRoom.latitude = position.coords.latitude;
+	roomObj.VideoRoom.longitude = position.coords.longitude;
+	$.ajax({url:"/RoomLocationUpdate",
+		type:"POST",
+		data:JSON.stringify(roomObj.VideoRoom),
+		dataType:"json",
+		contentType:"application/json; charset=utf-8"});
+	
+}
 function live_token(token) { //Get live token for the room, required for all users
     token = $.get("/LiveAccess?RoomName=" + roomName); //Get the access token
     if (token == "") {//Show error with the room, might be closed
