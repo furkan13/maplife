@@ -179,16 +179,6 @@ let clearAll = function () {
     mcgLayerSupportGroup.addLayer(categoryGroupList)
 }
 
-//function for switch streaming now
-let switchToLiveNow = function () {
-    if (streamNowButtonElement.checked){
-        mcgLayerSupportGroup.removeLayer(upcomingGroup)
-    }
-    else {
-        checkCategories()
-    }
-}
-
 //check the streaming now switch button status
 let isLiveNow = function (){
     return !!streamNowButtonElement.checked;
