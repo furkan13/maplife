@@ -73,15 +73,17 @@ const getEvents = async function () {
         console.log(data);
         //resolve data and put them in our marker and popup
         for (let i = 0;data.length>i;i++) {
+            let time = strToDate(data[i].event_date)
             //define the custom icon for hosts
             let myIcon = L.divIcon({className:'custom-div-icon',iconAnchor: [25, 25],popupAnchor: [2, -28]});
             //custom the popup and icon for hosts
             popupContent = `<div id="event-img-container" style="background-image: url('../../../${data[i].photosImagePath}')"></div><div id="event-title">${data[i].title}</div>
-<div id="host-name" class="event-text">${data[i].user.username}</div><div id="event-viewers" class="event-text">${data[i].user.views} viewers</div><div class="event-text">${data[i].event_date}</div>`
+<div id="host-name" class="event-text">${data[i].user.username}</div><div id="event-viewers" class="event-text">${data[i].user.views} viewers</div><div class="event-text">${time}</div>`
             myIcon.options.html = `<img id="custom-div-icon" class="custom-div-icon" src= "image/${data[i].user.icon}">`
             const marker = L.marker([51.583396,-3.273728], {icon: myIcon}).bindPopup(popupContent,{closeButton:false})
             let category =  data[i].cat.split(",");
-            console.log(category)
+            console.log(data[i].title,category)
+            // console.log(data[i].event_date)
             for (let j=0;j<category.length;j++){
                 switch (category[j]){
                     case "Other":
@@ -158,9 +160,6 @@ const getEvents = async function () {
 //     }
 // }
 
-
-
-
 var filterSidebar = L.control.sidebar('filter-sidebar', {
     position: 'left',
     autoPan:false
@@ -170,8 +169,6 @@ map.addControl(filterSidebar);
 L.easyButton('filter-button',function(){
     filterSidebar.toggle();
 }).setPosition('bottomright').addTo(map);
-
-
 
 //function for clear all conditions in map filter
 let clearAll = function () {
@@ -231,7 +228,7 @@ setInterval(() => {
     gameGroup.clearLayers()
     upcomingGroup.clearLayers()
     mcgLayerSupportGroup.clearLayers()
-    getEvents().then(showEventsOnMap)},3000)
+    getEvents().then(showEventsOnMap)},30000)
 
 /* EventListeners */
 resetButtonElement.addEventListener("click",clearAll)
@@ -239,4 +236,29 @@ streamNowButtonElement.addEventListener("click", filter)
 //add listeners to bind checkbox and category layers
 for (let i = 0; i < categoryElements.length; i++) {
  categoryElements[i].addEventListener("click",filter)
+}
+let str2 = "2022-09-01T00:00:00.000+00:00"
+
+let strToDate= function (str){
+    let nowTime = new Date().getTime();
+    let eventTime = new Date(str).getTime();
+    if (nowTime>=eventTime){
+        let totalSeconds = (nowTime - eventTime)/1000
+        // let days = parseInt(totalSeconds/86400); // day  24*60*60*1000
+        let hours = parseInt(totalSeconds/3600)    // hours 60*60 whole hours-past hours= current hours
+        let minutes = parseInt(totalSeconds/60)-60*hours; // minutes - hours*60 = minutes left
+        let seconds = parseInt(totalSeconds%60);  // mod 60 so the seconds left
+        return  hours+" hours "+minutes+" minutes ago"
+    }
+    else {
+        let date = new Date(eventTime);
+        let Year = date.getFullYear();
+        let Moth = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1);
+        let Day = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate());
+        let Hour = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours());
+        let Minute = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes());
+        let Second = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+        return  Year + '-' + Moth + '-' + Day + '   '+ Hour +':'+ Minute  + ':' + Second;
+    }
+
 }
