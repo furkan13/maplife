@@ -1,93 +1,126 @@
+//Template list of tags
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <title>Geolocation</title>
 
 
     <meta charset=utf-8 />
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-
-    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 
 
-        <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-        <script type="text/javascript"
-                src="http://maps.googleapis.com/maps/api/js?key=AIzaSyD8mjrcsF6gWpy7VNfNxz00hLU3BGYDqK4&sensor=true">
-        </script>
-        <script type="text/javascript">
 
-            var geocoder;
-            var map;
 
-            function initialize() {
-                geocoder = new google.maps.Geocoder();
-                var latlng = new google.maps.LatLng(-34.397, 150.644);
-                var mapOptions = {
-                    zoom: 10,
-                    center: latlng,
-                    mapTypeId: google.maps.MapTypeId.ROADMAP
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <script type="text/javascript"
+            src="http://maps.googleapis.com/maps/api/js?key=AIzaSyD8mjrcsF6gWpy7VNfNxz00hLU3BGYDqK4&sensor=true">
+    </script>
+    <script type="text/javascript">
+
+        var geocoder = new google.maps.Geocoder();
+        var marker = null;
+        var map = null;
+        function initialize() {
+            var $latitude = document.getElementById('latitude');
+            var $longitude = document.getElementById('longitude');
+            var latitude = 50.715591133433854
+            var longitude = -3.53485107421875;
+            var zoom = 16;
+
+            var LatLng = new google.maps.LatLng(latitude, longitude);
+
+            var mapOptions = {
+                zoom: zoom,
+                center: LatLng,
+                panControl: false,
+                zoomControl: false,
+                scaleControl: true,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            }
+
+            map = new google.maps.Map(document.getElementById('map'), mapOptions);
+            if (marker && marker.getMap) marker.setMap(map);
+            marker = new google.maps.Marker({
+                position: LatLng,
+                map: map,
+                title: 'Drag Me!',
+                draggable: true
+            });
+
+            google.maps.event.addListener(marker, 'dragend', function(marker) {
+                var latLng = marker.latLng;
+                $latitude.value = latLng.lat();
+                $longitude.value = latLng.lng();
+            });
+
+
+        }
+        initialize();
+
+
+
+
+
+
+
+
+
+
+        function codeAddress() {
+            var address = document.getElementById('address').value;
+            geocoder.geocode( { 'address': address}, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    map.setCenter(results[0].geometry.location);
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: results[0].geometry.location
+                    });
+                    google.maps.event.addListener(marker, 'dragend', function (event) {
+                        document.getElementById("latitude").value = this.getPosition().lat();
+                        document.getElementById("longitude").value = this.getPosition().lng();
+                    });
+                } else {
+                    alert('Geocode was not successful for the following reason: ' + status);
                 }
-                map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
-            }
-
-            function codeAddress() {
-                var address = document.getElementById('address').value;
-                geocoder.geocode( { 'address': address}, function(results, status) {
-                    if (status == google.maps.GeocoderStatus.OK) {
-                        map.setCenter(results[0].geometry.location);
-                        var marker = new google.maps.Marker({
-                            map: map,
-                            position: results[0].geometry.location
-                        });
-                        google.maps.event.addListener(marker, 'dragend', function (event) {
-                            document.getElementById("latbox").value = this.getPosition().lat();
-                            document.getElementById("lngbox").value = this.getPosition().lng();
-                        });
-                    } else {
-                        alert('Geocode was not successful for the following reason: ' + status);
-                    }
-                });
-            }
+            });
+            initialize();
+        }
 
 
-            function codeAddress() {
-                var address = document.getElementById('address').value;
-                geocoder.geocode( { 'address': address}, function(results, status) {
-                    if (status == google.maps.GeocoderStatus.OK) {
-                        map.setCenter(results[0].geometry.location);
-                        var marker = new google.maps.Marker({
-                            map: map,
-                            position: results[0].geometry.location
-                        });
-                        document.getElementById("latbox").value = marker.getPosition().lat();
-                        document.getElementById("lngbox").value = marker.getPosition().lng();
+        function codeAddress() {
+            var address = document.getElementById('address').value;
+            geocoder.geocode( { 'address': address}, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    map.setCenter(results[0].geometry.location);
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: results[0].geometry.location
+                    });
+                    document.getElementById("latitude").value = marker.getPosition().lat();
+                    document.getElementById("longitude").value = marker.getPosition().lng();
 
-                        google.maps.event.addListener(marker, 'dragend', function (event) {
-                            document.getElementById("latbox").value = this.getPosition().lat();
-                            document.getElementById("lngbox").value = this.getPosition().lng();
-                        });
-                    } else {
-                        alert('Geocode was not successful for the following reason: ' + status);
-                    }
-                });
-            }
+                    google.maps.event.addListener(marker, 'dragend', function (event) {
+                        document.getElementById("latitude").value = this.getPosition().lat();
+                        document.getElementById("longitude").value = this.getPosition().lng();
+                    });
+                } else {
+                    alert('Geocode was not successful for the following reason: ' + status);
+                }
+            });
+        }
 
-        </script>
+
+
+
+
+    </script>
 <body onload="initialize()" onunload="GUnload()">
-<p>
-    Enter an address, The latitude/longitude will appear in the text fields after each search.
-</p>
-<p>
-    <input id="address" type="textbox" value="New York, New York">
-    <input type="button" value="Get Long and Lat" onclick="codeAddress()">
-</p>
 
-<div id="latlong">
-    <p>Latitude: <input size="20" type="text" id="latbox" name="lat" ></p>
-    <p>Longitude: <input size="20" type="text" id="lngbox" name="lng" ></p>
-</div>
-
-<div id="map_canvas" style="width: 600px; height: 400px"></div>
+<input type="text" id="latitude" placeholder="latitude">
+<input type="text" id="longitude" placeholder="longitude">
+<div id="map" class="map" style="width:500px; height:500px"></div>
+<p><input class="postcode" id="address" name="Postcode" type="text" value="New York, NY">
+    <input type="submit" value="Get Long and Lat" onclick="codeAddress()" /></p>
 
 </body>
 
@@ -95,3 +128,4 @@
 
 
 </html>
+ 
