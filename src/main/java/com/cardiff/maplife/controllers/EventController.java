@@ -304,9 +304,17 @@ public class EventController {
         else {
             String[] stringArray = eventService.findByName(RoomName).getCat().split(",");
             List<String> tagList = Arrays.asList(stringArray);
-            for (int i = 0; i < tagList.size(); i++) {
-                System.out.println(tagList.get(i));
-            }
+
+
+            int index=0;
+
+                if(tagList.size()>1)
+                {
+                    List<String> tags = tagList.subList(1, tagList.size());
+
+                    return tags;
+                }
+
 
 
             return tagList;
@@ -319,12 +327,7 @@ public class EventController {
 
 
 
-    @GetMapping("/test")
-    private ModelAndView mapTest(ModelAndView modelAndView)
-    {
-        modelAndView= new ModelAndView("/events/test");
-        return modelAndView;
-    }
+
   
 
 
