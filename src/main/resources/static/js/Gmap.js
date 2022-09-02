@@ -8,7 +8,10 @@
     var $longi = document.getElementById('longi');
     var lat = sessionStorage.getItem('lat');
     var longi = sessionStorage.getItem('lng');
-    console.log(lat);
+        $lat.value = lat;
+         $longi.value =longi;
+
+
     var zoom = 16;
 
     var LatLng = new google.maps.LatLng(lat, longi);

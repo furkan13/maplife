@@ -75,7 +75,7 @@ public class AddEventController {
 
 
 
-		
+
 		Event ServerEvent = null;
 		try{
 			ServerEvent = eventService.findByName(event.getTitle());
@@ -86,16 +86,16 @@ public class AddEventController {
 		}
 		//Check if the room title exist in database, check with live or future event(live = false)
 		//!!!!! need new function in eventrepo!!!!!
-		
+
 		//Check with twilio room if the room name exist
 		if(twilioService.CheckRoomExist(event) || ServerEvent != null) { //If there is existing room with the same name
 			event.setTitle("Error");
 			System.out.println("Room exist");
-			
+
 			//Show popup and Return to main page if room exist
 			return new ModelAndView("redirect:/");
 		}
-		
+
 		event.setUser(userService.findUserByUsername(user.getUsername()));
 		try{
 			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm");
@@ -105,8 +105,8 @@ public class AddEventController {
 		catch(Exception e){
 			return new ModelAndView("redirect:/");
 		}
-		System.out.println(event.getTitle());
-		System.out.println(event.getEvent_date());
+//		System.out.println(event.getTitle());
+//		System.out.println(event.getEvent_date());
 		Timestamp datetime = new Timestamp(System.currentTimeMillis());
 		long diff=event.getEvent_date().getTime()-datetime.getTime();
 		if(diff > 5){//Future event
@@ -128,21 +128,22 @@ public class AddEventController {
 			}
 			catch(Exception e){
 				System.out.println("some error here...");
-			
+
 			}
-			
+
 		}
 		else{ //Live event
 			try {
 				//Set event_date as current time
+
 				datetime = new Timestamp(System.currentTimeMillis());
 				event.setEvent_date(datetime);
 				event.setLive(true);
 				//Create twilio room and get url of the created room from twilio
 				String link = (twilioService.CreateRoom(event));
 				event.setEvent_link(link);
-				
-				
+
+
 				String fileName = "";
 				fileName = StringUtils.cleanPath(file.getOriginalFilename()); //get the acrual file name
 				event.setEventImageName(fileName);
@@ -155,13 +156,13 @@ public class AddEventController {
 			}
 			catch (Exception e) {
 				System.out.println("some error here...");
-				
+
 			}
 		}
 		//Return to main page if error 
 
-        return new ModelAndView("redirect:/");
-    }
+		return new ModelAndView("redirect:/");
+	}
 }
 
 

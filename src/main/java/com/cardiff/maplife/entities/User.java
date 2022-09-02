@@ -3,35 +3,22 @@ package com.cardiff.maplife.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "user")
 
 public class User implements UserDetails, Serializable {
-
-
-    public User() {
-
-    }
-    public User(Long id, String username, String password, String email, boolean userType, int coins, int views, String icon, String roles, String video, String bio) {
-        this.user_id = id;
-        this.username = username;
-        this.password = password;
-        this.email = email;
-        this.userType = userType;
-        this.coins = coins;
-        this.views = views;
-        this.icon = icon;
-        this.roles=roles;
-        this.video=video;
-        this.bio=bio;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,8 +38,7 @@ public class User implements UserDetails, Serializable {
     @Column(name = "userType")
     private boolean userType;
 
-    @Column(name = "coins")
-    private int coins;
+
 
     @Column(name = "views")
     private int views;
@@ -69,8 +55,10 @@ public class User implements UserDetails, Serializable {
     @Column(name = "bio")
     private String bio;
 
+
     private LocalDate lastLogin;
     private int coin;
+
 
 
     @OneToMany(mappedBy = "user")  //Creating one to many relation with booking class and Using user object from Booking class
@@ -111,15 +99,16 @@ public class User implements UserDetails, Serializable {
     }
 
 
+    public User() {
 
+    }
 
-    public User(Long user_id, String username, String password, String email, boolean userType, int coins, int views, String icon, String roles, String video, String bio, List<Event> eventList, Set<User> followerUserSet, Set<User> followingUserSet, List<GrantedAuthority> authorities) {
+    public User(Long user_id, String username, String password, String email, boolean userType, int views, String icon, String roles, String video, String bio, List<Event> eventList, Set<User> followerUserSet, Set<User> followingUserSet, List<GrantedAuthority> authorities) {
         this.user_id = user_id;
         this.username = username;
         this.password = password;
         this.email = email;
         this.userType = userType;
-        this.coins = coins;
         this.views = views;
         this.icon = icon;
         this.roles = roles;
@@ -141,7 +130,6 @@ public class User implements UserDetails, Serializable {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
-
     public Long getId() {
         return user_id;
     }
@@ -158,20 +146,19 @@ public class User implements UserDetails, Serializable {
         this.user_id = user_id;
     }
 
-    @Override
     public String getUsername() {
         return username;
     }
-    @JsonIgnore
 
     public void setUsername(String username) {
         this.username = username;
     }
 
-    @Override
+    @JsonIgnore
     public String getPassword() {
         return password;
     }
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -187,12 +174,7 @@ public class User implements UserDetails, Serializable {
     public void setUserType(boolean userType) {
         this.userType = userType;
     }
-    public int getCoins() {
-        return coins;
-    }
-    public void setCoins(int coins) {
-        this.coins = coins;
-    }
+
     public int getViews() {
         return views;
     }
