@@ -6,8 +6,9 @@
     function initialize() {
     var $lat = document.getElementById('lat');
     var $longi = document.getElementById('longi');
-    var lat = 51.483707;
-    var longi = -3.1680962;
+    var lat = sessionStorage.getItem('lat');
+    var longi = sessionStorage.getItem('lng');
+    console.log(lat);
     var zoom = 16;
 
     var LatLng = new google.maps.LatLng(lat, longi);
@@ -43,22 +44,35 @@
 
     function codeAddress() {
     var address = document.getElementById('address').value;
+
+
     geocoder.geocode( { 'address': address}, function(results, status) {
     if (status == google.maps.GeocoderStatus.OK) {
     map.setCenter(results[0].geometry.location);
     var marker = new google.maps.Marker({
     map: map,
-    position: results[0].geometry.location
+
+    position: results[0].geometry.location,
+
 });
+
+
+
+
     google.maps.event.addListener(marker, 'dragend', function (event) {
     document.getElementById("lat").value = this.getPosition().lat();
     document.getElementById("longi").value = this.getPosition().lng();
 });
 } else {
-    alert('Geocode was not successful for the following reason: ' + status);
+        if (marker && marker.getMap) marker.setMap(map);
+        marker = new google.maps.Marker({
+            position: LatLng,
+            map: map,
+            title: 'Drag Me!',
+            draggable: true
+        });
 }
 });
-    initialize();
 }
 
 

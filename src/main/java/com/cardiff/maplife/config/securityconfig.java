@@ -26,7 +26,7 @@ public class securityconfig extends WebSecurityConfigurerAdapter {
                 .failureUrl("/authform?message=errorMessage")
                 .and()
                 .authorizeRequests()
-                .antMatchers("/authform","/","/api/addUser","/api/getUser","/profile/{username}","/subscriptions","/EventTags").permitAll()
+                .antMatchers("/authform","/","/api/addUser","/api/getUser","/profile/{username}","/subscriptions").permitAll()
                 .antMatchers("/js/**","/css/**","/image/*","/fonts/**","/**/*.png","/**/*.jpg").permitAll();
 
                 http.csrf().disable();
