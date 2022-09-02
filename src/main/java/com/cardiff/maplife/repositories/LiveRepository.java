@@ -16,8 +16,12 @@ public interface LiveRepository extends CrudRepository<Live, Long> {
 
 
     Live findByCohostid(long cohostid);
-
     List<Live> findByEventid(long eventid);
+
+    @Modifying
+    @Transactional
+    @Query("select u from Live u where u.cohostid = (:cohostid) and u.eventid = (:eventid)")
+    List<Live> findByCohostidAndEventid(long cohostid,long eventid);
     @Modifying
     @Transactional
     @Query("select u from Live u where u.approved=false and u.eventid = (:eventid)")
@@ -26,8 +30,10 @@ public interface LiveRepository extends CrudRepository<Live, Long> {
     @Transactional
     @Query("select u from Live u where u.approved=true and u.eventid = (:eventid)")
     List<Live> findApprovedByEventid(long eventid);
+    @Modifying
     @Transactional
-    void deleteByCohostid(long cohostid);
+    @Query("delete from Live u where u.cohostid = (:cohostid) and u.eventid = (:eventid)")
+    void deleteByCohostid(long cohostid,long eventid);
     void deleteAllByEventid(long eventid);
     void deleteLivesByEventid(long eventid);
     @Modifying

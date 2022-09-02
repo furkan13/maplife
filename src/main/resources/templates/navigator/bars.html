@@ -123,44 +123,29 @@
                         <a class="nav-link" th:href="@{/explore}"><img src="https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u190.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762"></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/}"><img src="https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u187.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762"></a>
+                        <a class="nav-link" th:href="@{/EventList}"><img src="https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u187.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762"></a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/}"><img src="https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u196.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762"></a>
                     </li>
                 </ul>
-                <div class="sub-avatar-container">
-                    <div class="sub-avatar">
-                        <a class="nav-link" th:href="@{/}">
-                            <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
-                        </a>
-                    </div>
-                    <div class="sub-avatar">
-                        <a class="nav-link" th:href="@{/}">
-                            <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
-                        </a>
-                    </div>
-                    <div class="sub-avatar">
-                        <a class="nav-link" th:href="@{/}">
-                            <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
-                        </a>
-                    </div>
-                    <div class="sub-avatar">
-                        <a class="nav-link" th:href="@{/}">
-                            <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
-                        </a>
-                    </div>
-                    <div class="sub-avatar">
-                        <a class="nav-link" th:href="@{/}">
-                            <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
-                        </a>
-                    </div>
-                    <div class="sub-avatar">
+                <div class="sub-avatar-container" th:if="${newEventList==null}">
+                    <div id="recommendation-0" class="sub-avatar">
                         <a class="nav-link" th:href="@{/}">
                             <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
                         </a>
                     </div>
                 </div>
+                <div class="sub-avatar-container" th:if="${newEventList!=null}">
+                    <div id="subscription-0" class="sub-avatar" th:each="newEventList : ${newEventList}">
+                        <a class="nav-link" th:href="@{/}">
+                            <div class="sub-avatar-icon">
+                                <img class="sub-avatar-icon" th:src="@{${'/image/'+newEventList.user.icon}}">
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
                 <div id="setting-icon-container">
                     <a class="nav-link setting-icon" th:href="@{/settings}"><img src="https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u183.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762"></a>
                 </div>
@@ -189,7 +174,7 @@
                                 </a>
                         </li>
                         <li>
-                                <a class="nav-link nav-link-box" href="bars.html">
+                                <a class="nav-link nav-link-box" th:href="@{/EventList}">
                                     <div class="nav-link-icon">
                                         <img src="https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u187.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762">
                                     </div>
@@ -197,7 +182,7 @@
                                 </a>
                         </li>
                         <li>
-                                <a class="nav-link nav-link-box" href="bars.html">
+                                <a class="nav-link nav-link-box" th:href="@{/}">
                                     <div class="nav-link-icon">
                                         <img src="https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u196.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762">
                                     </div>
@@ -206,15 +191,19 @@
                         </li>
                     </ul>
                     <hr class="sidebar-hr">
-                    <a th:href="@{/subscriptions}" class="nav-link">
+                    <a th:href="@{/subscriptions}" class="nav-link" th:if="${newEventList!=null}">
                         <div class="offcanvas-header subscription-header">
                             <h5>SUBSCRIPTIONS</h5><img src="https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u233.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762">
                         </div>
                     </a>
-
-                    <ul class="subscription-list navbar-nav">
-                        <li>
-                            <a class="nav-link nav-link-box" href="bars.html">
+                    <a th:href="@{/subscriptions}" class="nav-link" th:if="${newEventList==null}">
+                        <div class="offcanvas-header subscription-header">
+                            <h5>RECOMMENDATIONS</h5><img src="https://d1icd6shlvmxi6.cloudfront.net/gsc/6LGU0K/ad/4d/7a/ad4d7ad1c4f44e8fa5b9121329b2460b/images/yanguo/u233.svg?pageId=741f38e6-6758-478e-b589-dda19ca30762">
+                        </div>
+                    </a>
+                    <ul class="subscription-list navbar-nav" th:if="${newEventList==null}">
+                        <li id="recommendation-detail-0">
+                            <a class="nav-link nav-link-box" th:href="@{/}">
                                 <div class="subscription-live">
                                     <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
                                     <div class="streaming-detail">
@@ -225,99 +214,28 @@
                                         <span class="live-viewer">1.2k</span>
                                     </div>
                                 </div>
-                            </a>
-                        </li>
-                        <li>
-                        <a class="nav-link nav-link-box" href="bars.html">
-                            <div class="subscription-live">
-                                <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
-                                <div class="streaming-detail">
-                                    <span class="live-name text-truncate">Cat Lover</span><span class="live-description text-truncate">My life with my cat</span>
-                                </div>
-                                <div class="live-viewer-box">
-                                    <div class="live-dot"></div>
-                                    <span class="live-viewer">1.2k</span>
-                                </div>
-                            </div>
-
-                        </a>
-                        </li>
-                        <li>
-                        <a class="nav-link nav-link-box" href="bars.html">
-                            <div class="subscription-live">
-                                <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
-                                <div class="streaming-detail">
-                                    <span class="live-name text-truncate">Cat Lover</span><span class="live-description text-truncate">My life with my cat</span>
-                                </div>
-                                <div class="live-viewer-box">
-                                    <div class="live-dot"></div>
-                                    <span class="live-viewer">1.2k</span>
-                                </div>
-                            </div>
-
-                        </a>
-                        </li>
-                        <li>
-                        <a class="nav-link nav-link-box" href="bars.html">
-                            <div class="subscription-live">
-                                <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
-                                <div class="streaming-detail">
-                                    <span class="live-name text-truncate">Cat Lover</span><span class="live-description text-truncate">My life with my cat</span>
-                                </div>
-                                <div class="live-viewer-box">
-                                    <div class="live-dot"></div>
-                                    <span class="live-viewer">1.2k</span>
-                                </div>
-                            </div>
-
-                        </a>
-                        </li>
-                        <li>
-                            <a class="nav-link nav-link-box" href="bars.html">
-                                <div class="subscription-live">
-                                    <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
-                                    <div class="streaming-detail">
-                                        <span class="live-name text-truncate">Cat Lover</span><span class="live-description text-truncate">My life with my cat</span>
-                                    </div>
-                                    <div class="live-viewer-box">
-                                        <div class="live-dot"></div>
-                                        <span class="live-viewer">1.2k</span>
-                                    </div>
-                                </div>
-
-                            </a>
-                        </li>
-                        <li>
-                            <a class="nav-link nav-link-box" href="bars.html">
-                                <div class="subscription-live">
-                                    <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
-                                    <div class="streaming-detail">
-                                        <span class="live-name text-truncate">Cat Lover</span><span class="live-description text-truncate">My life with my cat</span>
-                                    </div>
-                                    <div class="live-viewer-box">
-                                        <div class="live-dot"></div>
-                                        <span class="live-viewer">1.2k</span>
-                                    </div>
-                                </div>
-
-                            </a>
-                        </li>
-                        <li>
-                            <a class="nav-link nav-link-box" href="bars.html">
-                                <div class="subscription-live">
-                                    <img class="sub-avatar-icon" th:src="@{${'/image/cat.png'}}">
-                                    <div class="streaming-detail">
-                                        <span class="live-name text-truncate">Cat Lover</span><span class="live-description text-truncate">My life with my cat</span>
-                                    </div>
-                                    <div class="live-viewer-box">
-                                        <div class="live-dot"></div>
-                                        <span class="live-viewer">1.2k</span>
-                                    </div>
-                                </div>
-
                             </a>
                         </li>
                     </ul>
+                    <ul class="subscription-list navbar-nav" th:if="${newEventList!=null}">
+                        <li id="subscription-detail-0" th:each="newEventList : ${newEventList}">
+                            <a class="nav-link nav-link-box" th:href="@{/}">
+                                <div class="subscription-live">
+                                    <div class="sub-avatar-icon">
+                                        <img class="sub-avatar-icon" th:src="@{${'/image/'+newEventList.user.icon}}">
+                                    </div>
+                                    <div class="streaming-detail">
+                                        <span class="live-name text-truncate" th:text="${newEventList.user.username}"></span><span class="live-description text-truncate" th:text="${newEventList.title}"></span>
+                                    </div>
+                                    <div class="live-viewer-box">
+                                        <div class="live-dot"></div>
+                                        <span class="live-viewer" th:text="${newEventList.user.views}"></span>
+                                    </div>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+
                     <hr class="sidebar-hr">
                     <footer>
                         <div id="footer-link-primary">

@@ -37,8 +37,7 @@ public class Event {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-
-    @Column(name = "eventId")
+    @Column(name = "Id")
     private Long id;
 
     public Long getId() {
@@ -82,7 +81,7 @@ public class Event {
     private Long host_id;
     @Column(name = "event_link")
     private String event_link;
-    @Column(name = "event_title")
+    @Column(name = "title")
     private String title;
     @Column(name = "room_type")
     private boolean room_type;

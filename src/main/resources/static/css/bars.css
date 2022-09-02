@@ -135,7 +135,9 @@ body{
 }
 .sub-avatar-icon{
     border-radius: 50%;
-    width: 60%;
+    width: 42px;
+    height: 42px;
+    margin: 0 auto;
 }
 .sub-avatar .nav-link{
     padding: 0.3rem 0;
@@ -252,9 +254,7 @@ body{
     display: flex;
     align-items: center;
 }
-.subscription-live img{
-    width: 40px;
-}
+
 .streaming-detail{
     display: flex;
     flex-direction: column;

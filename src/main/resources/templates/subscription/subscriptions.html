@@ -6,90 +6,29 @@
     <link th:href= "@{/css/subscription.css}" rel="stylesheet" />
 
 </head>
-<body th:replace="navigator/bars::common-body(~{::#subscriptions-page},~{},~{})">
+<body th:replace="navigator/bars::common-body(~{::#subscriptions-page},~{},~{::script})">
 <div id="subscriptions-page" >
     <div class="following-list">
         <div class="following-list-title">
             <label>All following</label>
         </div>
-        <div class="following-block">
+        <div class="following-block" th:each="followingUser:${followingUserSet}">
             <div class="following-icon">
-                <img th:src="@{${'/image/cat.png'}}">
+                <img th:src="@{${'/image/'+followingUser.getIcon()}}">
             </div>
             <div class="following-userDetails">
-                <div class="following-username">Shuwen</div>
-                <div class="following-bio">I am a pretty girl.</div>
+                <div class="following-username subscription-following-username" th:text="${followingUser.getUsername()}" ></div>
+                <div class="following-bio" th:text="${followingUser.getBio()}"></div>
             </div>
             <div>
-                <input class="following-button" type="button" value="followed">
+                <input id="followBtn" class="btn btn-sm btn-outline-secondary subscription-following-button" type="button" th:value="${followToggle}" >
             </div>
-        </div>
-        <div class="following-block">
-            <div class="following-icon">
-                <img th:src="@{${'/image/cat.png'}}">
-            </div>
-            <div class="following-userDetails">
-                <div class="following-username">Shuwen</div>
-                <div class="following-bio">I am a pretty girl.</div>
-            </div>
-            <div>
-                <input class="following-button" type="button" value="followed">
-            </div>
-        </div>
-        <div class="following-block">
-            <div class="following-icon">
-                <img th:src="@{${'/image/cat.png'}}">
-            </div>
-            <div class="following-userDetails">
-                <div class="following-username">Shuwen</div>
-                <div class="following-bio">I am a pretty girl.</div>
-            </div>
-            <div>
-                <input class="following-button" type="button" value="followed">
-            </div>
-        </div>
-        <div class="following-block">
-            <div class="following-icon">
-                <img th:src="@{${'/image/cat.png'}}">
-            </div>
-            <div class="following-userDetails">
-                <div class="following-username">Shuwen</div>
-                <div class="following-bio">I am a pretty girl.</div>
-            </div>
-            <div>
-                <input class="following-button" type="button" value="followed">
-            </div>
-        </div>
-        <div class="following-block">
-        <div class="following-icon">
-            <img th:src="@{${'/image/cat.png'}}">
-        </div>
-        <div class="following-userDetails">
-            <div class="following-username">Shuwen</div>
-            <div class="following-bio">I am a pretty girl.</div>
-        </div>
-        <div>
-            <input class="following-button" type="button" value="followed">
         </div>
     </div>
-        <div class="following-block">
-        <div class="following-icon">
-            <img th:src="@{${'/image/cat.png'}}">
-        </div>
-        <div class="following-userDetails">
-            <div class="following-username">Shuwen</div>
-            <div class="following-bio">I am a pretty girl.</div>
-        </div>
-        <div>
-            <input class="following-button" type="button" value="followed">
-        </div>
-    </div>
-
-
-
-    </div>
-
-
 </div>
+<script type="text/javascript" th:src="@{/js/subscription.js}"></script>
 </body>
+<!--<script type="text/javascript" th:src="@{/js/profile.js}">-->
+<!--</script>-->
+
 </html>
