@@ -2,14 +2,22 @@ package com.cardiff.maplife.services;
 
 import com.cardiff.maplife.config.TwilioConfig;
 import com.cardiff.maplife.entities.Event;
+import com.cardiff.maplife.entities.User;
+import com.twilio.base.ResourceSet;
 import com.twilio.http.HttpMethod;
 import com.twilio.jwt.accesstoken.AccessToken;
 import com.twilio.jwt.accesstoken.VideoGrant;
+import com.twilio.rest.media.v1.MediaProcessor;
+import com.twilio.rest.media.v1.PlayerStreamer;
+import com.twilio.rest.media.v1.playerstreamer.PlaybackGrant;
 import com.twilio.rest.video.v1.Room;
 import com.twilio.rest.video.v1.room.Participant;
+import com.twilio.rest.video.v1.room.participant.SubscribeRules;
+import com.twilio.type.SubscribeRulesUpdate;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
+import java.util.List;
 
 @Service
 public class TwilioService {
@@ -68,6 +76,69 @@ public class TwilioService {
         ).identity(UserName).grant(grant).build();
 //        System.out.println(token.toJwt());
         return token.toJwt();
+    }
+    public String createPlayerStreamer(){ //Create a player that send data to viewers
+        PlayerStreamer playerStreamer = PlayerStreamer.creator().create();
+        return playerStreamer.getSid();
+    }
+    public boolean deletePlayerStreamer(String sid){//Delete when it is not used
+        try{
+            PlayerStreamer.updater(sid, PlayerStreamer.UpdateStatus.ENDED);
+            return true;
+        }
+        catch(Exception e){
+            return false;
+        }
+    }
+    public String createMediaProcessor(String roomID,String streamerID){//Listener to twilio video room
+        MediaProcessor mediaProcessor = MediaProcessor.creator(
+                "video-composer-v2",
+                "{\"identity\": \"video-composer-v2\",\"room\":{\"name\":\"" +roomID+"\"}, \"outputs\": [\""+streamerID+"\"], \"audioBitrate\":128, \"resolution\": \"1280x720\", \"video\": true}")
+                .create();
+
+        return mediaProcessor.getSid();
+    }
+    public void deleteMediaProcessor(String processorId){
+        try {
+            MediaProcessor mediaProcessor = MediaProcessor.updater(
+                            processorId,
+                            MediaProcessor.UpdateStatus.ENDED)
+                    .update();
+        }
+        catch(Exception e){
+
+        }
+    }
+    public String LiveTokenGenerate(String streamerId){//A token for streamer
+        PlaybackGrant playbackGrant = com.twilio.rest.media.v1.playerstreamer.PlaybackGrant.creator(streamerId)
+                .setTtl(10)
+                .create();
+        com.twilio.jwt.accesstoken.PlaybackGrant wrapped = new com.twilio.jwt.accesstoken.PlaybackGrant().setGrant(playbackGrant.getGrant());
+        final TwilioConfig TwilioConfig= new TwilioConfig();
+        AccessToken token = new AccessToken.Builder(
+                TwilioConfig.GetSID(),
+                TwilioConfig.GetAPI_Key(),
+                TwilioConfig.GetAPI_Secret()
+        ).grant(wrapped).build();
+        return token.toJwt();
+
+    }
+    public void StreamerJoinedRules(List<User> cohost, User host,Event eventCache){ //Set only subscribe to host and cohost, default none
+        //Get list of participants in the room, set rules in them to exclude all tracks except cohost and host
+        //Only call when there are changes in room, i.e. new or kicked cohost
+        ResourceSet<Room> room = Room.reader()
+                .setUniqueName(eventCache.getTitle())
+                .setStatus(Room.RoomStatus.IN_PROGRESS)
+                .read();
+//        Room room_target;
+        for(Room room_target: room){
+            //loop for all participant
+            SubscribeRulesUpdate rules = SubscribeRules.updater(room_target.getSid(),user.getUsername())
+                    .setRules()
+        }
+    }
+    public void ViewerJoinedRules(Event eventCache, User currentUser){
+
     }
 }
 
