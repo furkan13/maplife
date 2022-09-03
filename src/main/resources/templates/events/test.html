@@ -1,80 +1,131 @@
-<!DOCTYPE html>
-<html lang="en">
+//Template list of tags
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+    <title>Geolocation</title>
+
+
+    <meta charset=utf-8 />
+
+
+
+
+
+
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <script type="text/javascript"
+            src="http://maps.googleapis.com/maps/api/js?key=AIzaSyD8mjrcsF6gWpy7VNfNxz00hLU3BGYDqK4&sensor=true">
+    </script>
+    <script type="text/javascript">
+
+        var geocoder = new google.maps.Geocoder();
+        var marker = null;
+        var map = null;
+        function initialize() {
+            var $latitude = document.getElementById('latitude');
+            var $longitude = document.getElementById('longitude');
+            var latitude = 50.715591133433854
+            var longitude = -3.53485107421875;
+            var zoom = 16;
+
+            var LatLng = new google.maps.LatLng(latitude, longitude);
+
+            var mapOptions = {
+                zoom: zoom,
+                center: LatLng,
+                panControl: false,
+                zoomControl: false,
+                scaleControl: true,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            }
+
+            map = new google.maps.Map(document.getElementById('map'), mapOptions);
+            if (marker && marker.getMap) marker.setMap(map);
+            marker = new google.maps.Marker({
+                position: LatLng,
+                map: map,
+                title: 'Drag Me!',
+                draggable: true
+            });
+
+            google.maps.event.addListener(marker, 'dragend', function(marker) {
+                var latLng = marker.latLng;
+                $latitude.value = latLng.lat();
+                $longitude.value = latLng.lng();
+            });
+
+
+        }
+        initialize();
+
+
+
+
+
+
+
+
+
+
+        function codeAddress() {
+            var address = document.getElementById('address').value;
+            geocoder.geocode( { 'address': address}, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    map.setCenter(results[0].geometry.location);
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: results[0].geometry.location
+                    });
+                    google.maps.event.addListener(marker, 'dragend', function (event) {
+                        document.getElementById("latitude").value = this.getPosition().lat();
+                        document.getElementById("longitude").value = this.getPosition().lng();
+                    });
+                } else {
+                    alert('Geocode was not successful for the following reason: ' + status);
+                }
+            });
+            initialize();
+        }
+
+
+        function codeAddress() {
+            var address = document.getElementById('address').value;
+            geocoder.geocode( { 'address': address}, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    map.setCenter(results[0].geometry.location);
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: results[0].geometry.location
+                    });
+                    document.getElementById("latitude").value = marker.getPosition().lat();
+                    document.getElementById("longitude").value = marker.getPosition().lng();
+
+                    google.maps.event.addListener(marker, 'dragend', function (event) {
+                        document.getElementById("latitude").value = this.getPosition().lat();
+                        document.getElementById("longitude").value = this.getPosition().lng();
+                    });
+                } else {
+                    alert('Geocode was not successful for the following reason: ' + status);
+                }
+            });
+        }
+
+
+
+
+
+    </script>
+<body onload="initialize()" onunload="GUnload()">
+
+<input type="text" id="latitude" placeholder="latitude">
+<input type="text" id="longitude" placeholder="longitude">
+<div id="map" class="map" style="width:500px; height:500px"></div>
+<p><input class="postcode" id="address" name="Postcode" type="text" value="New York, NY">
+    <input type="submit" value="Get Long and Lat" onclick="codeAddress()" /></p>
 
 </body>
+
+
+
+
 </html>
-
-<section class="contact-section section_padding">
-    <div class="container">
-
-
-        <div class="row">
-            <div class="col-12">
-                <h2 class="contact-title">Get in Touch</h2>
-            </div>
-            <div class="col-lg-8">
-
-
-                <form action="#" th:action="@{/addevents}" class="event-form" th:object="${events}" method="post" enctype="multipart/form-data">
-
-                    <div class="row">
-
-
-                        <div class="col-12">
-                            <div class="form-group">
-                                <input class="form-control" name="title" id="title" th:field="${events.title}" type="text"
-                                       onfocus="this.placeholder = ''" onblur="this.placeholder = 'Title'"
-                                       placeholder='Title'>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!--<div class="row">
-                        <div class="col-12">
-                            <div class="form-group">
-
-                                <textarea class="form-control w-100" name="body" id="" th:field="*{}" cols="30" rows="3" onfocus="this.placeholder = ''" onblur="this.placeholder = 'Desk Type'" placeholder = 'Desk Type'></textarea>
-                            </div>
-                        </div>-->
-
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <input  class="form-control" name="event_dis" id="event_dis" type="text"
-                                    th:field="*{event_dis}" onfocus="this.placeholder = 'Description'"
-                                    onblur="this.placeholder = 'Description'"
-                                    placeholder='Description'>
-                        </div>
-                    </div>
-
-                    <!--     <div class="col-sm-6">
-                             <div class="form-group">
-                                 <input  class="form-control" name="tag" id="" type="number"
-                                        &lt;!&ndash; th:field="*{monitorOption}"&ndash;&gt; onfocus="this.placeholder = 'Monitor Number'"
-                                         onblur="this.placeholder = 'Monitor Number'"
-                                         placeholder='Monitor Number'>
-                             </div>
-                         </div>-->
-
-
-                    <div class="col-12">
-                        <div class="form-group">
-                            <label>Photos: </label>
-                            <input type="file" value="upload" name="image" accept="image/png, image/jpeg" />
-                        </div>
-                    </div>
-            </div>
-            <div >
-
-                <input type="submit"  value="Add Event" class="add_event" />
-            </div>
-            </form>
-        </div>
-
-    </div>
-    </div>
-</section>
+ 

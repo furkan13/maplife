@@ -66,9 +66,14 @@ public class AddEventController {
 
 
     @PostMapping("/addevents")
-    public ModelAndView addEvent(ModelAndView modelAndView, @ModelAttribute("events") Event event, Model model, @RequestParam(value = "image", required = false) MultipartFile file, @AuthenticationPrincipal User user, HttpSession session, RedirectAttributes redirAttrs,@RequestParam (required = false) String time,@RequestParam("tags")String checkboxValue) throws IOException, NullPointerException{
+    public ModelAndView addEvent(ModelAndView modelAndView, @ModelAttribute("events") Event event, Model model, @RequestParam(value = "image", required = false) MultipartFile file, @AuthenticationPrincipal User user, HttpSession session, RedirectAttributes redirAttrs,@RequestParam (required = false) String time,@RequestParam("tags")String checkboxValue,@RequestParam(value = "longi",required = false)String longitude,@RequestParam(value = "lat",required = false)String latitude) throws IOException, NullPointerException{
 
 		event.setCat(checkboxValue);
+		event.setLongitude(Double.valueOf(longitude));
+		event.setLatitude(Double.valueOf(latitude));
+
+
+
 
 
 		Event ServerEvent = null;
@@ -81,16 +86,16 @@ public class AddEventController {
 		}
 		//Check if the room title exist in database, check with live or future event(live = false)
 		//!!!!! need new function in eventrepo!!!!!
-		
+
 		//Check with twilio room if the room name exist
 		if(twilioService.CheckRoomExist(event) || ServerEvent != null) { //If there is existing room with the same name
 			event.setTitle("Error");
 			System.out.println("Room exist");
-			
+
 			//Show popup and Return to main page if room exist
 			return new ModelAndView("redirect:/");
 		}
-		
+
 		event.setUser(userService.findUserByUsername(user.getUsername()));
 		try{
 			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm");
@@ -123,9 +128,9 @@ public class AddEventController {
 			}
 			catch(Exception e){
 				System.out.println("some error here...");
-			
+
 			}
-			
+
 		}
 		else{ //Live event
 			try {
@@ -137,8 +142,8 @@ public class AddEventController {
 				//Create twilio room and get url of the created room from twilio
 				String link = (twilioService.CreateRoom(event));
 				event.setEvent_link(link);
-				
-				
+
+
 				String fileName = "";
 				fileName = StringUtils.cleanPath(file.getOriginalFilename()); //get the acrual file name
 				event.setEventImageName(fileName);
@@ -151,13 +156,13 @@ public class AddEventController {
 			}
 			catch (Exception e) {
 				System.out.println("some error here...");
-				
+
 			}
 		}
 		//Return to main page if error 
 
-        return new ModelAndView("redirect:/");
-    }
+		return new ModelAndView("redirect:/");
+	}
 }
 
 

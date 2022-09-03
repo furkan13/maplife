@@ -8,9 +8,18 @@
     <link rel="stylesheet" href="css/bootstrap.min.css">
 
 
+    <script type="text/javascript"
+            src="http://maps.googleapis.com/maps/api/js?key=AIzaSyD8mjrcsF6gWpy7VNfNxz00hLU3BGYDqK4&sensor=true">
+    </script>
+
+
+
+
+
 </head>
-<body th:replace="navigator/bars::common-body(~{::#addevents-page},~{},~{})">
+<body th:replace="navigator/bars::common-body(~{::#addevents-page},~{},~{::script})" th:onload="initialize()">
 <div id="addevents-page" >
+
     <div class="content">
 
         <div class="container">
@@ -72,6 +81,22 @@
                                 </div>
 
                             </div>
+                                <div  class="col-md-12 form-group mb-3">
+                                    <div id="map" class="map" style="width:600px; height:500px"></div>
+                                    <p><input class="form-control" id="address" name="Postcode" type="text" placeholder="Postcode">
+                                        <input id="longi" name="longi" type="hidden" value="">
+                                        <input id="lat" name="lat" type="hidden" value="">
+                                        <input type="button"  class="button button-primary rounded-0 py-2 px-4" value="Search by postcode" onclick="codeAddress()" /></p>
+
+                                </div>
+
+                            </div>
+
+
+
+
+
+
 
 
 
@@ -83,10 +108,6 @@
                             </div>
                         </form>
 
-                        <div id="form-message-warning mt-4"></div>
-                        <div class="alert alert-primary" role="alert" th:text="${success}" th:if="${success}"></div>
-                        <div class="alert alert-danger" role="alert" th:text="${error}" th:if="${error}"></div>
-
                     </div>
                 </div>
             </div>
@@ -95,6 +116,8 @@
     </div>
 
 </div>
+
+<script type="text/javascript" th:src="@{/js/Gmap.js}"></script>
 
 </body>
 </html>

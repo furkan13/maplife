@@ -15,6 +15,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.sql.Timestamp;
@@ -315,13 +316,25 @@ public class EventController {
         else {
             String[] stringArray = eventService.findByName(RoomName).getCat().split(",");
             List<String> tagList = Arrays.asList(stringArray);
-            for (int i = 0; i < tagList.size(); i++) {
-                System.out.println(tagList.get(i));
-            }
+
+
+            int index=0;
+
+                if(tagList.size()>1)
+                {
+                    List<String> tags = tagList.subList(1, tagList.size());
+
+                    return tags;
+                }
+
 
 
             return tagList;
         }
+
+
+
+
     }
 
 

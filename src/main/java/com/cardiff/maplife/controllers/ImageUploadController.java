@@ -30,7 +30,7 @@ public class ImageUploadController {
         }
 
         //Check if the image is of right type
-        Object imageObject = image.getContentType();
+//        Object imageObject = image.getContentType();
 //        System.out.println(imageObject);
 //        if (imageObject != null && !imageObject.toString().equals("image/jpeg") || imageObject != null && !imageObject.toString().equals("image/jpg")) {
 //            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Only JPEG/JPG uploads allowed");
@@ -55,16 +55,5 @@ public class ImageUploadController {
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body(e.getMessage() + "\n File Could be Uploaded. Please tray again later.");
         }
-
-
     }
-
-//    @PutMapping("api/updateImage")
-//    public ResponseEntity<User> updateImage(@RequestParam MultipartFile image,@RequestBody User user){
-//        String usernameFromUser = user.getUsername();
-//        user.setIcon(image.getOriginalFilename());
-////        User loggingUser = (User) userService.loadUserByUsername(usernameFromUser);
-//        User savedUser=userService.saveUser(user);
-//        return new ResponseEntity<>(savedUser, HttpStatus.OK);
-//    }
 }

@@ -2,7 +2,6 @@ const followBtn = document.getElementById("followBtn")
 
 let profileUsername=document.getElementById("profileUsername").innerText
 
-
 const unFollowUser = async function () {
     const userObject = {
         username: profileUsername,
