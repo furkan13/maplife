@@ -1,5 +1,4 @@
 let popupContent
-let mockPopupContent
 let currentLocation
 const categoryElements= document.getElementsByName('cat-group-chips')
 const resetButtonElement = document.getElementById("reset-filter-btn")

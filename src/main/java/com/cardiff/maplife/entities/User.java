@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -37,8 +38,7 @@ public class User implements UserDetails, Serializable {
     @Column(name = "userType")
     private boolean userType;
 
-    @Column(name = "coins")
-    private int coins;
+
 
     @Column(name = "views")
     private int views;
@@ -54,6 +54,11 @@ public class User implements UserDetails, Serializable {
 
     @Column(name = "bio")
     private String bio;
+
+
+    private LocalDate lastLogin;
+    private int coin;
+
 
 
     @OneToMany(mappedBy = "user")  //Creating one to many relation with booking class and Using user object from Booking class
@@ -98,13 +103,12 @@ public class User implements UserDetails, Serializable {
 
     }
 
-    public User(Long user_id, String username, String password, String email, boolean userType, int coins, int views, String icon, String roles, String video, String bio, List<Event> eventList, Set<User> followerUserSet, Set<User> followingUserSet, List<GrantedAuthority> authorities) {
+    public User(Long user_id, String username, String password, String email, boolean userType, int views, String icon, String roles, String video, String bio, List<Event> eventList, Set<User> followerUserSet, Set<User> followingUserSet, List<GrantedAuthority> authorities) {
         this.user_id = user_id;
         this.username = username;
         this.password = password;
         this.email = email;
         this.userType = userType;
-        this.coins = coins;
         this.views = views;
         this.icon = icon;
         this.roles = roles;
@@ -170,12 +174,7 @@ public class User implements UserDetails, Serializable {
     public void setUserType(boolean userType) {
         this.userType = userType;
     }
-    public int getCoins() {
-        return coins;
-    }
-    public void setCoins(int coins) {
-        this.coins = coins;
-    }
+
     public int getViews() {
         return views;
     }
@@ -226,5 +225,21 @@ public class User implements UserDetails, Serializable {
 
     public void setFollowingUserSet(Set<User> followingUserSet) {
         this.followingUserSet = followingUserSet;
+    }
+
+    public LocalDate getLastLogin() {
+        return lastLogin;
+    }
+
+    public void setLastLogin(LocalDate lastLogin) {
+        this.lastLogin = lastLogin;
+    }
+
+    public int getCoin() {
+        return coin;
+    }
+
+    public void setCoin(int coin) {
+        this.coin = coin;
     }
 }
