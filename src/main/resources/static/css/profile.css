@@ -115,10 +115,9 @@ body{
 .upcoming-event-image{
     margin: 20px;
     width: 35%;
-    background-image: url("../image/cat.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
+    background-repeat: no-repeat!important;
+    background-size: cover!important;
+    background-position: center!important;
 }
 .upcomingEvent-label{
     margin: 15px auto 0 22px;

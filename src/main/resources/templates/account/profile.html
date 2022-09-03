@@ -51,7 +51,7 @@
     <div class="upcoming-event-body">
         <div class="user-Event">
             <div class="user-Event-body" th:each="upcomingEvent:${upcomingEventList}" >
-                <div class="upcoming-event-image">
+                <div class="upcoming-event-image" th:style="'background:url(' + @{${'../../../'+upcomingEvent.photosImagePath}} + ');'">
                 </div>
                 <div>
                     <div class="upcomingEvent-label profile-title-font">
