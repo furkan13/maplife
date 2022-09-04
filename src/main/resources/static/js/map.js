@@ -3,7 +3,6 @@ let currentLocation
 const categoryElements= document.getElementsByName('cat-group-chips')
 const resetButtonElement = document.getElementById("reset-filter-btn")
 const streamNowButtonElement = document.getElementById("live-switch")
-
 // display the map layer
 var map = L.map('map',{zoomControl:false}).setView([51.483396, -3.173728], 11);
 //render map tile layer
@@ -17,7 +16,6 @@ L.tileLayer('https://api.maptiler.com/maps/voyager/256/{z}/{x}/{y}@2x.png?key=qn
 }).addTo(map);
 //zoom controller
 L.control.zoom({position:'topright'}).addTo(map);
-
 // load and zoom to the current location controller
 var displayCurrentLocation = L.control.locate({
     position:'bottomright',
@@ -32,7 +30,6 @@ var displayCurrentLocation = L.control.locate({
     icon:'relocate',
 }).addTo(map);
 displayCurrentLocation.start({setView:false}) //load location as soon as load the page
-
 //set the current location latitude and longitude to sessionStorage
 function getCurrentLocation(e) {
     currentLocation = e.latlng
@@ -45,25 +42,24 @@ function getCurrentLocation(e) {
 map.on('locationfound', getCurrentLocation);
 
 //customize the default marker
-// var orangeIcon = new L.Icon({
-//     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
-//     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-//     iconSize: [25, 41],
-//     iconAnchor: [12, 41],
-//     popupAnchor: [1, -34],
-//     shadowSize: [41, 41]
-// })
-// L.Marker.prototype.options.icon = orangeIcon
+var orangeIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-orange.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+})
+L.Marker.prototype.options.icon = orangeIcon
 
 // define a marker cluster group to support heat map and Compatibility with layers
 var mcgLayerSupportGroup = L.markerClusterGroup.layerSupport({spiderLegPolylineOptions:{opacity: 0},showCoverageOnHover:false}),
     petGroup = L.layerGroup(), lifeGroup = L.layerGroup(), gameGroup = L.layerGroup(), sportGroup = L.layerGroup(),travelGroup = L.layerGroup(),otherGroup = L.layerGroup(),
     liveNowGroup = L.layerGroup(), upcomingGroup = L.layerGroup(),
-    control = L.control.layers(null, null, { collapsed: false })
-
+    control = L.control.layers(null, null, { collapsed: false }),
+    categoryGroupList = [gameGroup,petGroup,lifeGroup,sportGroup,travelGroup,otherGroup]
+    // switchLiveGroupList = [upcomingGroup,liveNowGroup]
 mcgLayerSupportGroup.addTo(map);
-var categoryGroupList = [gameGroup,petGroup,lifeGroup,sportGroup,travelGroup,otherGroup]
-// var switchLiveGroupList = [upcomingGroup,liveNowGroup]
 //retrieve and show the streaming event data
 const getEvents = async function () {
     const response = await fetch("/EventList")
@@ -161,20 +157,76 @@ const getEvents = async function () {
 
 var filterSidebar = L.control.sidebar('filter-sidebar', {
     position: 'left',
-    autoPan:false
+    autoPan:true
 });
 map.addControl(filterSidebar);
 
+//toggle button for map filter
 L.easyButton('filter-button',function(){
     filterSidebar.toggle();
 }).setPosition('bottomright').addTo(map);
 
+//location search
+const distanceRangeInput= document.getElementById("distance-range")
+const distanceRangeLabel= document.getElementById("distance-range-value")
+let radius = 1000 * distanceRangeInput.value
+var distanceCircle = L.circle()
+var geocoder = L.Control.geocoder({
+    collapsed:false,
+    defaultMarkGeocode: false,
+    placeholder:"Search Places..."
+})
+    .on('markgeocode', function(e) {
+        map.removeLayer(distanceCircle);
+        var center = e.geocode.center;
+        distanceCircle = L.circle(center,{radius:radius,color:"#de5b19",fillOpacity: 0.1,opacity: 0.8}).addTo(map)
+        map.fitBounds(distanceCircle.getBounds(),{paddingTopLeft:[288,0]});
+    })
+    .addTo(map);
+
+distanceRangeLabel.innerText=distanceRangeInput.value
+distanceRangeInput.oninput=function (){
+    radius = 1000 * distanceRangeInput.value
+    distanceRangeLabel.innerHTML=distanceRangeInput.value
+    distanceCircle.setRadius(radius)
+}
+distanceRangeInput.onchange=function (){
+    try{
+        map.fitBounds(distanceCircle.getBounds(),{paddingTopLeft:[288,0]});
+    }
+    catch (e) {
+        console.log("circle is not created")
+    }
+}
+
+//convert datetime
+let strToDate= function (str){
+    let nowTime = new Date().getTime();
+    let eventTime = new Date(str).getTime();
+    if (nowTime>=eventTime){
+        let totalSeconds = (nowTime - eventTime)/1000
+        // let days = parseInt(totalSeconds/86400); // day  24*60*60*1000
+        let hours = parseInt(totalSeconds/3600)    // hours 60*60 whole hours-past hours= current hours
+        let minutes = parseInt(totalSeconds/60)-60*hours; // minutes - hours*60 = minutes left
+        let seconds = parseInt(totalSeconds%60);  // mod 60 so the seconds left
+        return  hours+" hours "+minutes+" minutes ago"
+    }
+    else {
+        let date = new Date(eventTime);
+        let Year = date.getFullYear();
+        let Moth = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1);
+        let Day = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate());
+        let Hour = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours());
+        let Minute = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes());
+        let Second = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+        return  Year + '-' + Moth + '-' + Day + '   '+ Hour +':'+ Minute  + ':' + Second;
+    }
+}
 //function for clear all conditions in map filter
 let clearAll = function () {
     document.getElementById('distance-range-value').innerHTML='50'
     mcgLayerSupportGroup.addLayer(categoryGroupList)
 }
-
 //check the streaming now switch button status
 let isLiveNow = function (){
     return !!streamNowButtonElement.checked;
@@ -236,28 +288,4 @@ streamNowButtonElement.addEventListener("click", filter)
 for (let i = 0; i < categoryElements.length; i++) {
  categoryElements[i].addEventListener("click",filter)
 }
-let str2 = "2022-09-01T00:00:00.000+00:00"
 
-let strToDate= function (str){
-    let nowTime = new Date().getTime();
-    let eventTime = new Date(str).getTime();
-    if (nowTime>=eventTime){
-        let totalSeconds = (nowTime - eventTime)/1000
-        // let days = parseInt(totalSeconds/86400); // day  24*60*60*1000
-        let hours = parseInt(totalSeconds/3600)    // hours 60*60 whole hours-past hours= current hours
-        let minutes = parseInt(totalSeconds/60)-60*hours; // minutes - hours*60 = minutes left
-        let seconds = parseInt(totalSeconds%60);  // mod 60 so the seconds left
-        return  hours+" hours "+minutes+" minutes ago"
-    }
-    else {
-        let date = new Date(eventTime);
-        let Year = date.getFullYear();
-        let Moth = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1);
-        let Day = (date.getDate() < 10 ? '0' + date.getDate() : date.getDate());
-        let Hour = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours());
-        let Minute = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes());
-        let Second = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
-        return  Year + '-' + Moth + '-' + Day + '   '+ Hour +':'+ Minute  + ':' + Second;
-    }
-
-}
