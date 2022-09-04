@@ -68,7 +68,7 @@ body{
 /*    left: 14%;*/
 /*    top: 11%;*/
 /*}*/
-.edit-btn{
+.btn btn-sm btn-outline-secondaryedit-btn{
     border: solid 2px #d7d7d7;
     height: 33px;
     width: 98px;
