@@ -20,18 +20,7 @@ function main(){
 	//3. Create a local track to publish in the twilio video room
 	//4. Connect to twilio video room with the token, localtrack and room name
 	//5. Show other participant's tracks from the video room
-	
-	
-    $("#video_rm").click(function(){
-        video_reload();
-		// console.log(liveToken)
-	});
-    $("#exit").click(function(){ room_exit(roomObj);});
-    $("#partycheck").click(function(){ participant_video(roomObj);});
-	$("#delete_room").click(function(){room_delete();});
 
-    $("#cohost_request").click(function(){cohost_send();});
-    $("#cohost_list").click(function(){fetchCoHostRequest();});
 //    live_token(liveToken)
 	initlise();
 }
@@ -58,6 +47,8 @@ const initlise = async function(){
 		alert("Room name: "+roomName +" may be closed or not exist.\n Return to main page.");
 		window.location.href = '../'; //Go back to main page
 	}
+	$("#partycheck").click(function(){ participant_video(roomObj);});
+	
 	if(userJson.userId == roomObj.VideoRoom["user"].id){ //If the user is the host of this room
 		//Build the host page accordingly
 		//Show submit button and add event listener
@@ -77,8 +68,13 @@ const initlise = async function(){
 				window.location.href = '../';
 			}
 		})
+		$("#delete_exit_room").click(function(){//Check the identity of user, then provide different function and innerhtml
+			$("delete_exit_room").html("Delete Room");
+			room_delete();
+		});
 	}
 	else{//Potential co-host, validate the user's id to server and check for token
+		
 		if(!roomObj.VideoRoom["live"]){ //If the room is not live, it must be a future event as server only provide valid event
 			alert("This is a future event and the host has not launched it yet. Please wait until the host start the event.")
 			window.location.href = '../'; //Go back to live page
@@ -91,9 +87,12 @@ const initlise = async function(){
 			}
 		})
 		$("#loading_animation").show(); //Show the loading animation
-
+		
 		//Call get token every 15s, if server doesn't provide it for 5 minutes, return to live
 		await video_token();
+		if(roomObj.token ==""){
+			cohost_send(); //Send a cohost request if user cannot get the token
+		}
 		while(count < 19 && roomObj.token ==""){
 
 			await sleep(15000);
@@ -101,7 +100,7 @@ const initlise = async function(){
 			// console.log("ha")
 			count+=1;
 		}
-
+		$("#cohost_list").hide();//Hide the cohost list as it is used for host only
 		//Checking for any token receive
 		if(roomObj.token == ""){ //Alert user that host has not processed the request at the moment
 			alert("Host has not replied at the moment. Please try it again or watch the streaming instead.")
@@ -114,9 +113,14 @@ const initlise = async function(){
 			$("#speaker_target").empty();
 			$("#video_target").empty();
 			room_join(roomObj);
+			//Disable audio as user is not host
+			
 		})
-		$("#join_room_btn").show(); 
-
+		$("#join_room_btn").show();
+		$("#delete_exit_room").click(function(){//Check the identity of user, then provide different function and innerhtml
+			$("#delete_exit_room").html("Exit");
+			room_exit(roomObj);
+		});
 		
 
 	}
@@ -124,7 +128,31 @@ const initlise = async function(){
 const host_join = async function(){
 	await room_final_check(); //Create a twilio room if future event
 	await video_room(); //Get the room detail again
+	fetchCoHostRequest(); //Start getting list of cohost request
+	auto_location_sender();//Update host location
+	//make a function to mute the published audio track;
+	$("#mute_publish_audio").data("muted_track", false);
+	$("#mute_publish_audio").click(function(){
+		source_audio_mute($("#mute_publish_audio"));
+	});
+	$("#mute_publish_audio").show();
 	room_join(roomObj);
+}
+function source_audio_mute(source){
+	if(source.data("muted_track")){ //If the audio track is muted
+		roomObj.room.localParticipant.audioTracks.forEach(
+			(publication) => {publication.track.enable();}
+		);
+		source.data("muted_track", false);
+		source.html("Stop audio publish")
+	}
+	else{ //Audio track is not muted
+		roomObj.room.localParticipant.audioTracks.forEach(
+			(publication) => {publication.track.disable();}
+		);
+		source.data("muted_track", true);
+		source.html("Resume audio publish");
+	}
 }
 function sleep(ms){
 	return new Promise(resolve => setTimeout(resolve,ms));
@@ -169,7 +197,36 @@ function switch_speaker(target, listspeaker){
 function get_track_list(){ //Doesn't work in local file, try localhost
 	local_track =[[[],[],[]],[[],[],[]]];
 	let stream;
-	return navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then(s=>{
+	
+	navigator.mediaDevices.getUserMedia({ audio: false, video: true })
+	.then(s=>{
+		stream = s;
+		if (!navigator.mediaDevices?.enumerateDevices) {
+		console.log("enumerateDevices() not supported.");
+		} 
+		else {
+			navigator.mediaDevices.enumerateDevices()
+			.then((devices) => {
+				devices.forEach((device) => {
+					// console.log(device.label);
+					if(device.kind == "videoinput"){
+						local_track[0][0].push(device.deviceId);
+						local_track[1][0].push(device.label);
+					}
+				});
+				local_track[0][0].push("screen");
+				local_track[1][0].push("Screen capture");
+			})
+
+
+		}
+	})
+	.catch(err =>{ //If user do not have any camera
+		local_track[0][0].push("screen");
+		local_track[1][0].push("Screen capture");
+	});
+
+	return navigator.mediaDevices.getUserMedia({ audio: true, video: false }).then(s=>{
 		stream = s;
 		if (!navigator.mediaDevices?.enumerateDevices) {
 			console.log("enumerateDevices() not supported.");
@@ -178,10 +235,10 @@ function get_track_list(){ //Doesn't work in local file, try localhost
 			.then((devices) => {
 				devices.forEach((device) => {
 					// console.log(device.label);
-					if(device.kind == "videoinput"){
-						local_track[0][0].push(device.deviceId);
-						local_track[1][0].push(device.label);
-					}
+					// if(device.kind == "videoinput"){
+						// local_track[0][0].push(device.deviceId);
+						// local_track[1][0].push(device.label);
+					// }
 					if(device.kind == "audiooutput"){
 						local_track[0][1].push(device.deviceId);
 						local_track[1][1].push(device.label);
@@ -192,8 +249,8 @@ function get_track_list(){ //Doesn't work in local file, try localhost
 					}
 					
 				});
-				local_track[0][0].push("screen");
-				local_track[1][0].push("Screen capture");
+				// local_track[0][0].push("screen");
+				// local_track[1][0].push("Screen capture");
 			})
 
 
@@ -219,20 +276,38 @@ const loading_page = async function(){ //Setup for the blackscreen, provide vide
 			target_list[i].append(cache);
 		}
 	}
+	
 	//Set to default video/microphone, show it on webpage
+	$("#video_target").empty();//Clear the previous track in show
+	if(local_track[0][0][0] == "screen"){ //If user do not have any camera, set camera as screen capture
+		navigator.mediaDevices.getDisplayMedia().then((streams) => {
+			let Screen_video = new Twilio.Video.LocalVideoTrack(streams.getTracks()[0]);
+			roomObj.tracks[1] = Screen_video;
 
-	Twilio.Video.createLocalTracks({audio:{deviceId:{exact:local_track[0][2][0]}}, video:{deviceId:{exact:local_track[0][0][0]}}})
+			$("#video_target").append(roomObj.tracks[1].attach());
+		});
+	}
+	else{
+		Twilio.Video.createLocalTracks({audio:false, video:{deviceId:{exact:local_track[0][0][0]}}})
+			.then((stream)=> {
+				roomObj.tracks[1] = stream[0]; //Store the tracks in roomObj
+				$("#video_target").append(roomObj.tracks[1].attach());
+			})
+		
+	}
+	
+	
+	Twilio.Video.createLocalTracks({audio:{deviceId:{exact:local_track[0][2][0]}}, video:false})
 		.then((stream)=> {
-			roomObj.tracks = stream; //Store the tracks in roomObj
-
-			$("#video_target").empty();//Clear the previous track in show
+			roomObj.tracks[0] = stream[0]; //Store the tracks in roomObj
+			
 			$(".Testing").remove();
 
 			//Make an id for the audio, so doesn't delete all
 			let cache = roomObj.tracks[0].attach();
 			cache.className = "Testing";
 			$("#speaker_target").append(cache); //Attach the track for preview
-			$("#video_target").append(roomObj.tracks[1].attach());
+			
 		})
 
 }
@@ -264,41 +339,26 @@ function room_final_check(){
 
 	});
 }
-function video_block(){ //Create block for multiple streamers' video
-	$("#bottom_other_stream") //Target div
 
-	
-}
-function participant_video_on_connect(){ //function for on connect 
-	room.on('participantConnected', participant => {
-	  console.log(`Participant "${participant.identity}" connected`);
 
-	  participant.tracks.forEach(publication => {
-		if (publication.isSubscribed) {
-		  const track = publication.track;
-		  document.getElementById('remote-media-div').appendChild(track.attach());
-		}
-	  });
-
-	  participant.on('trackSubscribed', track => {
-		document.getElementById('remote-media-div').appendChild(track.attach());
-	  });
-	});
-}
-function create_main_audio(participant){
+const create_main_audio = async function(participant){
 	
 	let localAudio = "";
-	participant.audioTracks.forEach((tracks)=>{localAudio = tracks}); //Need to debug
+	await participant.audioTracks.forEach((tracks)=>{localAudio = tracks.track.attach()}); //Need to debug
 	localAudio.id = "main_audio"; //added id to control with volume slider
 	localAudio.volume = 0;
 	// Volume control and mute button 
 	// slider
+	//Only mute when user is host!!!
 	let volume_slider = $("<input></input>");
-	volume_slider.attr("input", "range");
-	volume_slider.val = 0; //default muted
-	volume_slider.data("volume", 100);//storing the restoring volume as id
+	volume_slider.attr("type", "range");
+	volume_slider.attr("value", 0); //default muted
+	volume_slider.data("volume", 1);//storing the restoring volume as id
+	
+	
 	volume_slider.attr("min", 0);
 	volume_slider.attr("max", 100);
+	volume_slider.attr("step", 1);
 	volume_slider.change(function(){volume_adjust(volume_slider)});
 	//mute 
 	let volume_mute_btn = $("<button></button>");
@@ -306,7 +366,12 @@ function create_main_audio(participant){
 	volume_mute_btn.html("mute");//!!!Should implement mute icon
 	
 	volume_mute_btn.click(function(){volume_mute(volume_mute_btn,volume_slider)});
-	
+	if(participant.identity != roomObj.VideoRoom.user.username){ //for cohost, unmute and play host's audio
+		volume_slider.attr("value", 100); //default unmuted
+		volume_slider.data("volume", 0);//storing the restoring volume as id
+		localAudio.volume = 1;
+		localAudio.muted = false;
+	}
 	let audio_related = $("<div></div>");
 	audio_related.attr("id", "stream_audio");
 	audio_related.data("userid", participant.sid);
@@ -325,38 +390,102 @@ function create_cohost_function(participant){
 	let hide_kick_btn = $("<button></button>");
 	hide_kick_btn.html("hide");//!!!Should implement red cross icon
 	hide_kick_btn.data("username", participant.identity);
+	hide_kick_btn.data("userid", participant.sid);
 	hide_kick_btn.click(function(){hide_kick(hide_kick_btn)});
 	//Clickable div, call switching function if click
 	//Create a div overlay to ease deleting it 
 	let cache = $("<div></div>");
 	cache.data("username", participant.identity);
 	cache.data("userid", participant.sid);
-	cache.click(function(){stream_switch(cache)});
+	// cache.click(function(){stream_switch(cache)});
 	cache.append(hide_kick_btn);
 	
 	return cache;
 }
-function participant_video(roomObj){ //Show all the video of participant in the room, call when join the room
+function participant_video_on_connect(roomObj){ //function for on connect 
+	roomObj.room.on('participantConnected', participant => {
+	  
+		//Only attach video tracks, attach audio when user click the window, allow delete if host
+		participant.tracks.forEach((publication) => {
+			if(publication.isSubscribed){
+				video_window = $("<div></div>");//Div for video
+				video_window.attr("id", participant.identity);
+				let video_cache =  publication.track;//Add video in the div
+				video_window.append(video_cache.attach());
+				//Need to subscribe the video before posting it on panel!!!
+				
+				
+				//Attaching it to user interface
+				if(participant.identity == roomObj.VideoRoom.user.username){ 
+					//Shown in main stream as that is host 
+					if(participant.audioTracks){
+						let audio_related = create_main_audio(participant);
+						audio_related.then((reply)=>{video_window.append(reply);})
+						
+					}
+					$("#stream").append(video_window);
+				}
+				else{ //Other cohost 
+					let cache = create_cohost_function(participant);
+					video_window.append(cache);
+					$("#bottom_other_stream").append(video_window);;
+				}
+			}
+		});
+
+        participant.on("trackSubscribed",track =>{
+			
+			if(track.kind == "video"){
+				console.log("onsub tracks");
+				console.log(track);
+				video_window = $("<div></div>");//Div for video
+				video_window.attr("id", participant.identity);
+				video_window.append(track.attach());//Add video in the div
+				//Need to subscribe the video before posting it on panel!!!
+				
+				
+				//Attaching it to user interface
+				if(participant.identity == roomObj.VideoRoom.user.username){ 
+					//Shown in main stream as that is host 
+					if(participant.audioTracks){
+						let audio_related = create_main_audio(participant);
+						audio_related.then((reply)=>{video_window.append(reply);})
+					}
+					$("#stream").append(video_window);
+				}
+				else{ //Other cohost 
+					let cache = create_cohost_function(participant);
+					video_window.append(cache);
+					$("#bottom_other_stream").append(video_window);;
+				}
+			}
+            
+        });
+
+	});
+}
+const participant_video = async function(roomObj){ //Show all the video of participant in the room, call when join the room
     //Empty the existing video
 	$("#bottom_other_stream").empty();
 	$("#stream").empty();
 	
-	let video_window = $("<div></div>");//Div for video; //Storage for each video element
+	
 	//Main display: attach video and audio tracks, allow to mute volume 
 	//Create whole object here, then append to stream div
-	
+	let video_window = $("<div></div>");//Div for video; //Storage for each video element;
+	video_window.attr("id", userJson.username);
 	// Host show their video as main as default
 	roomObj.room.localParticipant.tracks.forEach(publication => { 
-		
-		if(publication.videoTracks){ //video element, add audio control on it
-			video_window.append(publication.videoTracks.attach());
+
+		if(publication.kind == "video"){ //video element, add audio control on it
+			video_window.append(publication.track.attach());
 			
 		}
-		if(publication.audioTracks){ //Audio element, put in different container
+		if(publication.kind == "audio"){ //Audio element, put in different container
 			// Should mute in default to prevent echo
 			
-			let audio_related = create_main_audio(localParticipant);
-			video_window.append(audio_related);
+			let audio_related = create_main_audio(roomObj.room.localParticipant);
+			audio_related.then((reply)=>{video_window.append(reply);})
 		}
 	});
 	//Localtrack appending
@@ -379,45 +508,80 @@ function participant_video(roomObj){ //Show all the video of participant in the 
 		
 		//Only attach video tracks, attach audio when user click the window, allow delete if host
 		participant.tracks.forEach((publication) => {
-			if(publication.kind == "video"){
+			if(publication.track != null){
+				if(publication.track.kind =="video"){ //
+					console.log("onconnect tracks");
+					console.log(publication.track);
+					video_window = $("<div></div>");//Div for video
+					video_window.attr("id", participant.identity);
+					let video_cache =  publication.track;//Add video in the div
+					video_window.append(video_cache.attach());
+					//Need to subscribe the video before posting it on panel!!!
+
+
+					//Attaching it to user interface
+					if(participant.identity == roomObj.VideoRoom.user.username){
+						//Shown in main stream as that is host
+						if(participant.audioTracks){
+							let audio_related = create_main_audio(participant);
+							audio_related.then((reply)=>{video_window.append(reply);})
+						}
+						$("#stream").append(video_window);
+					}
+					else{ //Other cohost
+						let cache = create_cohost_function(participant);
+						video_window.append(cache);
+						$("#bottom_other_stream").append(video_window);;
+					}
+				}
+			}
+		});
+
+        participant.on("trackSubscribed",track =>{
+			
+			if(track.kind == "video"){
+				console.log("onsub tracks");
+				console.log(track);
 				video_window = $("<div></div>");//Div for video
-				video_window.append(publication.track.attach());//Add video in the div
-				
-				
+				video_window.attr("id", participant.identity);
+				video_window.append(track.attach());//Add video in the div
+				//Need to subscribe the video before posting it on panel!!!
 				
 				
 				//Attaching it to user interface
-				if(participant.identity != roomObj.VideoRoom.user.username){ 
-					//Filter host as it is shown in main stream
+				if(participant.identity == roomObj.VideoRoom.user.username){ 
+					//Shown in main stream as that is host 
 					if(participant.audioTracks){
 						let audio_related = create_main_audio(participant);
-						video_window.append(audio_related);
+						audio_related.then((reply)=>{video_window.append(reply);})
 					}
 					$("#stream").append(video_window);
 				}
-				else{
+				else{ //Other cohost 
 					let cache = create_cohost_function(participant);
 					video_window.append(cache);
 					$("#bottom_other_stream").append(video_window);;
 				}
 			}
-		});
-
-        // participant.on("trackSubscribed",track =>{
-            // $("#bottom_other_stream").append(track.attach());
-        // });
+            
+        });
     });
 }
+
 function stream_switch(source){//Swap the source to main stream panel
 	//Remove stream audio first, add swap and remove functionality after swap 
 	//host allow promote after switch
 	let main_display = $("#stream_audio").parent(); //Switch to buttom_other_stream
-	let side_display = source.parent(); //Switch to main stream
+	let side_display = source.parent().parent(); //Switch to main stream
 
 	let main_id = $("#stream_audio").data("userid"); //Get twilio participant sid to retrieve the audio track
 	let main_name = $("#stream_audio").data("username");
 	let source_id = source.data("userid"); //Get twilio participant sid to retrieve the audio track
 	let source_name = source.data("username");
+	console.log(main_id);
+	console.log(main_name);
+	console.log(source_id);
+	console.log(source_name);
 	//Remove audio control in main and sup function in other
 	$("#stream_audio").remove();
 	source.remove();
@@ -432,7 +596,8 @@ function stream_switch(source){//Swap the source to main stream panel
 		
 	}
 	else{
-		if(roomObj.room.participants.get(source_id).tracks.audioTracks){//the selected user is remoted
+		//Bugs here!!!
+		if(roomObj.room.participants.get(source_id).audioTracks){//the selected user is remoted
 			audio_track = create_main_audio(roomObj.room.participants.get(source_id));
 		}
 		
@@ -456,6 +621,7 @@ function stream_switch(source){//Swap the source to main stream panel
 	main_display.replaceWith(clone_side);
 	side_display.replaceWith(clone_main);
 }
+//Kick function completed
 function hide_kick(source){//host: expand to ask confirm kicking, cohost: ask confirm hiding
 	//Confirm dialog popup
 	let reply = "hiding";
@@ -463,46 +629,64 @@ function hide_kick(source){//host: expand to ask confirm kicking, cohost: ask co
 		reply = "kicking"
 	}
 	//Create a chat with title and inner span
-	let cache = $("<div></div>");
-	cache.attr("title", "Confirm "+reply+" ?");
-	
+	let cache = source.parent()
+	cache.attr("title", "Confirm "+reply+"?");
+	let target_username  = source.data("username");
+	let target_userid  = source.data("userid");
+	// source.append(cache);
 	//
-	$(function(){
+	
     cache.dialog({ //Target to the chat
 		resizable: false,
-		height: "auto", //Should be size of the window
-		width: "auto",
-		modal: true,
+		height: "100px", //Should be size of the window
+		width: "100px",
+		modal: false,
 		buttons: {
 			"Confirm": function() {
-				//Hide the video
-				source.parent().remove(); //Remove the whole video div(video_window)
+				
+				
 				if(roomObj.VideoRoom.user.id == userJson.userId){//host
 					//Kick the target user in twilio room
-					$.post("/CoHostKick?RoomName="+roomObj.VideoRoom["title"]+"&username="+source.data("username"), function(data, status){});
+					console.log(target_username);
+					$.post("/CoHostKick?RoomName="+roomObj.VideoRoom["title"]+"&username="+target_username, function(data, status){});
 
 				}
+				//Hide the video
+				$("#"+target_username).remove(); //Remove the whole video div(video_window)
 				$( this ).dialog( "close" );
 				
 			},
 			Cancel: function() {
+				//find the participant with name == target_username
+				console.log(roomObj.room.participants.get(target_userid))
+				$("#"+target_username).append(create_cohost_function(roomObj.room.participants.get(target_userid)))
+				
 				$( this ).dialog( "close" );
+				//create back the hide button
 			}
 		  }
 		});
-	});
+	
 	
 }
+//Checking with volume_adjust & volume_mute finished
 function volume_adjust(source){ //Only change input volume, twilio does not allow output volume setting
-	$("#main_audio")[0].volume = source.val;
+	if(parseInt(source[0].value) >0){
+		$("#main_audio")[0].muted = false;
+	}
+	source.data("volume", 0);
+	$("#main_audio")[0].volume = parseFloat(source[0].value/100);
 }
 function volume_mute(btn,slider){ //Mute function 
-	if(slider.data("volume") == 0){ //Mute 
-		slider.data("volume",slider[0].volume);//Set the restoring volume 
+	if(slider.data("volume") == 0){ //Mute, data("volume") will only be 0 if audio is playing
+		slider[0].value = 0;//Move the slider to 0
+		slider.data("volume",$("#main_audio")[0].volume);//Set the restoring volume 
 		$("#main_audio")[0].volume = 0; 
 	}
 	else{ //unmute
+		$("#main_audio")[0].muted = false;
 		$("#main_audio")[0].volume = slider.data("volume"); //Remove a in id and convert to nubmer
+		slider[0].value = slider.data("volume")*100; //Move the slider back to original 
 		slider.data("volume", 0);
 	}
 }
@@ -545,18 +729,35 @@ const room_join =async function(roomObj){ //Join the room with tracks
     await Twilio.Video.connect(roomObj.token, {name: roomName, tracks:roomObj.tracks}).then(room => {
         console.log(`Successfully joined a Room: ${room}`);
         roomObj.room = room;
-        room.on('participantConnected', participant => {
-            console.log(`A remote Participant connected: ${participant}`);
-
+		room.on("participantDisconnected", participant=>{
+			$("#"+participant.identity).remove();
+			
 		});
+		room.on("disconnected", room=>{
+			alert("The room is closed now. Return to main page");
+			window.location.href="/";
+			
+			
+		});
+        // room.on('participantConnected', participant => {
+            // console.log(`A remote Participant connected: ${participant}`);
+
+		// });
 	}, error => {
 		console.error(`Unable to connect to Room: ${error.message}`);
 	});
-	participant_video(roomObj);
+	if(userJson.userId != roomObj.VideoRoom["user"].id){ //disable user's audio if they are not host
+		roomObj.room.localParticipant.audioTracks.forEach(
+			(publication) => {publication.track.disable();}
+        );
+	}
+	participant_video(roomObj); //Get existing user's video
+	participant_video_on_connect(roomObj); //Get user's video when they connect
+	
 }
 
 function fetchCoHostRequest(){
-    let interval = 5000; //5 second per request
+    let interval = 15000; //5 second per request
     let cohostList = $.get("/CoHostRequest?RoomName="+roomName, function(data, status){
         console.log(data);
         setTimeout(fetchCoHostRequest,interval);
@@ -619,6 +820,21 @@ const video_token = async function(){ // Get video token if grant access
 	}); //Get the access token or reject if user is not authorised
 }
 
+const auto_location_sender = async function(){
+	navigator.geolocation.getCurrentPosition(location_update);
+	// await sleep(30000);//Call every 5 minutes
+	setTimeout(auto_location_sender,30000);
+}
+function location_update(position){
+	roomObj.VideoRoom.latitude = position.coords.latitude;
+	roomObj.VideoRoom.longitude = position.coords.longitude;
+	$.ajax({url:"/RoomLocationUpdate",
+		type:"POST",
+		data:JSON.stringify(roomObj.VideoRoom),
+		dataType:"json",
+		contentType:"application/json; charset=utf-8"});
+	
+}
 function live_token(token) { //Get live token for the room, required for all users
     token = $.get("/LiveAccess?RoomName=" + roomName); //Get the access token
     if (token == "") {//Show error with the room, might be closed
