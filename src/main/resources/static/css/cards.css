@@ -8,13 +8,14 @@
     box-sizing: border-box;
 }
 
-body {
-    font-family: 'Noto Sans JP', sans-serif;
-    background-color: #ffffff;
+body{
+    background-color: rgba(249, 249, 249, 1);
+    /*background-color:gray;*/
+
+    height: -webkit-fill-available;
 }
 
-
-.headline
+#search .headline
 {
     padding: 12px;
     display: inline-block;
@@ -22,7 +23,7 @@ body {
     text-decoration-thickness: auto;
 }
 
-.section_nearby {
+#search .section_nearby {
     top: 8%;
     position: absolute;
     left: 50%;
@@ -32,7 +33,7 @@ body {
 }
 
 
-.section_Trending {
+#search .section_Trending {
     top: 600px;
     position: absolute;
     left: 50%;
@@ -40,7 +41,7 @@ body {
 
 }
 
-.cards {
+#search .cards {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px,400px));
     gap: 2rem;
@@ -50,7 +51,7 @@ body {
 
 }
 
-.card {
+#search .card {
     position: relative;
     display: block;
     height: 100%;
@@ -60,12 +61,12 @@ body {
     left: 50%;
 }
 
-.card__image {
+#search .card__image {
     width: 100%;
     height: auto;
 }
 
-.card__overlay {
+#search .card__overlay {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -77,11 +78,11 @@ body {
     transition: .2s ease-in-out;
 }
 
-.card:hover .card__overlay {
+#search .card:hover .card__overlay {
     transform: translateY(0);
 }
 
-.card__header {
+#search .card__header {
     position: relative;
     display: flex;
     align-items: center;
@@ -93,7 +94,7 @@ body {
     transition: .2s ease-in-out;
 }
 
-.card__arc {
+#search .card__arc {
     width: 80px;
     height: 80px;
     position: absolute;
@@ -102,29 +103,29 @@ body {
     z-index: 1;
 }
 
-.card__arc path {
+#search .card__arc path {
     fill: var(--surface-color);
     d: path("M 40 80 c 22 0 40 -22 40 -40 v 40 Z");
 }
 
-.card:hover .card__header {
+#search .card:hover .card__header {
     transform: translateY(0);
 }
 
-.card__thumb {
+#search .card__thumb {
     flex-shrink: 0;
     width: 50px;
     height: 50px;
     border-radius: 50%;
 }
 
-.card__title {
+#search .card__title {
     font-size: 1em;
     margin: 0 0 .3em;
     color: #6A515E;
 }
 
-.card__tagline {
+#search .card__tagline {
     display: block;
     margin: 1em 0;
     font-family: "MockFlowFont";
@@ -132,12 +133,12 @@ body {
     color: #ffffff;
 }
 
-.card__status {
+#search .card__status {
     font-size: .8em;
     color: #ffffff;
 }
 
-.card__description {
+#search .card__description {
     padding: 0 2em 2em;
     margin: 0;
     color: #ffffff;

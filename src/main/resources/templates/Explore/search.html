@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" lang="en">
+<head th:replace="navigator/bars::common-header(~{::title}, ~{::link})">
+    <meta charset="UTF-8">
+    <title>Search</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link th:href= "@{/css/cards.css}" rel="stylesheet" />
+    <link th:href= "@{/css/bars.css}" rel="stylesheet" />
+
+</head>
+<body th:replace="navigator/bars::common-body(~{::#search},~{},~{})">
+
+
+<div id="search"  >
+
+
+
+
+
+
+
+    <ul class="cards">
+
+        <li th:each="event : ${results}">
+            <a href="" class="card">
+                <!--<img th:src="${event.image}" class="card__image" alt="" />-->
+                <img th:src="@{${event.PhotosImagePath}}" class="card__image" alt="" />
+                <div class="card__overlay">
+                    <div class="card__header">
+
+                        <div class="card__header-text">
+                            <h3 class="card__title" th:text="${event.title}"></h3>
+                            <h3 class="card__title" th:text="${event.cat}"></h3>
+                            <span class="card__status" th:text="${event.event_date}" ></span>
+                            <div>
+                                <form action="#"  >
+                                    <input type="submit" value="Join Event" class="accept_button" />
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                    <p class="card__description" th:text="${event.event_dis}"></p>
+                </div>
+            </a>
+        </li>
+
+    </ul>
+    <ul class="cards">
+
+        <li th:each="user : ${userList}">
+            <a href="" class="card">
+                <!--<img th:src="${event.image}" class="card__image" alt="" />-->
+                <img th:src="@{${user.PhotosImagePath}}" class="card__image" alt="" />
+                <div class="card__overlay">
+                    <div class="card__header">
+
+                        <div class="card__header-text">
+                            <h3 class="card__title" th:text="${user.Username}"></h3>
+
+
+                            <div>
+                                <form action="#" th:action="@{/profile/{username}(username=${user.username})}">
+                                    <input type="submit" value="View Profile" class="accept_button" />
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                    <p class="card__description" th:text="${user.Bio}"></p>
+                </div>
+            </a>
+        </li>
+
+    </ul>
+
+
+
+</div>
+
+</body>
+</html>

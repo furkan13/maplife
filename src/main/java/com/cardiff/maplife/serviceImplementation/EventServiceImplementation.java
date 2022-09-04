@@ -77,6 +77,14 @@ public class EventServiceImplementation implements EventService {
     @Override
     public List<Event> finduserCustom(Timestamp serverTime, String username){return eventRepository.finduserCustom(serverTime, username);}
 
+    @Override
+    public List<Event> searchResults(String key,Timestamp serverTime)
+    {
+
+
+        return eventRepository.searchResults(key,serverTime);
+    }
+
 
 
 

@@ -68,7 +68,26 @@ public class AddEventController {
     @PostMapping("/addevents")
     public ModelAndView addEvent(ModelAndView modelAndView, @ModelAttribute("events") Event event, Model model, @RequestParam(value = "image", required = false) MultipartFile file, @AuthenticationPrincipal User user, HttpSession session, RedirectAttributes redirAttrs,@RequestParam (required = false) String time,@RequestParam("tags")String checkboxValue,@RequestParam(value = "longi",required = false)String longitude,@RequestParam(value = "lat",required = false)String latitude) throws IOException, NullPointerException{
 
-		event.setCat(checkboxValue);
+
+
+		String[] stringArray=checkboxValue.split(",");
+		List<String> tagList = Arrays.asList(stringArray);
+		int index=0;
+
+		if(tagList.size()>1)
+		{
+			List<String> tags = tagList.subList(1, tagList.size());
+			String listString = String.join(", ", tags);
+			event.setCat(listString);
+
+
+		}
+		else
+		{
+			event.setCat(checkboxValue);
+		}
+
+
 		event.setLongitude(Double.valueOf(longitude));
 		event.setLatitude(Double.valueOf(latitude));
 
