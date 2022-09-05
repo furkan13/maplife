@@ -14,6 +14,7 @@ import java.util.Set;
 
 @Service
 public class LiveService {
+    public TwilioService twilioService;
     private LiveRepository liveRepository;
     public LiveService(LiveRepository liveRepository){
         this.liveRepository=liveRepository;
@@ -31,7 +32,7 @@ public class LiveService {
 
     }
     public List<Live> findAllLiveByEventid(long eventid){
-        return liveRepository.findByEventid(eventid);
+        return liveRepository.findApprovedByEventid(eventid);
     }
     public List<Live> findPendingLiveByEventid(long eventid){
         return liveRepository.findPendingByEventid(eventid);
