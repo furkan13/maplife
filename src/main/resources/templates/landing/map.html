@@ -42,7 +42,7 @@
     <div id="map">
     </div>
     <div id="filter-sidebar">
-        <form>
+        <form id="filter-sidebar-form">
         <h5 class="mb-3 mt-4">Category</h5>
         <div class="group-chips-container">
             <input type="checkbox" class="btn-check" id="btncheck1" name="cat-group-chips" value="Game" autocomplete="off" checked>
@@ -65,10 +65,11 @@
 <!--        <div class="mb-1" style="color:#8c8c8c;font-size: 14px">Search</div>-->
 
 <!--        <div class="input-group mb-3">-->
-        <input type="search"  class="form-control mb-3" placeholder="Search Places..." name="keyword">
+<!--        <input type="search"  class="form-control mb-3" placeholder="Search Places..." name="keyword">-->
 <!--        <button class="btn btn-sm btn-outline-secondary" type="submit">-->
 <!--        </button>-->
 <!--        </div>-->
+        <div id="location-search-bar" class="mb-3"></div>
         <div class="mb-1" style="color:#8c8c8c;font-size: 14px">Distance</div>
         <label for="distance-range" class="form-label mb-0" style="font-size: 14px"><span id="distance-range-value" style="margin-right: 0.5rem"></span>Kilometers</label>
         <input type="range" class="form-range" min="1" max="100" id="distance-range" value="50">

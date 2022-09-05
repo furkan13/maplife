@@ -174,7 +174,7 @@ var distanceCircle = L.circle()
 var geocoder = L.Control.geocoder({
     collapsed:false,
     defaultMarkGeocode: false,
-    placeholder:"Search Places..."
+    placeholder:"Search Places...",
 })
     .on('markgeocode', function(e) {
         map.removeLayer(distanceCircle);
@@ -183,7 +183,21 @@ var geocoder = L.Control.geocoder({
         map.fitBounds(distanceCircle.getBounds(),{paddingTopLeft:[288,0]});
     })
     .addTo(map);
+const searchLocationBar = geocoder.getContainer()
+const searchLocationBarContainer = document.getElementById("location-search-bar")
+const searchbarInput = document.getElementsByClassName("leaflet-control-geocoder-form")[0].firstChild
+const searchbarOuter = document.getElementsByClassName("leaflet-control-geocoder")[0]
+searchbarInput.addEventListener("focus",()=>{
+    searchbarOuter.style.setProperty('border', '1px solid #de5b19', 'important')
+    searchbarOuter.style.setProperty('box-shadow', '0 0 0 0.25rem rgb(222 91 25 / 25%)', 'important')
+})
+searchbarInput.addEventListener("blur",()=>{
+    searchbarOuter.style.setProperty('border', '1px solid #ced4da', 'important')
+    searchbarOuter.style.setProperty('box-shadow', 'none', 'important')
+})
+searchLocationBarContainer.replaceWith(searchLocationBar)
 
+// searchLocationBar.removeAttribute("class","leaflet-bar")
 distanceRangeLabel.innerText=distanceRangeInput.value
 distanceRangeInput.oninput=function (){
     radius = 1000 * distanceRangeInput.value
