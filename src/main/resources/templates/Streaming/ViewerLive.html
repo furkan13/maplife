@@ -7,13 +7,32 @@
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/themes/smoothness/jquery-ui.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
     <script type="module" src="js/LivePlayer/twilio-live-player.js"></script>
+    <script src="https://sdk.twilio.com/js/video/releases/2.17.1/twilio-video.min.js"></script>
 
     <link th:href= "@{/css/live.css}" rel="stylesheet" />
     <title>Live</title>
 </head>
 <body th:replace="navigator/bars::common-body(~{::#live-page},~{},~{::script})">
     <div id="live-page">
+            <main id="panel">
+                <div class="row">
+                    <section id="left_display" class="main_card">
+                        <button id="partycheck">Reload video</button>
 
+                        <div id="stream"></div>
+
+                    </section>
+                    <aside id="right_option" class="main_card" >
+                        <button id="setting">Setting</button>
+                        <button id="exit_room">Exit</button>
+                        <div id="viewer_number" class="counter">0 views</div>
+                        <div id="streamer_number" class="counter">1 streamers</div>
+
+                        <div id="chat"></div>
+                    </aside>
+                </div>
+                <section id="bottom_other_stream" ></section>
+            </main>
     </div>
 <script type="text/javascript" th:src="@{/js/live.js}"></script>
 </body>

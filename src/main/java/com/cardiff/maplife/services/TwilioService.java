@@ -3,6 +3,7 @@ package com.cardiff.maplife.services;
 import com.cardiff.maplife.config.TwilioConfig;
 import com.cardiff.maplife.entities.Event;
 import com.cardiff.maplife.entities.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.twilio.base.ResourceSet;
 import com.twilio.http.HttpMethod;
 import com.twilio.jwt.accesstoken.AccessToken;
@@ -13,11 +14,16 @@ import com.twilio.rest.media.v1.playerstreamer.PlaybackGrant;
 import com.twilio.rest.video.v1.Room;
 import com.twilio.rest.video.v1.room.Participant;
 import com.twilio.rest.video.v1.room.participant.SubscribeRules;
+import com.twilio.type.Rule;
+import com.twilio.type.SubscribeRule;
 import com.twilio.type.SubscribeRulesUpdate;
+import org.assertj.core.util.Lists;
 import org.springframework.stereotype.Service;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TwilioService {
@@ -123,22 +129,74 @@ public class TwilioService {
         return token.toJwt();
 
     }
-    public void StreamerJoinedRules(List<User> cohost, User host,Event eventCache){ //Set only subscribe to host and cohost, default none
+    public void StreamerJoinedRules(Event eventCache,List<User> cohost, User host){ //Set only subscribe to host and cohost, default none
         //Get list of participants in the room, set rules in them to exclude all tracks except cohost and host
         //Only call when there are changes in room, i.e. new or kicked cohost
         ResourceSet<Room> room = Room.reader()
                 .setUniqueName(eventCache.getTitle())
                 .setStatus(Room.RoomStatus.IN_PROGRESS)
                 .read();
+        ResourceSet<Participant> participants =
+                Participant.reader(eventCache.getTitle())
+                        .setStatus(Participant.Status.CONNECTED)
+                        .read();
 //        Room room_target;
+        List<SubscribeRule> ruleset = new ArrayList<>();
+        ruleset.add(SubscribeRule.builder() //Disable all by default
+                .withType(SubscribeRule.Type.EXCLUDE).withAll()
+                .build());
+        for(int i =0; i< cohost.size();i++){
+            ruleset.add(SubscribeRule.builder() //Only show video of the cohost
+                    .withType(SubscribeRule.Type.INCLUDE).withPublisher(cohost.get(i).getUsername())
+                    .withKind(SubscribeRule.Kind.VIDEO)
+                    .build());
+        }
+        ruleset.add(SubscribeRule.builder()
+                .withType(SubscribeRule.Type.INCLUDE).withPublisher(host.getUsername())
+                .build());
+        SubscribeRulesUpdate UpdatedRules = new SubscribeRulesUpdate((ruleset));
         for(Room room_target: room){
             //loop for all participant
-            SubscribeRulesUpdate rules = SubscribeRules.updater(room_target.getSid(),user.getUsername())
-                    .setRules()
-        }
-    }
-    public void ViewerJoinedRules(Event eventCache, User currentUser){
+            for(Participant users: participants){ //Update to all connected user
+                System.out.println(users.getIdentity());
+                SubscribeRules rules = SubscribeRules
+                        .updater(room_target.getSid(),users.getIdentity())
+                        .setRules(new ObjectMapper().convertValue(UpdatedRules, Map.class))
+                        .update();
+            }
 
+
+        }
+
+    }
+    public void ViewerJoinedRules(Event eventCache, User currentUser,List<User> cohost, User host){
+        //New user join the live, set their sub rules to allow host video&audio and cohost video only
+        ResourceSet<Room> room = Room.reader()
+                .setUniqueName(eventCache.getTitle())
+                .setStatus(Room.RoomStatus.IN_PROGRESS)
+                .read();
+//        Room room_target;
+        List<SubscribeRule> ruleset = new ArrayList<>();
+        ruleset.add(SubscribeRule.builder() //Disable all by default
+                .withType(SubscribeRule.Type.EXCLUDE).withAll()
+                .build());
+        for(int i =0; i< cohost.size();i++){
+            ruleset.add(SubscribeRule.builder() //Only show video of the cohost
+                    .withType(SubscribeRule.Type.INCLUDE).withPublisher(cohost.get(i).getUsername())
+                    .withKind(SubscribeRule.Kind.VIDEO)
+                    .build());
+        }
+        ruleset.add(SubscribeRule.builder()
+                .withType(SubscribeRule.Type.INCLUDE).withPublisher(host.getUsername())
+                .build());
+        SubscribeRulesUpdate UpdatedRules = new SubscribeRulesUpdate((ruleset));
+        for(Room room_target: room){
+            //Targeting the user just join the room
+            SubscribeRules rules = SubscribeRules
+                    .updater(room_target.getSid(),currentUser.getUsername())
+                    .setRules(new ObjectMapper().convertValue(UpdatedRules, Map.class))
+                    .update();
+        }
     }
 }
 

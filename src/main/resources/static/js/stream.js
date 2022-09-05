@@ -699,6 +699,8 @@ function room_exit(roomObj){ //Exit the room
         })
     })
     roomObj.room.disconnect();
+	alert("Return to main page");
+	window.location.href="/";
 }
 function GetTracks(roomObj){ //Obtain local audio/video tracks
 	//Check if the user has video and audio device, return to live if no
@@ -730,7 +732,9 @@ const room_join =async function(roomObj){ //Join the room with tracks
         console.log(`Successfully joined a Room: ${room}`);
         roomObj.room = room;
 		room.on("participantDisconnected", participant=>{
-			$("#"+participant.identity).remove();
+			if($("#"+participant.identity).length > 0){
+				$("#"+participant.identity).remove();
+			}
 			
 		});
 		room.on("disconnected", room=>{
@@ -751,11 +755,16 @@ const room_join =async function(roomObj){ //Join the room with tracks
 			(publication) => {publication.track.disable();}
         );
 	}
+	update_tracks();
 	participant_video(roomObj); //Get existing user's video
 	participant_video_on_connect(roomObj); //Get user's video when they connect
 	
 }
-
+function update_tracks(){
+	$.get("/UpdateTracks?RoomName="+roomName, function(data,status){
+		
+	});
+}
 function fetchCoHostRequest(){
     let interval = 15000; //5 second per request
     let cohostList = $.get("/CoHostRequest?RoomName="+roomName, function(data, status){
@@ -834,14 +843,6 @@ function location_update(position){
 		dataType:"json",
 		contentType:"application/json; charset=utf-8"});
 	
-}
-function live_token(token) { //Get live token for the room, required for all users
-    token = $.get("/LiveAccess?RoomName=" + roomName); //Get the access token
-    if (token == "") {//Show error with the room, might be closed
-        $("#pop_up").innerHTML= "Room cannot be found"
-        $("#pop_up").show();
-    }
-    return token;
 }
 
 $(document).ready(function(){
