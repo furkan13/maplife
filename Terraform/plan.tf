@@ -20,8 +20,8 @@ required_version = ">= 0.14.0"
       cidr        = "0.0.0.0/0"
     }
     rule {
-      from_port   = 8080
-      to_port     = 8080
+      from_port   = 80
+      to_port     = 80
       ip_protocol = "tcp"
       cidr        = "0.0.0.0/0"
     }
