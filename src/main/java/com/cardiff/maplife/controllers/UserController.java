@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -170,7 +171,22 @@ public class UserController {
             //followingUser = user you want to follow
             User followerUser = userService.findUserByUsername(user.getUsername());
             Set<User> followerUserSet = followerUser.getFollowerUserSet();
-            return followerUserSet;
+            return new ResponseEntity<>(followerUserSet, HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/api/getFollowingUserId")
+    private ResponseEntity<List<Long>> getFollowingUserId() {
+        try {
+            User loggedUser = userService.findUserByUsername(userService.getAuthentication());
+            Set<User> followingUserSet = loggedUser.getFollowingUserSet();
+            List<Long> userNameList = new ArrayList<Long>();
+            for (User followingUser:followingUserSet){
+                userNameList.add(followingUser.getUser_id());
+            }
+            return new ResponseEntity<>(userNameList, HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }

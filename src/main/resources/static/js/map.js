@@ -1,8 +1,10 @@
 let popupContent
 let currentLocation
+let followingUserId=[]
 const categoryElements= document.getElementsByName('cat-group-chips')
 const resetButtonElement = document.getElementById("reset-filter-btn")
 const streamNowButtonElement = document.getElementById("live-switch")
+const subscriptionButtonElement = document.getElementById("sub-switch")
 // display the map layer
 var map = L.map('map',{zoomControl:false}).setView([51.483396, -3.173728], 11);
 //render map tile layer
@@ -55,13 +57,22 @@ L.Marker.prototype.options.icon = orangeIcon
 // define a marker cluster group to support heat map and Compatibility with layers
 var mcgLayerSupportGroup = L.markerClusterGroup.layerSupport({spiderLegPolylineOptions:{opacity: 0},showCoverageOnHover:false}),
     petGroup = L.layerGroup(), lifeGroup = L.layerGroup(), gameGroup = L.layerGroup(), sportGroup = L.layerGroup(),travelGroup = L.layerGroup(),otherGroup = L.layerGroup(),
-    liveNowGroup = L.layerGroup(), upcomingGroup = L.layerGroup(),subscriptionGroup= L.layerGroup(),
+    liveNowGroup = L.layerGroup(), upcomingGroup = L.layerGroup(),unfollowingGroup= L.layerGroup(),
     control = L.control.layers(null, null, { collapsed: false }),
     categoryGroupList = [gameGroup,petGroup,lifeGroup,sportGroup,travelGroup,otherGroup]
     // switchLiveGroupList = [upcomingGroup,liveNowGroup]
 mcgLayerSupportGroup.addTo(map);
 //retrieve and show the streaming event data
 const getEvents = async function () {
+    if (headerButtonLogged.style.display==="flex"){
+
+
+        const response1 = await fetch("/api/getFollowingUserId")
+        if (response1.status == "200"){
+            followingUserId = await response1.json();
+            console.log("Subscriptions' Ids",followingUserId);
+        }
+    }
     const response = await fetch("/EventList")
     if (response.status == "200") {
         const data = await response.json();
@@ -73,53 +84,38 @@ const getEvents = async function () {
             let myIcon = L.divIcon({className:'custom-div-icon',iconAnchor: [25, 25],popupAnchor: [2, -28]});
             //custom the popup and icon for hosts
             popupContent = `<div id="event-img-container" style="background-image: url('../../../${data[i].photosImagePath}')"></div><div id="event-title">${data[i].title}</div>
-<div id="host-name" class="event-text">${data[i].user.username}</div><div id="event-viewers" class="event-text">${data[i].user.views} viewers</div><div class="event-text">${time}</div>`
+                            <div id="host-name" class="event-text">${data[i].user.username}</div><div id="event-viewers" class="event-text">${data[i].user.views} viewers</div><div class="event-text">${time}</div>`
             myIcon.options.html = `<img id="custom-div-icon" class="custom-div-icon" src= "image/${data[i].user.icon}">`
             const marker = L.marker([data[i].latitude,data[i].longitude], {icon: myIcon}).bindPopup(popupContent,{closeButton:false})
             let category =  data[i].cat.split(",");
             console.log(data[i].title,category)
-            // console.log(data[i].event_date)
-            for (let j=0;j<category.length;j++){
-                switch (category[j]){
-                    case "Other":
-                        otherGroup.addLayer(marker)
-                        if(data[i].live===false){
-                            upcomingGroup.addLayer(marker)
-                        }   break
-                    case "Pet":
-                        petGroup.addLayer(marker)
-                        if(data[i].live===false){
-                            upcomingGroup.addLayer(marker)
-                        }   break
-                        // else if (data[i].live===true){
-                        //     liveNowGroup
-                        //  }
-                    case "Game":
-                        gameGroup.addLayer(marker)
-                        if(data[i].live===false){
-                            upcomingGroup.addLayer(marker)
-                        }   break
-                    case "Life":
-                        lifeGroup.addLayer(marker)
-                        if(data[i].live===false){
-                            upcomingGroup.addLayer(marker)
-                        }   break
-                    case "Sport":
-                        sportGroup.addLayer(marker)
-                        if(data[i].live===false){
-                            upcomingGroup.addLayer(marker)
-                        }   break
-                    case "Travel":
-                        travelGroup.addLayer(marker)
-                        if(data[i].live===false){
-                            upcomingGroup.addLayer(marker)
-                        }   break
-                }
+            //add unfollowed hosts' events to a group
+            if (followingUserId.indexOf(data[i].user.user_id)===-1){
+                unfollowingGroup.addLayer(marker)
             }
-
+            //add upcomming events to a group
+            if(data[i].live===false){
+                upcomingGroup.addLayer(marker)
+            }
+            for (let j=0;j<category.length;j++){
+                    switch (category[j]){
+                        case "Other":
+                            otherGroup.addLayer(marker)
+                        case "Pet":
+                            petGroup.addLayer(marker)
+                        case "Game":
+                            gameGroup.addLayer(marker)
+                        case "Life":
+                            lifeGroup.addLayer(marker)
+                        case "Sport":
+                            sportGroup.addLayer(marker)
+                        case "Travel":
+                            travelGroup.addLayer(marker)
+                    }
+            }
         }
     } else {
-        console.log("get events not 200");
+        console.log("Get events not 200");
     }
 }
 
@@ -197,7 +193,6 @@ searchbarInput.addEventListener("blur",()=>{
 })
 searchLocationBarContainer.replaceWith(searchLocationBar)
 
-// searchLocationBar.removeAttribute("class","leaflet-bar")
 distanceRangeLabel.innerText=distanceRangeInput.value
 distanceRangeInput.oninput=function (){
     radius = 1000 * distanceRangeInput.value
@@ -241,9 +236,12 @@ let clearAll = function () {
     document.getElementById('distance-range-value').innerHTML='50'
     mcgLayerSupportGroup.addLayer(categoryGroupList)
 }
-//check the streaming now switch button status
+//check the streaming now and subscription switch button status
 let isLiveNow = function (){
     return !!streamNowButtonElement.checked;
+}
+let isSubOnly = function (){
+    return !!subscriptionButtonElement.checked;
 }
 //To filter all conditions and control the layer groups
 let filter =  function () {
@@ -253,8 +251,13 @@ let filter =  function () {
     if (isLiveNow()===true){
         mcgLayerSupportGroup.removeLayer(upcomingGroup)
     }
+    if (isSubOnly()===true){
+        mcgLayerSupportGroup.removeLayer(unfollowingGroup)
+    }
     console.log("These categories are checked",checkedCategories)
     console.log("Streaming now is ON",isLiveNow())
+    console.log("Subscription Only is ON",isSubOnly())
+
 }
 //To check which categories are selected
 let checkCategories =   function () {
@@ -271,6 +274,7 @@ let checkCategories =   function () {
 let showEventsOnMap= function (){
     // Adding to map or to AutoMCG are now equivalent.
     upcomingGroup.addTo(map)
+    unfollowingGroup.addTo(map)
     petGroup.addTo(map);
     lifeGroup.addTo(map);
     otherGroup.addTo(map);
@@ -292,12 +296,15 @@ setInterval(() => {
     otherGroup.clearLayers()
     gameGroup.clearLayers()
     upcomingGroup.clearLayers()
+    unfollowingGroup.clearLayers()
     mcgLayerSupportGroup.clearLayers()
     getEvents().then(showEventsOnMap)},30000)
 
 /* EventListeners */
 resetButtonElement.addEventListener("click",clearAll)
 streamNowButtonElement.addEventListener("click", filter)
+subscriptionButtonElement.addEventListener("click", filter)
+
 //add listeners to bind checkbox and category layers
 for (let i = 0; i < categoryElements.length; i++) {
  categoryElements[i].addEventListener("click",filter)

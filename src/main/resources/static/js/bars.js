@@ -52,6 +52,7 @@ const showUserIcon =  async function (){
         if (userJson.icon!=null){
             headerButtonLogged.style.display="flex"
             userIcon.setAttribute("src","/image/"+userJson.icon)
+
         }
         else {
             headerButton.style.display="flex"
