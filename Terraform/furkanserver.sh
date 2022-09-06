@@ -34,7 +34,7 @@ sudo apt install wget -y
 sudo apt install unzip -y
 
 
- sudo apt install -y apache2
+
  sudo apt install openjdk-11-jdk -y
  sudo apt install git -y
 sudo apt install mariadb-server -y
