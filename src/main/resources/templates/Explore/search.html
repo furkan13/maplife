@@ -37,11 +37,11 @@
                             <span class="card__status" th:text="${event.event_date}" ></span>
                             <div>
 
-                                <form th:if="${event.isLive}" action="#" th:action="@{/CoHostSubmit(RoomName=${event.title})}"  method="post">
+                                <form th:if="${event.isLive}" action="#" th:action="@{/streaming(room=${event.title})}" >
 
                                     <input type="submit"  value="Join Event" class="accept_button" />
                                 </form>
-                                <form th:unless="${event.isLive}" action="#" th:action="@{/CoHostSubmit(RoomName=${event.title})}"  method="post">
+                                <form th:unless="${event.isLive}" action="#"  th:action="@{/profile/{username}(username=${event.user.getUsername()})}" >
 
                                     <input type="submit"  value="Show profile" class="accept_button" />
                                 </form>

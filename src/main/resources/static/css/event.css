@@ -27,12 +27,14 @@ body{
 
 #explore-page .section_nearby {
     text-align: center;
+    padding: inherit;
 
 }
 
 
 #explore-page .section_Trending {
     text-align: center;
+    padding: inherit;
 
 }
 
@@ -267,16 +269,7 @@ body{
     box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
 
 }
-.showmore_div
-{
-
-    top: 560px;
-    position: absolute;
-    left: 80%;
-    transform: translate(-50%, -50%);
-    padding: 3%;
-
-}
+z`
 
 .showmore
 {
