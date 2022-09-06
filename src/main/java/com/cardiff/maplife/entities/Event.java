@@ -132,7 +132,7 @@ public class Event {
         if (title == null || id == -1) return null;
 
         //return "event/" + id + "/" + eventImageName;
-        return "/home/admin/project_44b_party_watch/event/" + id + "/" + eventImageName;
+        return "/home/ubuntu/project_44b_party_watch/event/" + id + "/" + eventImageName;
     }
 
 
