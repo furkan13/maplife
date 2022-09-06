@@ -163,14 +163,25 @@ public class UserController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
     }
+    @GetMapping("/api/GettargetUser")
+    private ResponseEntity<User> GetTargetUser(@RequestParam(value = "username",defaultValue = "null")String username) {
+        try {
+
+            //followingUser = user you want to follow
+            User followerUser = userService.findUserByUsername(username);
+            return new ResponseEntity<>(followerUser, HttpStatus.OK);
+        } catch (Exception e){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+    }
     @GetMapping("/api/GetfollowingUser")
-    private ResponseEntity<Set<User>> GetfollowingUser(@RequestBody User user) {
+    private ResponseEntity<Set<User>> GetfollowingUser() {
         try {
             User loggedUser = userService.findUserByUsername(userService.getAuthentication());
             //followingUser = user you want to follow
-            User followerUser = userService.findUserByUsername(user.getUsername());
-            Set<User> followerUserSet = followerUser.getFollowerUserSet();
-            return followerUserSet;
+            User followerUser = userService.findUserByUsername(loggedUser.getUsername());
+            Set<User> followingUserSet = followerUser.getFollowingUserSet();
+            return new ResponseEntity<>(followingUserSet, HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }

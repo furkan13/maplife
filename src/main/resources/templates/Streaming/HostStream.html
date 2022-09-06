@@ -15,7 +15,7 @@
 <body th:replace="navigator/bars::common-body(~{::#steaming-page},~{},~{::script})">
 <div id="steaming-page">
     <main id="panel" class="">
-		<div id="blackscreen" style="position: absolute;">
+		<div id="blackscreen" >
 			<select id="user_video" class="user_video form-select form-select-sm" name="video_preview"></select>
 			<div id="video_target" class="video-target"></div>
             <div style="display:none" class="lds-roller" id="loading_animation"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
@@ -42,7 +42,7 @@
                 </div>
             </div>
         </div>
-        <div class="row" style="position: absolute;">
+        <div class="row" >
             <section id="left_display" class="main_card">
                 <div class="left-display-control">
                     <div class="steaming-left-button">
@@ -76,7 +76,7 @@
                 <div id="chat"></div>
             </aside>
         </div>
-        <section id="bottom_other_stream" style="position: absolute;"></section>
+        <section id="bottom_other_stream" class="cohost-stream"></section>
     </main>
 
 </div>

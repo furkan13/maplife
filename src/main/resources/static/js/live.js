@@ -7,15 +7,17 @@ if(room != null){
 let roomObj = {room:"", tracks:[], token:"",VideoRoom:""};
 let follow_list;
 let processed_follow_list = {};
+let host_user;
 let count = 0;
-
+//!!!! make the user video div only containing video and user profile,
+//host audio set it to stream div instead of inside host div
 const main = async function(){
 	$("#exit_room").click(function(){//Check the identity of user, then provide different function and innerhtml
 		room_exit(roomObj);
 	});
 	$("#partycheck").click(function(){ participant_video(roomObj);});
 	await video_room();
-	follow_list = await following_list();
+	await following_list();
 	if(roomObj.VideoRoom["title"] == null){ //Server doesn't have the event entry of this roomname
 		alert("Room name: "+roomName +" may be closed or not exist.\n Return to main page.");
 		window.location.href = '../'; //Go back to main page
@@ -29,9 +31,10 @@ const main = async function(){
 }
 function following_list(){ //Ongoing test!!!
 	return $.get("/api/GetfollowingUser", function(data,status){
+		console.log(data);
 		follow_list = data;
-		for(int i =0; i< data.length; i++){
-			processed_follow_list[data[i].userName] = i; //dictionary direct to follow_list
+		for(let i =0; i< data.length; i++){
+			processed_follow_list[data[i].username] = i; //dictionary direct to follow_list
 		}
 	});
 	
@@ -45,7 +48,7 @@ function room_exit(roomObj){ //Exit the room
         })
     })
     roomObj.room.disconnect();
-	alert("Return to main page");
+	// alert("Return to main page");
 	window.location.href="/";
 }
 const room_join = async function(roomObj){
@@ -122,6 +125,7 @@ const create_main_audio = async function(participant){ //!!!Add host name and li
 	await participant.audioTracks.forEach((tracks)=>{localAudio = tracks.track.attach()}); //Need to debug
 	localAudio.id = "main_audio"; //added id to control with volume slider
 	localAudio.volume = 0;
+	localAudio.play();
 	// Volume control and mute button 
 	// slider
 	//Only mute when user is host!!!
@@ -147,39 +151,37 @@ const create_main_audio = async function(participant){ //!!!Add host name and li
 	
 	let audio_related = $("<div></div>");
 	audio_related.attr("id", "stream_audio");
-	audio_related.data("userid", participant.sid);
-	audio_related.data("username", participant.identity);
 	audio_related.append(localAudio);
 	audio_related.append(volume_slider);
 	audio_related.append(volume_mute_btn);
 	
 	return audio_related;
 }
-function create_cohost_function(participant){ //!!!Add cohost name and link to profile, sub button
+function create_cohost_function(participant, video){ //!!!Add cohost name and link to profile, sub button
 	
 	//red cross button for not showing/kick
 	//Host: kicking the user
 	//cohost: hide the video 
-	let hide_kick_btn = $("<button></button>");
-	hide_kick_btn.html("hide");//!!!Should implement red cross icon
-	hide_kick_btn.data("username", participant.identity);
-	hide_kick_btn.data("userid", participant.sid);
-	hide_kick_btn.click(function(){hide_kick(hide_kick_btn)});
+	// let hide_kick_btn = $("<button></button>");
+	// hide_kick_btn.html("hide");//!!!Should implement red cross icon
+	// hide_kick_btn.data("username", participant.identity);
+	// hide_kick_btn.data("userid", participant.sid);
+	// hide_kick_btn.click(function(){hide_kick(hide_kick_btn)});
 	//Clickable div, call switching function if click
 	//Create a div overlay to ease deleting it 
-	let cache = $("<div></div>");
-	cache.data("username", participant.identity);
-	cache.data("userid", participant.sid);
-	// cache.click(function(){stream_switch(cache)});
-	cache.append(hide_kick_btn);
 	
-	return cache;
+	video.data("username", participant.identity);
+	video.data("userid", participant.sid);
+	video.click(function(){stream_switch(video)});
+	// cache.append(hide_kick_btn);
+	
+	// return cache;
 }
 function sub_related(source){//follow or unfollow the 
 	userObject = {
 		username: source.data("username")
 	}
-	if(sub_btn.data("sub"){//if button is true: that user is followed, unfollowing that user
+	if(source.data("sub")){//if button is true: that user is followed, unfollowing that user
 		$.ajax({
 			url: "/api/unFollowUser",
 			type: "PUT",
@@ -187,30 +189,38 @@ function sub_related(source){//follow or unfollow the
 			data:JSON.stringify(userObject)
 		})
 		source.html("Follow");
-		sub_btn.data("sub", false);
+		source.data("sub", false);
 	}
 	else{ //Following that user
 		$.ajax({
-			url: "/api/FollowUser",
+			url: "/api/followUser",
 			type: "PUT",
 			contentType: "application/json",
 			data:JSON.stringify(userObject)
 		})
 		source.html("Followed");
-		sub_btn.data("sub", true);
+		source.data("sub", true);
 	}
 }
-function getUser(username){
-	
+function getTargetUser(username){//Get each host User object for the icons
+	//User's following list show contain current user, no need for following user list
+	//Check for whether current user is in the following user list
+	return $.get("/api/GettargetUser?username="+username, function(data,status){
+		console.log(data);
+		host_user = data;
+
+	});
+
 }
-function userBlockBuild(username){ //Build the div(icon,username and follow btn) for each user
+const userBlockBuild = async function(username){ //Build the div(icon,username and follow btn) for each user
 	//Append link to user's profile and subscribe button 
 	let user_div = $("<div></div>");
 	//Obtain user's User object by calling api (get user by username)
-	host_user = await getUser(username);
+	await getTargetUser(username);
 	//Add user icon in the div
-	let icon_wrap = $("<div></div>");
+	let icon_wrap = $("<a></a>");
 	icon_wrap.attr("class","profile-user-icon");
+	icon_wrap.attr("href", "/profile/"+username);
 	let icon = $("<img></img>");
 	icon.attr("class","profile-user-image");
 	icon.attr("src", "/image/"+host_user.icon);
@@ -219,15 +229,14 @@ function userBlockBuild(username){ //Build the div(icon,username and follow btn)
 	user_link.attr("href", "/profile/"+username);
 	let sub_btn_wrap = $("<div></div>");
 	sub_btn_wrap.attr("class", "editBtn");
-	let sub_btn = $("<input></input>");
+	let sub_btn = $("<button></button>");
 	sub_btn.attr("id", "followBtn");
 	sub_btn.data("username", username);
 	sub_btn.data("sub", false);//Default not follow
 	sub_btn.html("Follow");
 	sub_btn.attr("class", "btn btn-sm btn-outline-secondary");
-	sub_btn.attr("type", "button");
 	//Check if user is followed
-	if(processed_follow_list[username]){//processed_follow_list: dictionary
+	if(processed_follow_list[username] != undefined){//processed_follow_list: dictionary
 		sub_btn.html("Followed");
 		sub_btn.data("sub", true);//followed
 	}
@@ -246,28 +255,8 @@ const participant_video_on_connect = async function(roomObj){ //function for on 
 		//Only attach video tracks, attach audio when user click the window, allow delete if host
 		participant.tracks.forEach((publication) => {
 			if(publication.isSubscribed){
-				video_window = $("<div></div>");//Div for video
-				video_window.attr("id", participant.identity);
-				let video_cache =  publication.track;//Add video in the div
-				video_window.append(video_cache.attach());
-				//Need to subscribe the video before posting it on panel!!!
-				video_window.append(userBlockBuild(participant.identity));
-				
-				
-				//Attaching it to user interface
-				if(participant.identity == roomObj.VideoRoom.user.username){ 
-					//Shown in main stream as that is host 
-					if(participant.audioTracks){
-						let audio_related = create_main_audio(participant);
-						audio_related.then((reply)=>{video_window.append(reply);})
-						
-					}
-					$("#stream").append(video_window);
-				}
-				else{ //Other cohost 
-					let cache = create_cohost_function(participant);
-					video_window.append(cache);
-					$("#bottom_other_stream").append(video_window);;
+				if(publication.track.kind =="video"){ //
+					createVideoCard(participant,publication.track)
 				}
 			}
 		});
@@ -275,28 +264,7 @@ const participant_video_on_connect = async function(roomObj){ //function for on 
         participant.on("trackSubscribed",track =>{
 			
 			if(track.kind == "video"){
-				console.log("onsub tracks");
-				console.log(track);
-				video_window = $("<div></div>");//Div for video
-				video_window.attr("id", participant.identity);
-				video_window.append(track.attach());//Add video in the div
-				//Need to subscribe the video before posting it on panel!!!
-				video_window.append(userBlockBuild(participant.identity));
-				
-				//Attaching it to user interface
-				if(participant.identity == roomObj.VideoRoom.user.username){ 
-					//Shown in main stream as that is host 
-					if(participant.audioTracks){
-						let audio_related = create_main_audio(participant);
-						audio_related.then((reply)=>{video_window.append(reply);})
-					}
-					$("#stream").append(video_window);
-				}
-				else{ //Other cohost 
-					let cache = create_cohost_function(participant);
-					video_window.append(cache);
-					$("#bottom_other_stream").append(video_window);;
-				}
+				createVideoCard(participant,track);
 			}
             
         });
@@ -317,71 +285,67 @@ const participant_video = async function(roomObj){ //Show all the video of parti
 		participant.tracks.forEach((publication) => {
 			if(publication.track != null){
 				if(publication.track.kind =="video"){ //
-					console.log("onconnect tracks");
-					console.log(publication.track);
-					video_window = $("<div></div>");//Div for video
-					video_window.attr("id", participant.identity);
-					let video_cache =  publication.track;//Add video in the div
-					video_window.append(video_cache.attach());
-					//Need to subscribe the video before posting it on panel!!!
-					video_window.append(userBlockBuild(participant.identity));
-
-					//Attaching it to user interface
-					if(participant.identity == roomObj.VideoRoom.user.username){
-						//Shown in main stream as that is host
-						if(participant.audioTracks){
-							let audio_related = create_main_audio(participant);
-							audio_related.then((reply)=>{video_window.append(reply);})
-						}
-						$("#stream").append(video_window);
-					}
-					else{ //Other cohost
-						let cache = create_cohost_function(participant);
-						video_window.append(cache);
-						$("#bottom_other_stream").append(video_window);;
-					}
+					createVideoCard(participant,publication.track)
 				}
 			}
 		});
 
         participant.on("trackSubscribed",track =>{
+			// console.log(track);
+			// console.log(participant);
 			
 			if(track.kind == "video"){
-				console.log("onsub tracks");
-				console.log(track);
-				video_window = $("<div></div>");//Div for video
-				video_window.attr("id", participant.identity);
-				video_window.append(track.attach());//Add video in the div
-				//Need to subscribe the video before posting it on panel!!!
-				video_window.append(userBlockBuild(participant.identity));
-				
-				//Attaching it to user interface
-				if(participant.identity == roomObj.VideoRoom.user.username){ 
-					//Shown in main stream as that is host 
-					if(participant.audioTracks){
-						let audio_related = create_main_audio(participant);
-						audio_related.then((reply)=>{video_window.append(reply);})
-					}
-					$("#stream").append(video_window);
-				}
-				else{ //Other cohost 
-					let cache = create_cohost_function(participant);
-					video_window.append(cache);
-					$("#bottom_other_stream").append(video_window);;
-				}
+				// console.log("onsub tracks");
+				// console.log(track);
+				createVideoCard(participant,track);
 			}
+		
             
         });
     });
 }
+
+function createVideoCard(participant,track){
+	video_window = $("<div></div>");//Div for video
+	video_window.attr("id", participant.identity);
+	video_window.data("userid", participant.sid);
+	let video_target = track.attach();
+	// video_target.play();
+	video_window.append(video_target);//Add video in the div
+	//Need to subscribe the video before posting it on panel!!!
+	userBlockBuild(participant.identity).then((block)=>{video_window.append(block);})
+	create_cohost_function(participant,video_window.first());
+
+	//need to play the video/audio
+	//Attaching it to user interface
+	if(participant.identity == roomObj.VideoRoom.user.username){ 
+		//Shown in main stream as that is host 
+		if(participant.audioTracks){
+			let audio_related = create_main_audio(participant);
+			audio_related.then((reply)=>{$("#stream").append(reply);})
+		}
+		$("#stream").prepend(video_window);
+	}
+	else{ //Other cohost 
+		
+		$("#bottom_other_stream").append(video_window);;
+	}
+	
+}
 function stream_switch(source){//Swap the source to main stream panel
 	//Remove stream audio first, add swap and remove functionality after swap 
 	//host allow promote after switch
-	let main_display = $("#stream_audio").parent(); //Switch to buttom_other_stream
-	let side_display = source.parent().parent(); //Switch to main stream
+	// console.log(source);
+	// console.log(source.parent().attr("id"));
+	if(source.parent().attr("id") == "stream"){//Do not switch if the clicked div is in stream(main)
+		return; 
+	}
+	let main_display = $("#stream")[0].firstChild; //Switch to buttom_other_stream
+	let side_display = source.parent(); //Switch to main stream, cache.parent() = div with user id
+	
 
-	let main_id = $("#stream_audio").data("userid"); //Get twilio participant sid to retrieve the audio track
-	let main_name = $("#stream_audio").data("username");
+	let main_id = $("#stream")[0].firstChild.data("userid"); //Get twilio participant sid to retrieve the audio track
+	let main_name = $("#stream")[0].firstChild.data("username");
 	let source_id = source.data("userid"); //Get twilio participant sid to retrieve the audio track
 	let source_name = source.data("username");
 	console.log(main_id);
@@ -389,37 +353,37 @@ function stream_switch(source){//Swap the source to main stream panel
 	console.log(source_id);
 	console.log(source_name);
 	//Remove audio control in main and sup function in other
-	$("#stream_audio").remove();
-	source.remove();
-	let audio_track = "";
+	// $("#stream_audio").remove();
+	// source.remove();
+	// let audio_track = "";
 	
 	//Get the audio track from clicked user
 	//Identifying whether it is a local user: if so: get it from local participant, else: get it fomr participant
-	if(source_name == userJson.username){ //if the selected user is local participant
-		if(roomObj.room.localParticipant.audioTracks){
-			audio_track = create_main_audio(roomObj.room.localParticipant);
-		}
+	// if(source_name == userJson.username){ //if the selected user is local participant
+		// if(roomObj.room.localParticipant.audioTracks){
+			// audio_track = create_main_audio(roomObj.room.localParticipant);
+		// }
 		
-	}
-	else{
-		//Bugs here!!!
-		if(roomObj.room.participants.get(source_id).audioTracks){//the selected user is remoted
-			audio_track = create_main_audio(roomObj.room.participants.get(source_id));
-		}
+	// }
+	// else{
+		// Bugs here!!!
+		// if(roomObj.room.participants.get(source_id).audioTracks){//the selected user is remoted
+			// audio_track = create_main_audio(roomObj.room.participants.get(source_id));
+		// }
 		
-	}
-	side_display.append(audio_track);
+	// }
+	// side_display.append(audio_track);
 	
 	//Get swap function for the new side display
-	let cache = "";
-	if(main_name == userJson.username){ //if the current displaying main window is self
-		cache = create_cohost_function(roomObj.room.localParticipant);
+	// let cache = "";
+	// if(main_name == userJson.username){ //if the current displaying main window is self
+		// cache = create_cohost_function(roomObj.room.localParticipant);
 		
-	}
-	else{
-		cache = create_cohost_function(roomObj.room.participants.get(main_id));
-	}
-	main_display.append(cache);
+	// }
+	// else{
+		// cache = create_cohost_function(roomObj.room.participants.get(main_id));
+	// }
+	// main_display.append(cache);
 	
 	let clone_main = main_display.clone();
 	let clone_side = side_display.clone();
@@ -429,4 +393,12 @@ function stream_switch(source){//Swap the source to main stream panel
 }
 $(document).ready(function(){
 	main();
+});
+$(document).click(function(){
+	//play video and audio
+	video_list = $("video");
+	for(let i = 0; i < video_list.length; i++ ){
+		video_list[i].play();
+	}
+	$("audio")[0].play();
 });

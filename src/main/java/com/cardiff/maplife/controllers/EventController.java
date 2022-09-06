@@ -222,12 +222,15 @@ public class EventController {
         catch(Exception e){
             return;
         }
+        Long targetUserID = userService.findUserByUsername(userService.getAuthentication()).getId();
+            if(liveService.findLiveByUserid(targetUserID,eventCache.getId()) == null){
+                Live newLive = new Live();
+                newLive.setApproved(false);
+                newLive.setEventid(eventCache.getId());
+                newLive.setCohostid(targetUserID);
+                liveService.saveLive(newLive);
+            }
 
-            Live newLive = new Live();
-            newLive.setApproved(false);
-            newLive.setEventid(eventCache.getId());
-            newLive.setCohostid(userService.findUserByUsername(userService.getAuthentication()).getId());
-            liveService.saveLive(newLive);
 
     }
     @PostMapping(value = "/roomStatus", produces = "application/x-www-form-urlencoded")
