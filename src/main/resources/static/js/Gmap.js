@@ -54,7 +54,7 @@
     map.setCenter(results[0].geometry.location);
     var marker = new google.maps.Marker({
     map: map,
-
+    draggable: true,
     position: results[0].geometry.location,
 
 });
@@ -86,6 +86,7 @@
     map.setCenter(results[0].geometry.location);
     var marker = new google.maps.Marker({
     map: map,
+    draggable: true,
     position: results[0].geometry.location
 });
     document.getElementById("lat").value = marker.getPosition().lat();
