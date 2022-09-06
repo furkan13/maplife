@@ -55,7 +55,7 @@ L.Marker.prototype.options.icon = orangeIcon
 // define a marker cluster group to support heat map and Compatibility with layers
 var mcgLayerSupportGroup = L.markerClusterGroup.layerSupport({spiderLegPolylineOptions:{opacity: 0},showCoverageOnHover:false}),
     petGroup = L.layerGroup(), lifeGroup = L.layerGroup(), gameGroup = L.layerGroup(), sportGroup = L.layerGroup(),travelGroup = L.layerGroup(),otherGroup = L.layerGroup(),
-    liveNowGroup = L.layerGroup(), upcomingGroup = L.layerGroup(),
+    liveNowGroup = L.layerGroup(), upcomingGroup = L.layerGroup(),subscriptionGroup= L.layerGroup(),
     control = L.control.layers(null, null, { collapsed: false }),
     categoryGroupList = [gameGroup,petGroup,lifeGroup,sportGroup,travelGroup,otherGroup]
     // switchLiveGroupList = [upcomingGroup,liveNowGroup]
@@ -75,7 +75,7 @@ const getEvents = async function () {
             popupContent = `<div id="event-img-container" style="background-image: url('../../../${data[i].photosImagePath}')"></div><div id="event-title">${data[i].title}</div>
 <div id="host-name" class="event-text">${data[i].user.username}</div><div id="event-viewers" class="event-text">${data[i].user.views} viewers</div><div class="event-text">${time}</div>`
             myIcon.options.html = `<img id="custom-div-icon" class="custom-div-icon" src= "image/${data[i].user.icon}">`
-            const marker = L.marker([51.583396,-3.273728], {icon: myIcon}).bindPopup(popupContent,{closeButton:false})
+            const marker = L.marker([data[i].latitude,data[i].longitude], {icon: myIcon}).bindPopup(popupContent,{closeButton:false})
             let category =  data[i].cat.split(",");
             console.log(data[i].title,category)
             // console.log(data[i].event_date)
