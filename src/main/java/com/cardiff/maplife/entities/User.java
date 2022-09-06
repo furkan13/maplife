@@ -260,4 +260,10 @@ public class User implements UserDetails, Serializable {
     public void setCoin(int coin) {
         this.coin = coin;
     }
+
+    public String getPhotosImagePath() {
+
+
+        return "image/"+ getIcon();
+    }
 }

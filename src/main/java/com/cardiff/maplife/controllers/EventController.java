@@ -207,7 +207,7 @@ public class EventController {
             twilioService.KickCohost(RoomName, UserName);
         }
     }
-    @PostMapping("/CoHostSubmit") //User send a cohost request to host
+    @PostMapping("/CoHostSubmit/{RoomName}") //User send a cohost request to host
     private void AddLiveEntry(@RequestParam(value="RoomName")String RoomName){
         Event eventCache;
         try{ //Check if the room exist
@@ -319,19 +319,6 @@ public class EventController {
         else {
             String[] stringArray = eventService.findByName(RoomName).getCat().split(",");
             List<String> tagList = Arrays.asList(stringArray);
-
-
-            int index=0;
-
-                if(tagList.size()>1)
-                {
-                    List<String> tags = tagList.subList(1, tagList.size());
-
-                    return tags;
-                }
-
-
-
             return tagList;
         }
 

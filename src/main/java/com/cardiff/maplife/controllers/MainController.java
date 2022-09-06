@@ -5,6 +5,7 @@ import com.cardiff.maplife.entities.Event;
 import com.cardiff.maplife.entities.User;
 import com.cardiff.maplife.services.EventService;
 import com.cardiff.maplife.services.UserService;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -90,6 +91,30 @@ public class MainController {
         modelAndView.addObject("upcomingEventList",upcomingEventList);
         return modelAndView;
     }
+
+    @GetMapping("/search")
+    public ModelAndView showResults(ModelAndView modelAndView, Model model,@RequestParam("keyword")String key)
+    {
+        Timestamp servertime = new Timestamp(System.currentTimeMillis());
+        List<Event> results=eventService.searchResults(key,servertime);
+        List<User> userList=userService.searchResult(key);
+        model.addAttribute("results",results);
+        model.addAttribute("userList",userList);
+        modelAndView =new ModelAndView("Explore/search");
+        return modelAndView;
+    }
+
+    @PostMapping("/search")
+    public ModelAndView getResults(ModelAndView modelAndView, Model model,@RequestParam("keyword")String key)
+    {
+
+        return new ModelAndView("redirect:/search?key="+key);
+    }
+
+
+
+
+
 
 
 }

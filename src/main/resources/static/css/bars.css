@@ -102,7 +102,7 @@ body{
     background-image: url("https://d1icd6shlvmxi6.cloudfront.net/gsc/CQTZ48/eb/c7/d9/ebc7d925a90b4a339ec4087124b7875a/images/test/search_u2.svg?pageId=4780b999-ebe7-4eea-b174-45c2fa4bf142");
 }
 .sidebar{
-    margin-top: 45px;
+    margin-top: 45px ;
     position: fixed;
     font-family: Arial,sans-serif;
     z-index: 1500;
