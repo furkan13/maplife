@@ -115,5 +115,6 @@ sudo ssh-agent bash -c 'ssh-add maplife.key; git clone git@git.cardiff.ac.uk:c21
 
 #mvn -f office_desk_test/ compile package
 #java -jar office_desk_test/target/desk_booking-0.0.1-SNAPSHOT.jar
+cd project_44b_party_watch
 sudo mvn clean install
-sudo mvn -f maplife/ spring-boot:run
+sudo mvn spring-boot:run
