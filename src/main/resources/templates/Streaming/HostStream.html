@@ -42,41 +42,42 @@
                 </div>
             </div>
         </div>
-        <div class="row" >
-            <section id="left_display" class="main_card">
-                <div class="left-display-control">
-                    <div class="steaming-left-button">
+        <div class="hostAndCohost">
+            <div class="row" >
+                <section id="left_display" class="main_card">
+                    <div class="left-display-control">
+                        <div id="stream" class="steam-window"></div>
+                    </div>
+
+                </section>
+                <aside id="right_option" class="main_card" >
+                    <div class="right-option-button-control">
                         <button id="partycheck" class="partyCheck btn btn-sm btn-outline-secondary">Reload video</button>
                         <button style="display:none" type="button" id="mute_publish_audio" class="btn btn-sm btn-outline-secondary">Stop audio publish</button>
+                        <button id="setting" class="btn btn-sm btn-outline-secondary">Setting</button>
+                        <button id="delete_exit_room" class="btn btn-sm btn-outline-secondary">Delete</button>
                     </div>
-                    <div id="stream" class="steam-window"></div>
-                </div>
-
-            </section>
-            <aside id="right_option" class="main_card" >
-                <div class="right-option-button-control">
-                    <button id="setting" class="btn btn-sm btn-outline-secondary">Setting</button>
-                    <button id="delete_exit_room" class="btn btn-sm btn-outline-secondary">Delete</button>
-                </div>
-                <div class="right-option-viewerDetail">
-                    <div id="viewer_number" class="counter">0 views</div>
-                    <div id="streamer_number" class="counter">1 streamers</div>
-                </div>
-                <table id="cohost_list">
-                    <thead class="fixed">
-                    <tr>
-                        <th>Username</th>
-                        <th>Accept</th>
-                        <th>Decline</th>
-                    </tr>
-                    </thead>
-                    <tbody class="scroll" id="cohost_requests">
-                    </tbody>
-                </table>
-                <div id="chat"></div>
-            </aside>
+                    <div class="right-option-viewerDetail">
+                        <div id="viewer_number" class="counter">0 views</div>
+                        <div id="streamer_number" class="counter">1 streamers</div>
+                    </div>
+                    <table id="cohost_list">
+                        <thead class="fixed">
+                        <tr>
+                            <th>Cohost request list</th>
+                            <!--                        <th>Accept</th>-->
+                            <!--                        <th>Decline</th>-->
+                        </tr>
+                        </thead>
+                        <tbody class="scroll" id="cohost_requests">
+                        </tbody>
+                    </table>
+                    <div id="chat"></div>
+                </aside>
+            </div>
+            <section id="bottom_other_stream" class="cohost-stream"></section>
         </div>
-        <section id="bottom_other_stream" class="cohost-stream"></section>
+
     </main>
 
 </div>
