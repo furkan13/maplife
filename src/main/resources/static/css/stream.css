@@ -10,6 +10,7 @@
     /*margin:10px;*/
     /*float: left;*/
 }
+
 #left_display{
     width:70%;
   display: flex;
@@ -36,7 +37,7 @@ table{
     display:flex;
     justify-content: center;
     width: 100%;
-    height: calc(100vh - 70px);
+    height: calc(100vh - 200px);
 
 
 }
@@ -129,6 +130,7 @@ table{
 #blackscreen{
 	background-color:black;
 	/*height: 100%;*/
+    position: fixed;
     height: calc(100vh - 70px);
 	width: 100%;
     display: flex;
@@ -271,6 +273,13 @@ input:checked + .slider:before {
 .partyCheck{
   margin-right: 30px;
 }
+.cohost-stream{
+  width: 80%;
+  margin: 0 auto 0 auto;
+}
+.cohost-stream div{
+  width: 35%;
+}
 .steam-window{
   width: 77%;
   margin: 0 auto 0 auto;
@@ -286,6 +295,9 @@ input:checked + .slider:before {
   border: 0;
   background-color: #d7d7d7;
   color: #333333;
+}
+.right-option-button-control > button{
+  margin-left: 15px;
 }
 .right-option-button-control{
   width: 50%;

@@ -1,7 +1,6 @@
 package com.cardiff.maplife.controllers;
 
 
-import com.baomidou.mybatisplus.extension.api.R;
 import com.cardiff.maplife.entities.Event;
 
 import com.cardiff.maplife.entities.Live;
@@ -10,12 +9,18 @@ import com.cardiff.maplife.services.EventService;
 import com.cardiff.maplife.services.LiveService;
 import com.cardiff.maplife.services.TwilioService;
 import com.cardiff.maplife.services.UserService;
+import com.twilio.base.ResourceSet;
+import com.twilio.rest.video.v1.Room;
+import com.twilio.rest.video.v1.room.participant.SubscribeRules;
+import com.twilio.type.Rule;
+import com.twilio.type.SubscribeRule;
+import com.twilio.type.SubscribeRulesUpdate;
+import org.assertj.core.util.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.sql.Timestamp;
@@ -88,6 +93,7 @@ public class EventController {
             return;
         }
         //If the user is the host of the room
+
         if(userService.findUserByUsername(userService.getAuthentication()).getId() == eventCache.getUser().getId()){
             //Check if the room is created without twilio link (Created for future event)
             if( eventCache.getEvent_link() ==""){
@@ -216,12 +222,15 @@ public class EventController {
         catch(Exception e){
             return;
         }
+        Long targetUserID = userService.findUserByUsername(userService.getAuthentication()).getId();
+            if(liveService.findLiveByUserid(targetUserID,eventCache.getId()) == null){
+                Live newLive = new Live();
+                newLive.setApproved(false);
+                newLive.setEventid(eventCache.getId());
+                newLive.setCohostid(targetUserID);
+                liveService.saveLive(newLive);
+            }
 
-            Live newLive = new Live();
-            newLive.setApproved(false);
-            newLive.setEventid(eventCache.getId());
-            newLive.setCohostid(userService.findUserByUsername(userService.getAuthentication()).getId());
-            liveService.saveLive(newLive);
 
     }
     @PostMapping(value = "/roomStatus", produces = "application/x-www-form-urlencoded")
@@ -298,6 +307,8 @@ public class EventController {
                 }
                 if (user.getId() == eventCache.getUser().getId() || approved) {
                     //Check if the user is host or approved live user by host(cohost)
+
+
                     return twilioService.EventAccessToken(user.getUsername(), RoomName);
                 }
             }
@@ -306,49 +317,54 @@ public class EventController {
 
 
     }
+    @GetMapping("/UpdateTracks")
+    private void tracksupdate(@RequestParam(value = "RoomName",defaultValue = "null")String RoomName){
+        //API called after user join the room
 
-
-
-
-
-    @GetMapping("/EventTags")
-    private List<String> GetEventTags(@RequestParam(value = "RoomName", defaultValue = "null") String RoomName) {
-        System.out.println(RoomName);
-        if(RoomName.equals(null))
-        {return null;}
-        else {
-            String[] stringArray = eventService.findByName(RoomName).getCat().split(",");
-            List<String> tagList = Arrays.asList(stringArray);
-
-
-            int index=0;
-
-                if(tagList.size()>1)
-                {
-                    List<String> tags = tagList.subList(1, tagList.size());
-
-                    return tags;
-                }
-
-
-
-            return tagList;
+        User user = userService.findUserByUsername(userService.getAuthentication());
+//        System.out.println(user.getUsername());
+//        System.out.println(RoomName);
+        Event eventCache;
+        try{ //Check if the room exist
+            eventCache = eventService.findByName(RoomName);
         }
-
-
-
-
+        catch(Exception e){
+            return;
+        }
+        List<Live> cohost_live_list = liveService.findAllLiveByEventid(eventCache.getId());
+        List<User> cohost_user_list = new ArrayList<User>();
+        boolean host_checking = (user.getId() == eventCache.getUser().getId());
+        for(int i =0; i < cohost_live_list.size(); i++){
+            if(user.getId() == cohost_live_list.get(i).getCohostid()){
+                host_checking = true;
+            }
+            cohost_user_list.add(userService.findUserByUserId(cohost_live_list.get(i).getCohostid()));
+        }
+        User host = userService.findUserByUserId(eventCache.getUser().getId());
+        //Rules should be set after joining the group
+        if(host_checking) {//If the user is cohost or host, set allow rules to all users
+            twilioService.StreamerJoinedRules(eventCache, cohost_user_list, host);
+            return;
+        }
+        //Else case for viewers
+        twilioService.ViewerJoinedRules(eventCache,user, cohost_user_list,host);
     }
 
+    @GetMapping("/LiveAccessToken")
+    private String generateLiveToken(@RequestParam(value = "RoomName", defaultValue = "null") String RoomName) {
+        //Check whether user is allowed to join video room in database
+        //check if room exist
+        User user = userService.findUserByUsername(userService.getAuthentication());
+        Event eventCache;
+        try{ //Check if the room exist
+            eventCache = eventService.findByName(RoomName);
+        }
+        catch(Exception e){
+            return "";
+        }
 
+        //return token
+        return twilioService.EventAccessToken(user.getUsername(), eventCache.getTitle());
+    }
 
-
-  
-
-
-
-
-
-    //token generation
-    //Live player implementation
 }

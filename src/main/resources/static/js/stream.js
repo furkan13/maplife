@@ -408,56 +408,14 @@ function participant_video_on_connect(roomObj){ //function for on connect
 		//Only attach video tracks, attach audio when user click the window, allow delete if host
 		participant.tracks.forEach((publication) => {
 			if(publication.isSubscribed){
-				video_window = $("<div></div>");//Div for video
-				video_window.attr("id", participant.identity);
-				let video_cache =  publication.track;//Add video in the div
-				video_window.append(video_cache.attach());
-				//Need to subscribe the video before posting it on panel!!!
-				
-				
-				//Attaching it to user interface
-				if(participant.identity == roomObj.VideoRoom.user.username){ 
-					//Shown in main stream as that is host 
-					if(participant.audioTracks){
-						let audio_related = create_main_audio(participant);
-						audio_related.then((reply)=>{video_window.append(reply);})
-						
-					}
-					$("#stream").append(video_window);
-				}
-				else{ //Other cohost 
-					let cache = create_cohost_function(participant);
-					video_window.append(cache);
-					$("#bottom_other_stream").append(video_window);;
-				}
+				createVideoCard(participant,publication.track);
 			}
 		});
 
         participant.on("trackSubscribed",track =>{
 			
 			if(track.kind == "video"){
-				console.log("onsub tracks");
-				console.log(track);
-				video_window = $("<div></div>");//Div for video
-				video_window.attr("id", participant.identity);
-				video_window.append(track.attach());//Add video in the div
-				//Need to subscribe the video before posting it on panel!!!
-				
-				
-				//Attaching it to user interface
-				if(participant.identity == roomObj.VideoRoom.user.username){ 
-					//Shown in main stream as that is host 
-					if(participant.audioTracks){
-						let audio_related = create_main_audio(participant);
-						audio_related.then((reply)=>{video_window.append(reply);})
-					}
-					$("#stream").append(video_window);
-				}
-				else{ //Other cohost 
-					let cache = create_cohost_function(participant);
-					video_window.append(cache);
-					$("#bottom_other_stream").append(video_window);;
-				}
+				createVideoCard(participant,track);
 			}
             
         });
@@ -478,21 +436,22 @@ const participant_video = async function(roomObj){ //Show all the video of parti
 	roomObj.room.localParticipant.tracks.forEach(publication => { 
 
 		if(publication.kind == "video"){ //video element, add audio control on it
-			video_window.append(publication.track.attach());
+			video_window.prepend(publication.track.attach());
 			
 		}
 		if(publication.kind == "audio"){ //Audio element, put in different container
 			// Should mute in default to prevent echo
-			
-			let audio_related = create_main_audio(roomObj.room.localParticipant);
-			audio_related.then((reply)=>{video_window.append(reply);})
+			if(roomObj.VideoRoom.user.id == userJson.userId ){ //If user is host
+				let audio_related = create_main_audio(roomObj.room.localParticipant);
+				audio_related.then((reply)=>{$("#stream").append(reply);})
+			}
 		}
 	});
 	//Localtrack appending
 	//If host: append in main panel, if cohost: append in bottom stream
 	
 	if(roomObj.VideoRoom.user.id == userJson.userId ){ 
-		$("#stream").append(video_window);
+		$("#stream").prepend(video_window);
 	}
 	else{
 		$("#stream_audio").remove();//remove the audio from local user
@@ -510,29 +469,8 @@ const participant_video = async function(roomObj){ //Show all the video of parti
 		participant.tracks.forEach((publication) => {
 			if(publication.track != null){
 				if(publication.track.kind =="video"){ //
-					console.log("onconnect tracks");
-					console.log(publication.track);
-					video_window = $("<div></div>");//Div for video
-					video_window.attr("id", participant.identity);
-					let video_cache =  publication.track;//Add video in the div
-					video_window.append(video_cache.attach());
-					//Need to subscribe the video before posting it on panel!!!
-
-
-					//Attaching it to user interface
-					if(participant.identity == roomObj.VideoRoom.user.username){
-						//Shown in main stream as that is host
-						if(participant.audioTracks){
-							let audio_related = create_main_audio(participant);
-							audio_related.then((reply)=>{video_window.append(reply);})
-						}
-						$("#stream").append(video_window);
-					}
-					else{ //Other cohost
-						let cache = create_cohost_function(participant);
-						video_window.append(cache);
-						$("#bottom_other_stream").append(video_window);;
-					}
+					createVideoCard(participant,publication.track);
+					
 				}
 			}
 		});
@@ -540,34 +478,35 @@ const participant_video = async function(roomObj){ //Show all the video of parti
         participant.on("trackSubscribed",track =>{
 			
 			if(track.kind == "video"){
-				console.log("onsub tracks");
-				console.log(track);
-				video_window = $("<div></div>");//Div for video
-				video_window.attr("id", participant.identity);
-				video_window.append(track.attach());//Add video in the div
-				//Need to subscribe the video before posting it on panel!!!
+				createVideoCard(participant,track);
 				
-				
-				//Attaching it to user interface
-				if(participant.identity == roomObj.VideoRoom.user.username){ 
-					//Shown in main stream as that is host 
-					if(participant.audioTracks){
-						let audio_related = create_main_audio(participant);
-						audio_related.then((reply)=>{video_window.append(reply);})
-					}
-					$("#stream").append(video_window);
-				}
-				else{ //Other cohost 
-					let cache = create_cohost_function(participant);
-					video_window.append(cache);
-					$("#bottom_other_stream").append(video_window);;
-				}
 			}
             
         });
     });
 }
-
+function createVideoCard(participant,track){
+	video_window = $("<div></div>");//Div for video
+	video_window.attr("id", participant.identity);
+	video_window.data("userid", participant.sid);
+	let video_target = track.attach();
+	video_window.append(video_target);//Add video in the div
+	//Attaching it to user interface
+	if(participant.identity == roomObj.VideoRoom.user.username){ 
+		//Shown in main stream as that is host 
+		if(participant.audioTracks){
+			let audio_related = create_main_audio(participant);
+			audio_related.then((reply)=>{$("#stream").append(reply);})
+		}
+		$("#stream").prepend(video_window);
+	}
+	else{ //Other cohost 
+		let cache = create_cohost_function(participant);
+		video_window.append(cache);
+		$("#bottom_other_stream").append(video_window);;
+	}
+	
+}
 function stream_switch(source){//Swap the source to main stream panel
 	//Remove stream audio first, add swap and remove functionality after swap 
 	//host allow promote after switch
@@ -699,6 +638,8 @@ function room_exit(roomObj){ //Exit the room
         })
     })
     roomObj.room.disconnect();
+	alert("Return to main page");
+	window.location.href="/";
 }
 function GetTracks(roomObj){ //Obtain local audio/video tracks
 	//Check if the user has video and audio device, return to live if no
@@ -730,7 +671,9 @@ const room_join =async function(roomObj){ //Join the room with tracks
         console.log(`Successfully joined a Room: ${room}`);
         roomObj.room = room;
 		room.on("participantDisconnected", participant=>{
-			$("#"+participant.identity).remove();
+			if($("#"+participant.identity).length > 0){
+				$("#"+participant.identity).remove();
+			}
 			
 		});
 		room.on("disconnected", room=>{
@@ -751,11 +694,16 @@ const room_join =async function(roomObj){ //Join the room with tracks
 			(publication) => {publication.track.disable();}
         );
 	}
+	update_tracks();
 	participant_video(roomObj); //Get existing user's video
 	participant_video_on_connect(roomObj); //Get user's video when they connect
 	
 }
-
+function update_tracks(){
+	$.get("/UpdateTracks?RoomName="+roomName, function(data,status){
+		
+	});
+}
 function fetchCoHostRequest(){
     let interval = 15000; //5 second per request
     let cohostList = $.get("/CoHostRequest?RoomName="+roomName, function(data, status){
@@ -769,6 +717,8 @@ function fetchCoHostRequest(){
 			let name_entry = $("<td>"+data[i].userName+"</td>");
 			let accept_btn = $("<button class='acp_btn' id='"+data[i].userName+"'>Accept</button>");
 			let decline_btn = $("<button class='dec_btn' id='"+data[i].userName+"'>decline</button>");
+			accept_btn.attr("class","btn btn-sm btn-outline-secondary");
+			decline_btn.attr("class","btn btn-sm btn-outline-secondary");
 			accept_btn.click(function(){
 				cohost_accept(accept_btn);
 				accept_btn.parent().parent().remove(); //Delete the whole row after choice has made
@@ -834,14 +784,6 @@ function location_update(position){
 		dataType:"json",
 		contentType:"application/json; charset=utf-8"});
 	
-}
-function live_token(token) { //Get live token for the room, required for all users
-    token = $.get("/LiveAccess?RoomName=" + roomName); //Get the access token
-    if (token == "") {//Show error with the room, might be closed
-        $("#pop_up").innerHTML= "Room cannot be found"
-        $("#pop_up").show();
-    }
-    return token;
 }
 
 $(document).ready(function(){
