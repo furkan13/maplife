@@ -90,6 +90,7 @@ public class AddEventController {
 
 		event.setLongitude(Double.valueOf(longitude));
 		event.setLatitude(Double.valueOf(latitude));
+		event.setHost_id(user.getId());
 
 
 
