@@ -8,7 +8,9 @@ required_version = ">= 0.14.0"
   }
 }
 
-
+  resource "openstack_networking_floatingip_v2" "floating_ip_1" {
+    pool = var.pool
+  }
 
   resource "openstack_compute_secgroup_v2" "security_group" {
     name        = var.security_name
@@ -43,7 +45,7 @@ required_version = ">= 0.14.0"
       name = var.network
     }
   }
-  resource "openstack_networking_floatingip_v2" "floating_ip_1" {
+  resource "openstack_compute_floatingip_associate_v2" "floating_ip_1" {
     floating_ip = "10.72.99.249"
     instance_id = openstack_compute_instance_v2.instance_1.id
   }
