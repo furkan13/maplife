@@ -8,7 +8,9 @@ required_version = ">= 0.14.0"
   }
 }
 
-
+  resource "openstack_networking_floatingip_v2" "floating_ip_1" {
+    pool = public
+  }
 
   resource "openstack_compute_secgroup_v2" "security_group" {
     name        = var.security_name
