@@ -170,7 +170,7 @@ public class UserController {
             //followingUser = user you want to follow
             User followerUser = userService.findUserByUsername(user.getUsername());
             Set<User> followerUserSet = followerUser.getFollowerUserSet();
-            return followerUserSet;
+            return new ResponseEntity<>(followerUserSet, HttpStatus.OK);
         } catch (Exception e){
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
