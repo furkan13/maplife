@@ -111,7 +111,7 @@ qTvmakOCUVQCkAAAAVVXNlckBrcnVmLXdvcmtzdGF0aW9uAQIDBAUG
 sudo chmod 400 maplife.key
 
 
-sudo ssh-agent bash -c 'ssh-add maplife.key; git clone git@git.cardiff.ac.uk:c21045768/project_44b_party_watch.git' -yes
+sudo ssh-agent bash -c 'ssh-add maplife.key; git clone -b production git@git.cardiff.ac.uk:c21045768/project_44b_party_watch.git' -yes
 
 #mvn -f office_desk_test/ compile package
 #java -jar office_desk_test/target/desk_booking-0.0.1-SNAPSHOT.jar
