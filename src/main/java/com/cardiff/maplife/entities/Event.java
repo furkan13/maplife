@@ -131,7 +131,8 @@ public class Event {
     public String getPhotosImagePath() {
         if (title == null || id == -1) return null;
 
-        return "event/" + id + "/" + eventImageName;
+        //return "event/" + id + "/" + eventImageName;
+        return "/home/debian/project_44b_party_watch/event/" + id + "/" + eventImageName;
     }
 
 
