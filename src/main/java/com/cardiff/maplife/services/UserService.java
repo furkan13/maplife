@@ -1,5 +1,6 @@
 package com.cardiff.maplife.services;
 
+import com.cardiff.maplife.entities.Event;
 import com.cardiff.maplife.entities.User;
 import com.cardiff.maplife.repositories.UserRepository;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -57,6 +58,8 @@ public class UserService implements UserDetailsService {
     public List<User> searchResult(String key){
         return userRepository.searchResults(key);
     }
+
+
 
 
 

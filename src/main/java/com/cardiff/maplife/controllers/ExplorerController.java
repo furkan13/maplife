@@ -28,7 +28,18 @@ public class ExplorerController {
         {
             eventList.subList(3, eventList.size()).clear();             // remove all the other events from the list after index 3 so that only three events will be shown in page
         }
-       model.addAttribute("eventList",eventList);
+
+
+        List <Event> upComingList=eventservice.searchUpcoming();
+        if(upComingList.size()>3)                                          // check if there are more than 3 events
+        {
+            upComingList.subList(3, upComingList.size()).clear();             // remove all the other events from the list after index 3 so that only three events will be shown in page
+        }
+
+
+
+        model.addAttribute("eventList",upComingList);
+
         return "Explore/explore";
     }
     @GetMapping("/nearby")                                          //method for showing all the nearby events in different page

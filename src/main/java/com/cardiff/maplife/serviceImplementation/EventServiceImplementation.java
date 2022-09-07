@@ -85,6 +85,14 @@ public class EventServiceImplementation implements EventService {
         return eventRepository.searchResults(key,serverTime);
     }
 
+    @Override
+    public List<Event> searchUpcoming()
+    {
+
+
+        return eventRepository.searchUpcoming();
+    }
+
 
 
 
