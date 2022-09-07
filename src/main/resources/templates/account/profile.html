@@ -5,7 +5,9 @@
     <title>Subscriptions</title>
     <link th:href= "@{/css/profile.css}" rel="stylesheet" />
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
-<!--        <link href= "../../static/css/profile.css" rel="stylesheet" />-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <!--        <link href= "../../static/css/profile.css" rel="stylesheet" />-->
 
 </head>
 <body th:replace="navigator/bars::common-body(~{::#profile-page},~{},~{::script})">
@@ -56,18 +58,21 @@
     <div class="upcoming-event-body">
         <div class="user-Event">
             <div class="user-Event-body" th:each="upcomingEvent:${upcomingEventList}" >
-                <div class="upcoming-event-image" th:style="'background:url(' + @{${'../../../'+upcomingEvent.photosImagePath}} + ');'">
-                </div>
-                <div>
-                    <div class="upcomingEvent-label profile-title-font">
-                        <label th:text="${upcomingEvent.getTitle()}" ></label>
+                <a th:href="'/live?room='+${upcomingEvent.getTitle()}">
+                    <div class="upcoming-event-image" th:style="'background:url(' + @{${'../../../'+upcomingEvent.photosImagePath}} + ');'">
                     </div>
-                    <div class="upcomingEvent-label">
-                        <label th:text="${upcomingEvent.getEvent_dis()}"></label>
+                    <div>
+                        <div class="upcomingEvent-label profile-title-font">
+                            <label  th:text="${upcomingEvent.getTitle()}" ></label>
+                        </div>
+                        <div class="upcomingEvent-label">
+                            <label th:text="${upcomingEvent.getEvent_dis()}"></label>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
+
         <div class="user-information">
             <div class="user-bio">
                 <div>
@@ -90,7 +95,27 @@
 
             </div>
         </div>
-
+    </div>
+    <div class="upcoming-event-header">
+        <label>Streaming Events</label>
+    </div>
+    <div class="upcoming-event-body">
+        <div class="user-Event">
+        <div class="user-Event-body" th:each="streamingEvent:${streamingEventList}" >
+            <a th:href="'/live?room='+${streamingEvent.getTitle()}">
+                <div class="upcoming-event-image" th:style="'background:url(' + @{${'../../../'+streamingEvent.photosImagePath}} + ');'">
+                </div>
+                <div>
+                    <div class="upcomingEvent-label profile-title-font">
+                        <label  th:text="${streamingEvent.getTitle()}" ></label>
+                    </div>
+                    <div class="upcomingEvent-label">
+                        <label th:text="${streamingEvent.getEvent_dis()}"></label>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
     </div>
 
 </div>

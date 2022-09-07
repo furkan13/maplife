@@ -80,7 +80,9 @@ public class MainController {
         }
         //get upcoming event
         Timestamp datetime = new Timestamp(System.currentTimeMillis());
-        List<Event> upcomingEventList = eventService.finduserCustom(datetime, username);
+        List<Event> upcomingEventList = eventService.finduserCustomUpcoming(datetime, username);
+        List<Event> streamingEventList = eventService.finduserCustomNow(username);
+
 
         modelAndView.setViewName("account/profile");
         modelAndView.addObject("loggedUsername",loggedUsername);
@@ -93,6 +95,8 @@ public class MainController {
         modelAndView.addObject("following",followingUserSet.size());
         modelAndView.addObject("follower",followerUserSet.size());
         modelAndView.addObject("upcomingEventList",upcomingEventList);
+        modelAndView.addObject("streamingEventList",streamingEventList);
+
         return modelAndView;
     }
 
