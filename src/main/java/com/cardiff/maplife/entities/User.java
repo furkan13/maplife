@@ -246,6 +246,6 @@ public class User implements UserDetails, Serializable {
     public String getPhotosImagePath() {
 
 
-        return "image/"+ getIcon();
+        return "/image/"+ getIcon();
     }
 }
