@@ -5,10 +5,35 @@ if(room != null){
     roomName = room;
 }
 let roomObj = {room:"", tracks:[], token:"",VideoRoom:""};
+let chatObj = {client:"", channel:"", token:"",channel_index:0}
 let follow_list;
 let processed_follow_list = {};
 let host_user;
 let count = 0;
+let view_count=0;
+let stream_count = 0;
+function view_update(direction){//True: plus one
+	if(direction){
+		view_count+=1;
+	}
+	else{
+		if(view_count >0){
+			view_count -=1;
+		}
+	}
+	$("#viewer_number").html(view_count+" views");
+}
+function stream_update(direction){//True: plus one
+	if(direction){
+		stream_count+=1;
+	}
+	else{
+		if(stream_count >0){
+			stream_count -=1;
+		}
+	}
+	$("#streamer_number").html(stream_count+" streamers");
+}
 //!!!! make the user video div only containing video and user profile,
 //host audio set it to stream div instead of inside host div
 const main = async function(){
@@ -16,6 +41,12 @@ const main = async function(){
 		room_exit(roomObj);
 	});
 	$("#partycheck").click(function(){ participant_video(roomObj);});
+	$("#start_streaming").click(function(){
+		let answer = window.confirm("Stream in current room?");
+		if(answer){
+			window.location.href = '../streaming?room='+roomName; //Go to streaming page
+		}
+	})
 	await video_room();
 	await following_list();
 	if(roomObj.VideoRoom["title"] == null){ //Server doesn't have the event entry of this roomname
@@ -28,6 +59,8 @@ const main = async function(){
 	}
 	await live_token();
 	room_join(roomObj);
+	Join_chat();
+	view_update(true);
 }
 function following_list(){ //Ongoing test!!!
 	return $.get("/api/GetfollowingUser", function(data,status){
@@ -51,6 +84,7 @@ function room_exit(roomObj){ //Exit the room
 	// alert("Return to main page");
 	window.location.href="/";
 }
+
 const room_join = async function(roomObj){
 
 	//Connect without any track as they are viewers
@@ -59,7 +93,14 @@ const room_join = async function(roomObj){
         roomObj.room = room;
 		room.on("participantDisconnected", participant=>{
 			if($("#"+participant.identity).length > 0){
+				if(participant.identity == roomObj.VideoRoom.user.username){
+					$("#stream_audio").remove();
+				}
+				stream_update(false);
 				$("#"+participant.identity).remove();
+			}
+			else{
+				view_update(false);
 			}
 		});
 		room.on("disconnected", room=>{
@@ -68,10 +109,17 @@ const room_join = async function(roomObj){
 			
 			
 		});
-        // room.on('participantConnected', participant => {
+        room.on('participantConnected', participant => {
+			
+			if(participant.tracks.size >0){ //cohost/host
+				stream_update(true);
+			}
+			else{
+				view_update(true);
+			}
             // console.log(`A remote Participant connect ed: ${participant}`);
-
-		// });
+			
+		});
 	}, error => {
 		console.error(`Unable to connect to Room: ${error.message}`);
 	});
@@ -215,17 +263,22 @@ function getTargetUser(username){//Get each host User object for the icons
 const userBlockBuild = async function(username){ //Build the div(icon,username and follow btn) for each user
 	//Append link to user's profile and subscribe button 
 	let user_div = $("<div></div>");
+	user_div.attr("class", "hostDetailControl");
 	//Obtain user's User object by calling api (get user by username)
 	await getTargetUser(username);
 	//Add user icon in the div
-	let icon_wrap = $("<a></a>");
-	icon_wrap.attr("class","profile-user-icon");
-	icon_wrap.attr("href", "/profile/"+username);
+	let icon_wrap = $("<div></div>");
+	icon_wrap.attr("class","hostIcon");
+	icon_wrap.click(function(){
+		window.location.href = "../profile/"+username;
+	})
+
 	let icon = $("<img></img>");
-	icon.attr("class","profile-user-image");
+	icon.attr("class","");
 	icon.attr("src", "/image/"+host_user.icon);
 	icon_wrap.append(icon);
 	let user_link = $("<a>"+ username+"</a>");
+	user_link.attr("class", "hostName");
 	user_link.attr("href", "/profile/"+username);
 	let sub_btn_wrap = $("<div></div>");
 	sub_btn_wrap.attr("class", "editBtn");
@@ -242,9 +295,9 @@ const userBlockBuild = async function(username){ //Build the div(icon,username a
 	}
 	sub_btn.click(function(){sub_related(sub_btn)});
 	sub_btn_wrap.append(sub_btn);
-	
-	user_div.append(user_link);
+
 	user_div.append(icon_wrap);
+	user_div.append(user_link);
 	user_div.append(sub_btn_wrap);
 	
 	return user_div;
@@ -281,6 +334,14 @@ const participant_video = async function(roomObj){ //Show all the video of parti
 	//Create whole object here, then append to stream div
 	//Looping for all other user in the video room
 	roomObj.room.participants.forEach((participant) => { 
+		
+		if(participant.tracks.size>0){
+			stream_update(true);
+		}
+		else{
+			view_update(true);
+		}
+		
 		//Only attach video tracks, attach audio when user click the window, allow delete if host
 		participant.tracks.forEach((publication) => {
 			if(publication.track != null){
@@ -311,14 +372,17 @@ function createVideoCard(participant,track){
 	video_window.data("userid", participant.sid);
 	let video_target = track.attach();
 	// video_target.play();
-	video_window.append(video_target);//Add video in the div
+
 	//Need to subscribe the video before posting it on panel!!!
-	userBlockBuild(participant.identity).then((block)=>{video_window.append(block);})
+	let video_wrap = $("<div></div>");
+	video_wrap.append(video_target)
+	video_window.append(video_wrap);//Add video in the div
 	create_cohost_function(participant,video_window.first());
 
 	//need to play the video/audio
 	//Attaching it to user interface
-	if(participant.identity == roomObj.VideoRoom.user.username){ 
+	if(participant.identity == roomObj.VideoRoom.user.username){
+		video_wrap.attr("class","host-video-container");
 		//Shown in main stream as that is host 
 		if(participant.audioTracks){
 			let audio_related = create_main_audio(participant);
@@ -327,10 +391,10 @@ function createVideoCard(participant,track){
 		$("#stream").prepend(video_window);
 	}
 	else{ //Other cohost 
-		
+		video_wrap.attr("class","cohost-video-container");
 		$("#bottom_other_stream").append(video_window);;
 	}
-	
+	userBlockBuild(participant.identity).then((block)=>{video_window.append(block);})
 }
 function stream_switch(source){//Swap the source to main stream panel
 	//Remove stream audio first, add swap and remove functionality after swap 
@@ -340,12 +404,12 @@ function stream_switch(source){//Swap the source to main stream panel
 	if(source.parent().attr("id") == "stream"){//Do not switch if the clicked div is in stream(main)
 		return; 
 	}
-	let main_display = $("#stream")[0].firstChild; //Switch to buttom_other_stream
-	let side_display = source.parent(); //Switch to main stream, cache.parent() = div with user id
+	let main_display = $($("#stream")[0].firstChild); //Switch to buttom_other_stream
+	let side_display = source; //Switch to main stream, cache.parent() = div with user id
 	
 
-	let main_id = $("#stream")[0].firstChild.data("userid"); //Get twilio participant sid to retrieve the audio track
-	let main_name = $("#stream")[0].firstChild.data("username");
+	let main_id = $($("#stream")[0].firstChild).data("userid"); //Get twilio participant sid to retrieve the audio track
+	let main_name = $($("#stream")[0].firstChild).data("username");
 	let source_id = source.data("userid"); //Get twilio participant sid to retrieve the audio track
 	let source_name = source.data("username");
 	console.log(main_id);
@@ -387,18 +451,102 @@ function stream_switch(source){//Swap the source to main stream panel
 	
 	let clone_main = main_display.clone();
 	let clone_side = side_display.clone();
-	
-	main_display.replaceWith(clone_side);
-	side_display.replaceWith(clone_main);
+	//append side to stream
+	//then append main to side
+	// main_display.replaceWith(clone_side);
+	// side_display.replaceWith(clone_main);
+	$("#bottom_other_stream").prepend(main_display);
+	$("#stream").prepend(side_display);
+
+}
+const GetConversation = async function(){
+	await chatObj.client.getConversationByUniqueName(roomObj.VideoRoom["title"]) //Fix forbidden problem first
+		//User is not allowed to get conversation
+		.then(function(channel){
+			chatObj.channel = channel;
+			console.log("Chatroom found")
+			Channel_SetUp();
+		}).catch(function(){
+			console.log("Chatroom not found")
+			chatObj.client.createConversation({uniqueName:roomObj.VideoRoom["title"],friendlyName:"MapLife"})
+			.then(function(newChannel){
+				chatObj.channel = newChannel;
+				Channel_SetUp();
+			})
+		})
+}
+const Join_chat = async function(){//Create a client and then join the channel with name = room name
+	await chat_token();
+	Twilio.Conversations.Client.create(chatObj.token).then((client)=>{
+		chatObj.client = client;
+		chatObj.client.getSubscribedConversations().then((sub)=>{
+			for(let i=0; i< sub.items.length; i++){
+				if(sub.items[i].uniqueName == roomObj.VideoRoom["title"]){ //Char room found
+					chatObj.channel = sub.items[i];
+					chatObj.channel_index = i;
+					Channel_SetUp()
+				}
+			}
+			
+			// GetConversation()
+		});
+
+	});
+}
+const Channel_SetUp= async function(){
+	console.log("Joining chatroom")
+	await chatObj.channel.leave();
+
+
+	await chatObj.channel.join().then(function(channel){
+		console.log(channel);
+		console.log("Channel Joined");
+	})
+	chatObj.client.getSubscribedConversations().then((sub)=> {
+		console.log(sub.items);
+		sub.items[chatObj.channel_index].on("messageAdded", function (message) {
+			printMessage(message.author, message.body);
+		})
+	});
+	let $input = $('#chat-input');
+	$input.on('keydown', function(e) {
+		if(e.keyCode == 13) {//If enter
+			if(chatObj.channel == "") {
+				print('The Chat Service is not configured. Please check your .env file.', false);
+				return;
+			}
+			chatObj.channel.sendMessage($input.val())
+			$input.val('');
+		}
+	});
+}
+function printMessage(fromUser, message) {
+    let $user = $('<span class="username">').text(fromUser + ':');
+    if (fromUser === userJson.username) {
+      $user.addClass('me');
+    }
+    let $message = $('<span class="message">').text(message);
+    let $container = $('<div class="message-container">');
+    $container.append($user).append($message);
+    $("#messages").append($container); //Window for the chat box
+    $("#messages").scrollTop($("#messages")[0].scrollHeight);
+ }
+function chat_token(){
+	return $.get("/ChatToken?RoomName="+roomName, function(data, status){
+		chatObj.token = data;
+	}); //Get the access token or reject if user is not authorised
 }
 $(document).ready(function(){
 	main();
 });
 $(document).click(function(){
 	//play video and audio
-	video_list = $("video");
+	let video_list = $("video");
+	let audio_list = $("audio");
 	for(let i = 0; i < video_list.length; i++ ){
 		video_list[i].play();
 	}
-	$("audio")[0].play();
+	for(let i = 0; i < audio_list.length; i++ ){
+		audio_list[i].play();
+	}
 });

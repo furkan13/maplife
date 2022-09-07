@@ -20,7 +20,8 @@
 
 }
 #right_option{
-    width:40%;
+  width: 40%;
+  /*padding: 1rem 0 0 1rem;*/
 }
 table{
     width:100%;
@@ -35,104 +36,100 @@ table{
     height: 150px;
 }
 
-.row{
+.stream-row{
   display: flex;
-  width: 80%;
-  height: calc(100vh - 28%);
+  width: 100%;
   flex-direction: row;
-  margin: 11px auto 0 auto;
-
-
 }
 .lds-roller {
-  display: inline-block;
-  margin: 14% 42% 26% 42%;
-  position: absolute;
-  width: 160px;
-  height: 160px;
+display: inline-block;
+margin: 14% 42% 26% 42%;
+position: absolute;
+width: 160px;
+height: 160px;
 }
 .lds-roller div {
-  animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  transform-origin: 80px 80px;
+animation: lds-roller 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+transform-origin: 80px 80px;
 }
 .lds-roller div:after {
-  content: " ";
-  display: block;
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  background: #de5b19 ;
-  margin: -4px 0 0 -4px;
+content: " ";
+display: block;
+position: absolute;
+width: 14px;
+height: 14px;
+border-radius: 50%;
+background: #de5b19 ;
+margin: -4px 0 0 -4px;
 }
 .lds-roller div:nth-child(1) {
-  animation-delay: -0.036s;
+animation-delay: -0.036s;
 }
 .lds-roller div:nth-child(1):after {
-  top: 126px;
-  left: 126px;
+top: 126px;
+left: 126px;
 }
 .lds-roller div:nth-child(2) {
-  animation-delay: -0.072s;
+animation-delay: -0.072s;
 }
 .lds-roller div:nth-child(2):after {
-  top: 136px;
-  left: 112px;
+top: 136px;
+left: 112px;
 }
 .lds-roller div:nth-child(3) {
-  animation-delay: -0.108s;
+animation-delay: -0.108s;
 }
 .lds-roller div:nth-child(3):after {
-  top: 142px;
-  left: 96px;
+top: 142px;
+left: 96px;
 }
 .lds-roller div:nth-child(4) {
-  animation-delay: -0.144s;
+animation-delay: -0.144s;
 }
 .lds-roller div:nth-child(4):after {
-  top: 144px;
-  left: 80px;
+top: 144px;
+left: 80px;
 }
 .lds-roller div:nth-child(5) {
-  animation-delay: -0.18s;
+animation-delay: -0.18s;
 }
 .lds-roller div:nth-child(5):after {
-  top: 142px;
-  left: 64px;
+top: 142px;
+left: 64px;
 }
 .lds-roller div:nth-child(6) {
-  animation-delay: -0.216s;
+animation-delay: -0.216s;
 }
 .lds-roller div:nth-child(6):after {
-  top: 136px;
-  left: 48px;
+top: 136px;
+left: 48px;
 }
 .lds-roller div:nth-child(7) {
-  animation-delay: -0.252s;
+animation-delay: -0.252s;
 }
 .lds-roller div:nth-child(7):after {
-  top: 126px;
-  left: 34px;
+top: 126px;
+left: 34px;
 }
 .lds-roller div:nth-child(8) {
-  animation-delay: -0.288s;
+animation-delay: -0.288s;
 }
 .lds-roller div:nth-child(8):after {
-  top: 112px;
-  left: 24px;
+top: 112px;
+left: 24px;
 }
 @keyframes lds-roller {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+0% {
+  transform: rotate(0deg);
+}
+100% {
+  transform: rotate(360deg);
+}
 }
 
 #blackscreen{
-	background-color:black;
-	/*height: 100%;*/
+  background-color:black;
+  /*height: 100%;*/
     position: fixed;
     /*height: calc(100vh - 70px);*/
   height: calc(100vh - 50px);
@@ -276,14 +273,17 @@ input:checked + .slider:before {
 }
 
 .cohost-stream{
-  margin: 18px;
+  display: flex;
+  gap: 1rem;
+  flex-direction: row;
+  width: 100%;
 }
 .cohost-stream video{
 width: 100%;
 }
 
-.cohost-stream div{
-  width: 16%;
+.cohost-stream > div{
+  width: 30%;
   margin: 20px 20px 0 0;
   display: flex;
   flex-direction: row;
@@ -291,8 +291,9 @@ width: 100%;
   align-items: flex-end;
 }
 .cohost-hiddenBtn{
-  margin: 0!important;
-  position: fixed;
+  margin-bottom: 10px;
+  margin-right: 5px;
+  position: absolute;
 }
 .steam-window{
 height: 100%
@@ -327,13 +328,93 @@ margin-top: 6px;
 display: flex;
 flex-direction: column;
 }
-.hostAndCohost{
-display: flex;
-flex-direction: column;
-align-items: flex-start;
-height: calc(100vh - 51px);
+.hostAndCohost {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 .left-display-control{
   width: 100%;
 height: 100%;
+}
+#messages {
+  background-color: #232323;
+  padding: 10px;
+   height: 200px;
+   height: 200px;
+  /* width: 100%; */
+  /* margin: 0 auto; */
+  overflow-y: scroll;
+}
+/*For scroll bar*/
+#messages::-webkit-scrollbar-thumb {
+  background-color: #ffffff;
+  border-radius: 10px;
+}
+#messages::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background-color: #232323;
+}
+#messages::-webkit-scrollbar-track {
+  background-color: rgba(0, 0, 0, 0);
+  border-radius: 10px;
+}
+#messages::-webkit-scrollbar-thumb {
+  background-color: #dfdfdf;
+}
+#chat-input{
+  width: 100%;
+}
+#messages p {
+  margin:5px 0;
+  padding:0;
+}
+/*.host-video-container{*/
+/*  width: 100%;*/
+/*  overflow: hidden;*/
+/*  height: calc(60vw/1.7);*/
+/*}*/
+#stream > :first-child > :first-child{
+  width: 100%;
+  overflow: hidden;
+  height: calc(60vw/1.7);
+}
+.info {
+  margin:5px 0;
+  font-style:italic;
+}
+
+.message-container {
+  margin:5px 0;
+  color:#fff;
+}
+
+.message-container .username {
+  display:inline-block;
+  margin-right:5px;
+  font-weight:bold;
+  color:#849091;
+}
+
+.me, .username.me {
+  font-weight:bold;
+  color:cyan;
+}
+
+.message-container .username.me {
+  display:inline-block;
+  margin-right:5px;
+}
+@media only screen and (max-width: 600px) { 
+	.video-target {
+		height: 50%;
+		margin: 0px;
+	}
+	.streaming-switch-button {
+		flex-direction: column;
+	}
+  .streaming-click-button {
+    justify-content: flex-start;
+  }
 }

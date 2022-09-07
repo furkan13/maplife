@@ -8,9 +8,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.13.2/jquery-ui.min.js"></script>
     <script type="module" src="js/LivePlayer/twilio-live-player.js"></script>
     <script src="https://sdk.twilio.com/js/video/releases/2.17.1/twilio-video.min.js"></script>
-
-    <link th:href= "@{/css/live.css}" rel="stylesheet" />
+    <script src="https://media.twiliocdn.com/sdk/js/conversations/v2.1/twilio-conversations.min.js"></script>
     <link th:href= "@{/css/stream.css}" rel="stylesheet" />
+    <link th:href= "@{/css/live.css}" rel="stylesheet" />
 
     <title>Live</title>
 </head>
@@ -18,23 +18,29 @@
     <div id="live-page">
             <main id="panel">
                 <div class="hostAndCohost">
-                    <div class="row">
+                    <div class="stream-row">
                         <section id="left_display" class="main_card">
                             <div class="left-display-control">
                                 <div id="stream" class="steam-window"></div>
                             </div>
                         </section>
                         <aside id="right_option" class="main_card" >
-                            <div class="right-option-button-control">
-                                <button id="partycheck" class="partyCheck btn btn-sm btn-outline-secondary">Reload video</button>
-                                <button id="setting" class="btn btn-sm btn-outline-secondary">Setting</button>
-                                <button id="exit_room" class="btn btn-sm btn-outline-secondary">Exit</button>
+                            <div id="chat">
+                                <div id="messages"></div>
+                                <input id="chat-input" type="text" placeholder="say anything" autofocus/>
                             </div>
-                            <div class="right-option-viewerDetail">
-                                <div id="viewer_number" class="counter">0 views</div>
-                                <div id="streamer_number" class="counter">1 streamers</div>
+                            <div class="right-option-container">
+                                <div class="right-option-button-control">
+                                    <button id="start_streaming" class="btn btn-sm btn-outline-secondary">Stream</button>
+                                    <button id="partycheck" class="partyCheck btn btn-sm btn-outline-secondary">Reload video</button>
+                                    <button id="setting" class="btn btn-sm btn-outline-secondary">Setting</button>
+                                    <button id="exit_room" class="btn btn-sm btn-outline-secondary">Exit</button>
+                                </div>
+                                <div class="right-option-viewerDetail">
+                                    <div id="viewer_number" class="counter">0 views</div>
+                                    <div id="streamer_number" class="counter">0 streamers</div>
+                                </div>
                             </div>
-                            <div id="chat"></div>
                         </aside>
                     </div>
                     <section id="bottom_other_stream" class="cohost-stream"></section>
