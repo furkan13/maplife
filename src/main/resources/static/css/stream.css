@@ -406,3 +406,15 @@ height: 100%;
   display:inline-block;
   margin-right:5px;
 }
+@media only screen and (max-width: 600px) { 
+	.video-target {
+		height: 50%;
+		margin: 0px;
+	}
+	.streaming-switch-button {
+		flex-direction: column;
+	}
+  .streaming-click-button {
+    justify-content: flex-start;
+  }
+}
