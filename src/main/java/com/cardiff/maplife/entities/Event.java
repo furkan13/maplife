@@ -132,7 +132,7 @@ public class Event {
         if (title == null || id == -1) return null;
 
         //return "event/" + id + "/" + eventImageName;
-        return "event/" + id + "/" + eventImageName;
+        return "/event/" + id + "/" + eventImageName;
     }
 
 
