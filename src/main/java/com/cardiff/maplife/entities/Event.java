@@ -17,10 +17,10 @@ import java.util.List;
 public class Event {
     public Event() {
     }
-    public Event(Long id, long host_id, String event_link, String title, double longitude, double latitude, boolean room_type, Date event_date, String event_dis, boolean live) {
+    public Event(Long id, long host_id,  String title, double longitude, double latitude, boolean room_type, Date event_date, String event_dis, boolean live) {
         this.id = id;
         this.host_id = host_id;
-        this.event_link = event_link;
+
         this.title = title;
         this.longitude = longitude;
         this.latitude = latitude;
@@ -48,9 +48,7 @@ public class Event {
         return host_id;
     }
 
-    public String getEvent_link() {
-        return event_link;
-    }
+
 
     public boolean isRoom_type() {
         return room_type;
@@ -79,8 +77,7 @@ public class Event {
     private User user;
     @Column(name = "host_id")
     private Long host_id;
-    @Column(name = "event_link")
-    private String event_link;
+
     @Column(name = "title")
     private String title;
     @Column(name = "room_type")
@@ -93,7 +90,10 @@ public class Event {
     private Date event_date;
     @Column(name = "event_dis")
     private String event_dis;
-
+    @Column(name = "chat_sid")
+    private String chat_sid;
+    @Column(name = "room_sid")
+    private String room_sid;
     public boolean isLive() {
         return live;
     }
@@ -108,6 +108,22 @@ public class Event {
     @Column(name = "cat")
     private String cat;
 
+    public String getRoom_sid() {
+        return room_sid;
+    }
+
+    public void setRoom_sid(String room_sid) {
+        this.room_sid = room_sid;
+    }
+
+    public String getChat_sid() {
+        return chat_sid;
+    }
+
+
+    public void setChat_sid(String chat_sid) {
+        this.chat_sid = chat_sid;
+    }
 
     public String getCat() {
         return cat;
@@ -151,9 +167,7 @@ public class Event {
         this.host_id = host_id;
     }
 
-    public void setEvent_link(String event_link) {
-        this.event_link = event_link;
-    }
+
 
     public String getTitle() {
         return title;

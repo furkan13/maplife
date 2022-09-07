@@ -52,6 +52,11 @@ public class MainController {
         modelAndView = new ModelAndView("account/settings");
         return modelAndView;
     }
+    @GetMapping("/live")
+    public ModelAndView showLivePage(ModelAndView modelAndView) {
+        modelAndView = new ModelAndView("Streaming/ViewerLive");
+        return modelAndView;
+    }
     @GetMapping("/streaming")
     public ModelAndView showStreamingPage(ModelAndView modelAndView) {
         modelAndView = new ModelAndView("Streaming/HostStream");
