@@ -79,3 +79,43 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+#messages {
+  background-color:#232323;
+  padding:10px;
+  height:100%;
+  width:800px;
+  margin:0 auto;
+  overflow-y:auto;
+}
+
+#messages p {
+  margin:5px 0;
+  padding:0;
+}
+
+.info {
+  margin:5px 0;
+  font-style:italic;
+}
+
+.message-container {
+  margin:5px 0;
+  color:#fff;
+}
+
+.message-container .username {
+  display:inline-block;
+  margin-right:5px;
+  font-weight:bold;
+  color:#849091;
+}
+
+.me, .username.me {
+  font-weight:bold;
+  color:cyan;
+}
+
+.message-container .username.me {
+  display:inline-block;
+  margin-right:5px;
+}

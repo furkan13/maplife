@@ -10,7 +10,32 @@ if(room != null){
 }
 let roomObj = {room:"", tracks:[], token:"",VideoRoom:""};
 let local_track = [[[],[],[]],[[],[],[]]];//[n][0]:Video,[n][1]:Speaker,[n][2]:Mic, n=0: id, n=1: tag
+let chatObj = {client:"", channel:"", token:"",channel_index:0}
 let count = 0;
+let view_count=0;
+let stream_count = 0;
+function view_update(direction){//True: plus one
+	if(direction){
+		view_count+=1;
+	}
+	else{
+		if(view_count >0){
+			view_count -=1;
+		}
+	}
+	$("#viewer_number").html(view_count+" views");
+}
+function stream_update(direction){//True: plus one
+	if(direction){
+		stream_count+=1;
+	}
+	else{
+		if(stream_count >0){
+			stream_count -=1;
+		}
+	}
+	$("#streamer_number").html(stream_count+" streamers");
+}
 //user_name should be local stroage/cookie which is obtained when logging in
 
 function main(){
@@ -48,7 +73,7 @@ const initlise = async function(){
 		window.location.href = '../'; //Go back to main page
 	}
 	$("#partycheck").click(function(){ participant_video(roomObj);});
-	
+	$("#delete_exit_room").html("Exit");
 	if(userJson.userId == roomObj.VideoRoom["user"].id){ //If the user is the host of this room
 		//Build the host page accordingly
 		//Show submit button and add event listener
@@ -65,12 +90,14 @@ const initlise = async function(){
 			let answer = window.confirm("Return to main page? Room will be deleted");
 			if(answer){
 				room_delete();
-				window.location.href = '../';
+				
 			}
 		})
+		$("#delete_exit_room").html("Delete");
 		$("#delete_exit_room").click(function(){//Check the identity of user, then provide different function and innerhtml
-			$("delete_exit_room").html("Delete Room");
+			
 			room_delete();
+			
 		});
 	}
 	else{//Potential co-host, validate the user's id to server and check for token
@@ -93,9 +120,9 @@ const initlise = async function(){
 		if(roomObj.token ==""){
 			cohost_send(); //Send a cohost request if user cannot get the token
 		}
-		while(count < 19 && roomObj.token ==""){
+		while(count < 59 && roomObj.token ==""){//if no response for 5 mins
 
-			await sleep(15000);
+			await sleep(5000);
 			video_token();
 			// console.log("ha")
 			count+=1;
@@ -113,12 +140,13 @@ const initlise = async function(){
 			$("#speaker_target").empty();
 			$("#video_target").empty();
 			room_join(roomObj);
+			Join_chat();
 			//Disable audio as user is not host
 			
 		})
 		$("#join_room_btn").show();
 		$("#delete_exit_room").click(function(){//Check the identity of user, then provide different function and innerhtml
-			$("#delete_exit_room").html("Exit");
+			// $("#delete_exit_room").html("Exit");
 			room_exit(roomObj);
 		});
 		
@@ -137,6 +165,7 @@ const host_join = async function(){
 	});
 	$("#mute_publish_audio").show();
 	room_join(roomObj);
+	Join_chat();
 }
 function source_audio_mute(source){
 	if(source.data("muted_track")){ //If the audio track is muted
@@ -388,6 +417,7 @@ function create_cohost_function(participant){
 	//Host: kicking the user
 	//cohost: hide the video 
 	let hide_kick_btn = $("<button></button>");
+	hide_kick_btn.attr("class","btn btn-sm btn-outline-secondary cohost-hiddenBtn");
 	hide_kick_btn.html("hide");//!!!Should implement red cross icon
 	hide_kick_btn.data("username", participant.identity);
 	hide_kick_btn.data("userid", participant.sid);
@@ -464,7 +494,12 @@ const participant_video = async function(roomObj){ //Show all the video of parti
 	//Looping for all other user in the video room
 	roomObj.room.participants.forEach((participant) => { 
 		
-		
+		if(participant.tracks.size>0){
+			stream_update(true);
+		}
+		else{
+			view_update(true);
+		}
 		//Only attach video tracks, attach audio when user click the window, allow delete if host
 		participant.tracks.forEach((publication) => {
 			if(publication.track != null){
@@ -666,15 +701,18 @@ function GetTracks(roomObj){ //Obtain local audio/video tracks
 const room_join =async function(roomObj){ //Join the room with tracks
     // await GetTracks(roomObj); //Get local tracks from user, saved in roomObj.tracks
     console.log(roomObj.tracks);
-
+	stream_update(true);
     await Twilio.Video.connect(roomObj.token, {name: roomName, tracks:roomObj.tracks}).then(room => {
         console.log(`Successfully joined a Room: ${room}`);
         roomObj.room = room;
 		room.on("participantDisconnected", participant=>{
 			if($("#"+participant.identity).length > 0){
+				stream_update(false);
 				$("#"+participant.identity).remove();
 			}
-			
+			else{
+				view_update(false);
+			}
 		});
 		room.on("disconnected", room=>{
 			alert("The room is closed now. Return to main page");
@@ -682,10 +720,15 @@ const room_join =async function(roomObj){ //Join the room with tracks
 			
 			
 		});
-        // room.on('participantConnected', participant => {
-            // console.log(`A remote Participant connected: ${participant}`);
-
-		// });
+        room.on('participantConnected', participant => {
+			
+			if(participant.tracks.size >0){ //cohost/host
+				stream_update(true);
+			}
+			else{
+				view_update(true);
+			}
+		});
 	}, error => {
 		console.error(`Unable to connect to Room: ${error.message}`);
 	});
@@ -717,7 +760,7 @@ function fetchCoHostRequest(){
 			let name_entry = $("<td>"+data[i].userName+"</td>");
 			let accept_btn = $("<button class='acp_btn' id='"+data[i].userName+"'>Accept</button>");
 			let decline_btn = $("<button class='dec_btn' id='"+data[i].userName+"'>decline</button>");
-			accept_btn.attr("class","btn btn-sm btn-outline-secondary");
+			accept_btn.attr("class","btn btn-sm signup-btn");
 			decline_btn.attr("class","btn btn-sm btn-outline-secondary");
 			accept_btn.click(function(){
 				cohost_accept(accept_btn);
@@ -752,7 +795,7 @@ const room_delete = async function(e){ //Delete the room, should only allow host
                         // window.location.href="/stream"
                     }
 
-
+	window.location.href = '../';
 }
 function video_room(){ //Get event detail from server
 	return $.get("/EventDetail?RoomName="+roomName, function(data,status){
@@ -785,7 +828,73 @@ function location_update(position){
 		contentType:"application/json; charset=utf-8"});
 	
 }
+const Join_chat = async function(){//Create a client and then join the channel with name = room name
+	await chat_token();
+	Twilio.Conversations.Client.create(chatObj.token).then((client)=>{
+		chatObj.client = client;
+		chatObj.client.getSubscribedConversations().then((sub)=>{
+			for(let i=0; i< sub.items.length; i++){
+				if(sub.items[i].uniqueName == roomObj.VideoRoom["title"]){ //Char room found
+					chatObj.channel = sub.items[i];
+					chatObj.channel_index = i;
+					Channel_SetUp()
+				}
+			}
+			
+			// GetConversation()
+		});
 
+	});
+}
+const Channel_SetUp= async function(){
+	console.log("Joining chatroom")
+	await chatObj.channel.leave();
+
+
+	await chatObj.channel.join().then(function(channel){
+		console.log(channel);
+		console.log("Channel Joined");
+	})
+	chatObj.client.getSubscribedConversations().then((sub)=> {
+		console.log(sub.items);
+		sub.items[chatObj.channel_index].on("messageAdded", function (message) {
+			printMessage(message.author, message.body);
+		})
+	});
+	let $input = $('#chat-input');
+	$input.on('keydown', function(e) {
+		if(e.keyCode == 13) {//If enter
+			if(chatObj.channel == "") {
+				print('The Chat Service is not configured. Please check your .env file.', false);
+				return;
+			}
+			chatObj.channel.sendMessage($input.val())
+			$input.val('');
+		}
+	});
+}
+function printMessage(fromUser, message) {
+    let $user = $('<span class="username">').text(fromUser + ':');
+    if (fromUser === userJson.username) {
+      $user.addClass('me');
+    }
+    let $message = $('<span class="message">').text(message);
+    let $container = $('<div class="message-container">');
+    $container.append($user).append($message);
+    $("#messages").append($container); //Window for the chat box
+    $("#messages").scrollTop($("#messages")[0].scrollHeight);
+ }
+function chat_token(){
+	return $.get("/ChatToken?RoomName="+roomName, function(data, status){
+		chatObj.token = data;
+	}); //Get the access token or reject if user is not authorised
+}
+window.onunload = function(){
+	try{
+		roomObj.room.disconnect();
+	}
+	catch(e){}
+};
 $(document).ready(function(){
 	main();
 });

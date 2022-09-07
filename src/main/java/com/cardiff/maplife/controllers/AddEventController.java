@@ -112,7 +112,7 @@ public class AddEventController {
 		if(diff > 5){//Future event
 			try{
 				event.setLive(false); //Not in live
-				event.setEvent_link("");//Empty link as twilio api is not called
+				event.setRoom_sid("");//Empty link as twilio api is not called
 
 				String fileName = "";
 				fileName = StringUtils.cleanPath(file.getOriginalFilename()); //get the acrual file name
@@ -124,7 +124,7 @@ public class AddEventController {
 				EventFileUploadUtil.saveFile(uploadDir, fileName, file);
 
 
-				return new ModelAndView("redirect:/streaming?room="+event.getTitle());
+				return new ModelAndView("redirect:/profile/"+user.getUsername());
 			}
 			catch(Exception e){
 				System.out.println("some error here...");
@@ -140,9 +140,10 @@ public class AddEventController {
 				event.setEvent_date(datetime);
 				event.setLive(true);
 				//Create twilio room and get url of the created room from twilio
-				String link = (twilioService.CreateRoom(event));
-				event.setEvent_link(link);
-
+				String room_id = (twilioService.CreateRoom(event));
+				event.setRoom_sid(room_id);
+				String chat_id = twilioService.CreatChatRoom(event);
+				event.setChat_sid(chat_id);
 
 				String fileName = "";
 				fileName = StringUtils.cleanPath(file.getOriginalFilename()); //get the acrual file name

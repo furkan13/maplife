@@ -96,13 +96,15 @@ public class EventController {
 
         if(userService.findUserByUsername(userService.getAuthentication()).getId() == eventCache.getUser().getId()){
             //Check if the room is created without twilio link (Created for future event)
-            if( eventCache.getEvent_link() ==""){
+            if( eventCache.getChat_sid() ==""){
                 //Set the room to live and create twilio video room
                 eventCache.setLive(true);
                 Timestamp servertime = new Timestamp(System.currentTimeMillis());
                 eventCache.setEvent_date(servertime);
-                String link = (twilioService.CreateRoom(eventCache));
-                eventCache.setEvent_link(link);
+                String room_id = (twilioService.CreateRoom(eventCache));
+                String chat_id = twilioService.CreatChatRoom(eventCache);
+                eventCache.setChat_sid(chat_id);
+                eventCache.setRoom_sid(room_id);
                 eventService.save(eventCache);
             }
 
@@ -125,6 +127,7 @@ public class EventController {
             eventCache.setLive(false);
             eventService.save(eventCache);
 //            eventService.deleteById(eventCache.getId()); //Delete room in event table
+            twilioService.DeleteChatRoom(eventCache);
             twilioService.DeleteRoom(eventCache); //Delete room in twilio service
             liveService.deleteAllLiveByEventid(eventCache.getId()); //Delete all cohost in database
         }
@@ -248,6 +251,7 @@ public class EventController {
             eventCache.setLive(false);
             eventService.save(eventCache);
             liveService.deleteAllLiveByEventid(eventCache.getId());
+            twilioService.DeleteChatRoom(eventCache);
         }
         if(status.equals("participant-disconnected")){ //Delete cohost in database
             User userCache = userService.findUserByUsername(UserName);
@@ -257,9 +261,7 @@ public class EventController {
                 eventService.save(eventCache);
                 liveService.deleteAllLiveByEventid(eventCache.getId());
             }
-            else{ //Remove entry related to cohost
-                liveService.deleteLiveByCohostid(userCache.getId(), eventCache.getId());
-            }
+            //Do not remove cohost when they leave the stream
         }
     }
     @GetMapping("/EventDetail")
@@ -366,5 +368,16 @@ public class EventController {
         //return token
         return twilioService.EventAccessToken(user.getUsername(), eventCache.getTitle());
     }
-
+    @GetMapping("/ChatToken")
+    private String generateChatToken(@RequestParam(value = "RoomName", defaultValue = "null") String RoomName) {
+        User user = userService.findUserByUsername(userService.getAuthentication());
+        Event eventCache;
+        try{ //Check if the room exist
+            eventCache = eventService.findByName(RoomName);
+        }
+        catch(Exception e){
+            return "";
+        }
+        return twilioService.ChatAccessToken(user.getUsername(), eventCache);
+    }
 }
