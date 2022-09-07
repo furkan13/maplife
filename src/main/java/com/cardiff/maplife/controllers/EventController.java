@@ -96,7 +96,7 @@ public class EventController {
 
         if(userService.findUserByUsername(userService.getAuthentication()).getId() == eventCache.getUser().getId()){
             //Check if the room is created without twilio link (Created for future event)
-            if( eventCache.getChat_sid() ==""){
+            if( eventCache.getRoom_sid() ==""){
                 //Set the room to live and create twilio video room
                 eventCache.setLive(true);
                 Timestamp servertime = new Timestamp(System.currentTimeMillis());

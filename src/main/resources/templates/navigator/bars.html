@@ -34,9 +34,9 @@
                 <span>MAP</span>
                 <span>LIFE</span>
             </a>
-            <form th:action="@{/projects/?keyword=}" class="d-flex" role="search">
+            <form th:action="@{/search}" class="d-flex" role="search">
                 <div class="input-group">
-                    <input type="search" id="searchbar" class="form-control" placeholder="Explore Your Life..." name="keyword">
+                    <input type="search" id="keyword" class="form-control" placeholder="Explore Your Life..." name="keyword">
                     <button class="btn btn-sm btn-outline-secondary" type="submit">
                     </button>
                 </div>

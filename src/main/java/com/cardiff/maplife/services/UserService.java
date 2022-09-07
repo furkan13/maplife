@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -53,6 +54,13 @@ public class UserService implements UserDetailsService {
     public void deleteById(Long id){
         userRepository.deleteById(id);
     }
+    public List<User> searchResult(String key){
+        return userRepository.searchResults(key);
+    }
+
+
+
+
 
 
 
