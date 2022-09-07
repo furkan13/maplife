@@ -62,7 +62,7 @@
         <li th:each="user : ${userList}">
             <a href="" class="card">
                 <!--<img th:src="${event.image}" class="card__image" alt="" />-->
-                <img th:src="@{${user.PhotosImagePath}}" class="card__image" alt="" />
+                <img th:src="${user.PhotosImagePath}" class="card__image" alt="" />
                 <div class="card__overlay">
                     <div class="card__header">
 
