@@ -235,7 +235,10 @@ body{
 
 }*/
 
-
+.form_button
+{
+        display: inline;
+}
 
 
 .about_me .about_large_title {
