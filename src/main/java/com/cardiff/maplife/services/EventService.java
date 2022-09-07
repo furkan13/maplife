@@ -32,5 +32,7 @@ public interface EventService {
 
     public List<Event> searchResults(String key,Timestamp serverTime);
 
+    public  List<Event> searchUpcoming();
+
 
 }

@@ -112,4 +112,10 @@ body{
     height: 30px!important;
     margin: 10px!important;
 }
+/*.leaflet-touch .leaflet-bar button:hover {*/
+/*    box-shadow: none!important;*/
+/*}*/
+.leaflet-bar button:hover {
+    background-color: transparent!important;
+}
 

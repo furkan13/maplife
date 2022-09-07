@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Subscriptions</title>
     <link th:href= "@{/css/profile.css}" rel="stylesheet" />
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
 <!--        <link href= "../../static/css/profile.css" rel="stylesheet" />-->
 
 </head>
@@ -19,6 +20,10 @@
             <div class="dom-2">
                 <div>
                     <label id="profileUsername" style="font-weight: 800;font-size: 25px;" th:text="${username}"></label>
+                </div>
+                <div th:if="${loggedUsername==username}">
+                    <i class="fi fi-rr-coins" style="color: #de5b19;"></i>
+                    <label  th:text="${user_coins}"></label>
                 </div>
                 <a class="editBtn" th:href="@{/settings}">
                     <div>
@@ -51,7 +56,7 @@
     <div class="upcoming-event-body">
         <div class="user-Event">
             <div class="user-Event-body" th:each="upcomingEvent:${upcomingEventList}" >
-                <div class="upcoming-event-image">
+                <div class="upcoming-event-image" th:style="'background:url(' + @{${'../../../'+upcomingEvent.photosImagePath}} + ');'">
                 </div>
                 <div>
                     <div class="upcomingEvent-label profile-title-font">

@@ -37,6 +37,11 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query(value = "select u from Event u where (u.event_dis  LIKE %:key% or u.cat  LIKE %:key% or u.title  LIKE %:key%) and (u.live=true or u.event_date > (:serverTime)) ")
     List<Event> searchResults(String key ,Timestamp serverTime);
 
+    @Modifying
+    @Transactional
+    @Query(value = "select u from Event u where u.live=false ")
+    List<Event> searchUpcoming();
+
 
 
 }

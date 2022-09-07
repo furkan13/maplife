@@ -68,7 +68,7 @@ body{
 /*    left: 14%;*/
 /*    top: 11%;*/
 /*}*/
-.edit-btn{
+.btn btn-sm btn-outline-secondaryedit-btn{
     border: solid 2px #d7d7d7;
     height: 33px;
     width: 98px;
@@ -115,10 +115,9 @@ body{
 .upcoming-event-image{
     margin: 20px;
     width: 35%;
-    background-image: url("../image/cat.png");
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center;
+    background-repeat: no-repeat!important;
+    background-size: cover!important;
+    background-position: center!important;
 }
 .upcomingEvent-label{
     margin: 15px auto 0 22px;

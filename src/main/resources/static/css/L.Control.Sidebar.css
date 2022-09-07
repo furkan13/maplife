@@ -21,7 +21,7 @@
       -moz-box-sizing: border-box;
       box-sizing: border-box;
       padding: 8px 24px;
-      font-size: 18px;
+      font-size: 14px;
       background: white;
       box-shadow: 0 1px 7px rgba(0, 0, 0, 0.65);
       /*-webkit-border-radius: 4px;*/
@@ -96,6 +96,35 @@
 #filter-sidebar hr{
   margin: 1.5rem 0;
 }
+.leaflet-touch .leaflet-control-geocoder {
+  margin-bottom: 1rem;
+}
+.leaflet-control-geocoder-icon {
+  width: 30px!important;
+  height: 30px!important;
+}
+.leaflet-control-geocoder-icon:hover{
+  box-shadow: none !important;
+}
+#filter-sidebar-form .leaflet-bar {
+  box-shadow: none !important;
+  border: 1px solid #ced4da !important;
+}
+/*#filter-sidebar-form .leaflet-bar :focus-within{*/
+/*  border-color: #de5b19!important;*/
+/*  box-shadow: 0 0 0 0.25rem rgb(222 91 25 / 25%) !important;*/
+/*}*/
+/*.focusJs{*/
+/*  border-color: #de5b19!important;*/
+/*  box-shadow: 0 0 0 0.25rem rgb(222 91 25 / 25%) !important;*/
+/*}*/
+.leaflet-control-geocoder-form input {
+  font-size: 110% !important;
+  width: 200px !important;
+}
+.leaflet-control-geocoder-alternatives{
+  width: 100% !important;
+}
 .group-chips-container{
   font-size: 14px;
   display: flex;
@@ -133,8 +162,12 @@
   border-color: rgb(222 91 25) !important;
   box-shadow: 0 0 0 0.25rem rgb(222 91 25 / 25%) !important;
 }
+.form-switch{
+  font-size: 18px;
+}
 .form-switch .form-check-input {
   margin-top: 4px!important;
+
 }
 .form-switch .form-check-input:focus {
   border-color: #DE5B19!important;

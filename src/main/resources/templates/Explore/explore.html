@@ -31,7 +31,7 @@
     <li th:each="event : ${eventList}">
       <a href="" class="card">
         <!--<img th:src="${event.image}" class="card__image" alt="" />-->
-        <img th:src="@{${event.PhotosImagePath}}" class="card__image" alt="" />
+        <img th:src="${event.PhotosImagePath}" class="card__image" alt="" />
         <div class="card__overlay">
           <div class="card__header">
 
@@ -39,8 +39,8 @@
               <h3 class="card__title" th:text="${event.title}"></h3>
               <span class="card__status" th:text="${event.event_date}" ></span>
               <div>
-                <form action="#"  >
-                  <input type="submit" value="Join Event" class="accept_button" />
+                <form action="#" th:action="@{/profile/{username}(username=${event.user.getUsername()})}"  >
+                  <input type="submit" value="Show Profile" class="accept_button" />
                 </form>
 
               </div>
@@ -66,6 +66,7 @@
     </div>
 
   </div>
+
 
 </div>
 
