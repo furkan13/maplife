@@ -721,6 +721,9 @@ const room_join =async function(roomObj){ //Join the room with tracks
         roomObj.room = room;
 		room.on("participantDisconnected", participant=>{
 			if($("#"+participant.identity).length > 0){
+				if(participant.identity == roomObj.VideoRoom.user.username){
+					$("#stream_audio").remove();
+				}
 				stream_update(false);
 				$("#"+participant.identity).remove();
 			}
