@@ -57,7 +57,7 @@ L.Marker.prototype.options.icon = orangeIcon
 // define a marker cluster group to support heat map and Compatibility with layers
 var mcgLayerSupportGroup = L.markerClusterGroup.layerSupport({spiderLegPolylineOptions:{opacity: 0},showCoverageOnHover:false}),
     petGroup = L.layerGroup(), lifeGroup = L.layerGroup(), gameGroup = L.layerGroup(), sportGroup = L.layerGroup(),travelGroup = L.layerGroup(),otherGroup = L.layerGroup(),
-    liveNowGroup = L.layerGroup(), upcomingGroup = L.layerGroup(),unfollowingGroup= L.layerGroup(),
+    upcomingGroup = L.layerGroup(),unfollowingGroup= L.layerGroup(),
     control = L.control.layers(null, null, { collapsed: false }),
     categoryGroupList = [gameGroup,petGroup,lifeGroup,sportGroup,travelGroup,otherGroup]
     // switchLiveGroupList = [upcomingGroup,liveNowGroup]
@@ -101,16 +101,22 @@ const getEvents = async function () {
                     switch (category[j]){
                         case "Other":
                             otherGroup.addLayer(marker)
+                            break
                         case "Pet":
                             petGroup.addLayer(marker)
+                            break
                         case "Game":
                             gameGroup.addLayer(marker)
+                            break
                         case "Life":
                             lifeGroup.addLayer(marker)
+                            break
                         case "Sport":
                             sportGroup.addLayer(marker)
+                            break
                         case "Travel":
                             travelGroup.addLayer(marker)
+                            break
                     }
             }
         }
@@ -120,36 +126,22 @@ const getEvents = async function () {
 }
 
 //show mock data
-// var mockData = [
-//     {'host_name':'Cat Lover','event_title':'My life with cats','event_description':'','event_cover':'cat.png','event_viewer':'1000','host_icon':'cat.png','category':'Pet',lat:51.583396,lng:-3.173728},
-//     {'host_name':'Cat Lover','event_title':'My life with cats','event_description':'','event_cover':'cat.png','event_viewer':'1000','host_icon':'cat.png','category':'Pet',lat:51.683396,lng:-3.173728},
-//     {'host_name':'Cat Lover','event_title':'My life with cats','event_description':'','event_cover':'cat.png','event_viewer':'1000','host_icon':'cat.png','category':'Game',lat:51.683396,lng:-3.173728},
-//     {'host_name':'Cat Lover','event_title':'My life with cats','event_description':'','event_cover':'cat.png','event_viewer':'1000','host_icon':'cat.png','category':'Game',lat:51.685923,lng:-3.175390},
-//     {'host_name':'Cat Lover','event_title':'My life with cats','event_description':'','event_cover':'cat.png','event_viewer':'1000','host_icon':'cat.png','category':'Pet',lat:51.683396,lng:-3.173728},
-//     {'host_name':'Cat Lover','event_title':'My life with cats','event_description':'','event_cover':'cat.png','event_viewer':'1000','host_icon':'cat.png','category':'Life',lat:51.683392,lng:-3.173728},
-//     {'host_name':'Bird life','event_title':'Do you know these birds?','event_description':'','event_cover':'birds.jpg','event_viewer':'1000','host_icon':'birds.jpg','category':'Pet',lat:51.680023,lng:-3.170290},
-//     {'host_name':'Bird life','event_title':'Do you know these birds?','event_description':'','event_cover':'birds.jpg','event_viewer':'20','host_icon':'birds.jpg','category':'Pet',lat:51.685923,lng:-3.175390},
-//     {'host_name':'Bird life','event_title':'Do you know these birds?','event_description':'','event_cover':'birds.jpg','event_viewer':'30000','host_icon':'birds.jpg','category':'Pet',lat:51.681023,lng:-3.155490},
-//     {'host_name':'Bird life','event_title':'Do you know these birds?','event_description':'','event_cover':'birds.jpg','event_viewer':'2000','host_icon':'birds.jpg','category':'Game',lat:51.687023,lng:-3.170190},
-// ]
-// for (let i = 0;mockData.length>i;i++) {
-//     let mockIcon = L.divIcon({className:'custom-div-icon',iconAnchor: [25, 25],popupAnchor: [2, -28]});
-//     let mockEventCoverImg = "image/" + mockData[i].event_cover
-//     let mockEventIconImg = "image/" + mockData[i].host_icon
-//     mockPopupContent = `<div id="event-img-container" style="background-image: url(${mockEventCoverImg})"></div><div id="event-title">${mockData[i].event_title}</div>
-// <div id="host-name" class="event-text">${mockData[i].host_name}</div><div id="event-viewers" class="event-text">${mockData[i].event_viewer} viewers</div><div class="event-text">47 minutes ago</div>`
-//     mockIcon.options.html = `<img id="custom-div-icon" class="custom-div-icon" src= ${mockEventIconImg}>`
-//     // determine the category and put them into different layer groups
-//     if (mockData[i].category === 'Pet'){
-//         L.marker([mockData[i].lat,mockData[i].lng], {icon: mockIcon}).bindPopup(mockPopupContent,{closeButton:false}).addTo(petGroup) ;
-//     }
-//     else if (mockData[i].category === 'Life'){
-//         L.marker([mockData[i].lat,mockData[i].lng], {icon: mockIcon}).bindPopup(mockPopupContent,{closeButton:false}).addTo(lifeGroup);
-//     }
-//     else if (mockData[i].category === 'Game'){
-//         L.marker([mockData[i].lat,mockData[i].lng], {icon: mockIcon}).bindPopup(mockPopupContent,{closeButton:false}).addTo(gameGroup);
-//     }
-// }
+let mockData = []
+for (let i=0;i<50;i++){
+    let dummyItem = {'host_name':'Cat Lover','event_title':'My life with cats','event_description':'','event_cover':'cat.png','event_viewer':'1000','host_icon':'cat.png','category':'Pet',lat:48.8 + 0.1 * Math.random(),lng:2.25 + 0.2 * Math.random()}
+    let dummyItem2 = {'host_name':'Bird life','event_title':'Do you know these birds?','event_description':'','event_cover':'birds.jpg','event_viewer':'1000','host_icon':'birds.jpg','category':'Pet',lat:48.8 + 0.1 * Math.random(),lng:2.25 + 0.2 * Math.random()}
+    mockData.push(dummyItem,dummyItem2)
+}
+for (let i = 0;mockData.length>i;i++) {
+    let mockIcon = L.divIcon({className:'custom-div-icon',iconAnchor: [25, 25],popupAnchor: [2, -28]});
+    let mockEventCoverImg = "image/" + mockData[i].event_cover
+    let mockEventIconImg = "image/" + mockData[i].host_icon
+    mockPopupContent = `<div id="event-img-container" style="background-image: url(${mockEventCoverImg})"></div><div id="event-title">${mockData[i].event_title}</div>
+<div id="host-name" class="event-text">${mockData[i].host_name}</div><div id="event-viewers" class="event-text">${mockData[i].event_viewer} viewers</div><div class="event-text">47 minutes ago</div>`
+    mockIcon.options.html = `<img id="custom-div-icon" class="custom-div-icon" src= ${mockEventIconImg}>`
+    // determine the category and put them into different layer groups
+        L.marker([mockData[i].lat,mockData[i].lng], {icon: mockIcon}).bindPopup(mockPopupContent,{closeButton:false}).addTo(otherGroup) ;
+}
 
 var filterSidebar = L.control.sidebar('filter-sidebar', {
     position: 'left',
@@ -248,6 +240,7 @@ let filter =  function () {
     mcgLayerSupportGroup.removeLayers(categoryGroupList)
     let checkedCategories = checkCategories()
     mcgLayerSupportGroup.addLayers(checkedCategories)
+
     if (isLiveNow()===true){
         mcgLayerSupportGroup.removeLayer(upcomingGroup)
     }

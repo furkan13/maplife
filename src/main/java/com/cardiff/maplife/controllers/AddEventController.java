@@ -77,7 +77,7 @@ public class AddEventController {
 		if(tagList.size()>1)
 		{
 			List<String> tags = tagList.subList(1, tagList.size());
-			String listString = String.join(", ", tags);
+			String listString = String.join(",", tags);
 			event.setCat(listString);
 
 
