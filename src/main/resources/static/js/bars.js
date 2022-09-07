@@ -9,14 +9,17 @@ const recommendationDetailSourceNode = document.getElementById("recommendation-d
 
 // create repeat recommendation list
 const createRecommendation =  async function () {
-    for (let i = 1; i < 6; i++) {
-        let recommendationDetailClonedNode = recommendationDetailSourceNode.cloneNode(true);
-        recommendationDetailClonedNode.setAttribute("id", "recommendation-detail-" + i);
-        recommendationDetailSourceNode.parentNode.appendChild(recommendationDetailClonedNode);
-        let recommendationClonedNode = recommendationSourceNode.cloneNode(true);
-        recommendationClonedNode.setAttribute("id", "recommendation-" + i);
-        recommendationSourceNode.parentNode.appendChild(recommendationClonedNode);
+    try{
+        for (let i = 1; i < 6; i++) {
+            let recommendationDetailClonedNode = recommendationDetailSourceNode.cloneNode(true);
+            recommendationDetailClonedNode.setAttribute("id", "recommendation-detail-" + i);
+            recommendationDetailSourceNode.parentNode.appendChild(recommendationDetailClonedNode);
+            let recommendationClonedNode = recommendationSourceNode.cloneNode(true);
+            recommendationClonedNode.setAttribute("id", "recommendation-" + i);
+            recommendationSourceNode.parentNode.appendChild(recommendationClonedNode);
+        }
     }
+    catch (error){}
 }
 createRecommendation().then()
 const getUser = async function () {
@@ -49,6 +52,7 @@ const showUserIcon =  async function (){
         if (userJson.icon!=null){
             headerButtonLogged.style.display="flex"
             userIcon.setAttribute("src","/image/"+userJson.icon)
+
         }
         else {
             headerButton.style.display="flex"

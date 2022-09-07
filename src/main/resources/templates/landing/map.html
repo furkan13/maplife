@@ -14,13 +14,16 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css"/>
     <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.76.1/dist/L.Control.Locate.min.css">
     <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol@0.76.1/dist/L.Control.Locate.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
     <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
+    <script src="https://unpkg.com/leaflet.featuregroup.subgroup@1.0.2/dist/leaflet.featuregroup.subgroup.js"></script>
     <script src="https://unpkg.com/leaflet.markercluster.layersupport@2.0.1/dist/leaflet.markercluster.layersupport.js"></script>
-
     <link th:href= "@{/css/L.Control.Sidebar.css}" rel="stylesheet" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 
 
 <!--    delete below when push-->
@@ -39,43 +42,44 @@
     <div id="map">
     </div>
     <div id="filter-sidebar">
-        <form>
+        <form id="filter-sidebar-form">
         <h5 class="mb-3 mt-4">Category</h5>
         <div class="group-chips-container">
-            <input type="checkbox" class="btn-check" id="btncheck1" name="cat-group-chips" autocomplete="off" checked>
+            <input type="checkbox" class="btn-check" id="btncheck1" name="cat-group-chips" value="Game" autocomplete="off" checked>
             <label class="group-chips" for="btncheck1">Game</label>
-            <input type="checkbox" class="btn-check" id="btncheck2" name="cat-group-chips" autocomplete="off" checked>
+            <input type="checkbox" class="btn-check" id="btncheck2" name="cat-group-chips" value="Pet" autocomplete="off" checked>
             <label class="group-chips" for="btncheck2">Pet</label>
-            <input type="checkbox" class="btn-check" id="btncheck3" name="cat-group-chips" autocomplete="off" checked>
+            <input type="checkbox" class="btn-check" id="btncheck3" name="cat-group-chips" value="Life" autocomplete="off" checked>
             <label class="group-chips" for="btncheck3">Life</label>
         </div>
         <div class="group-chips-container">
-            <input type="checkbox" class="btn-check" id="btncheck4" name="cat-group-chips" autocomplete="off" checked>
+            <input type="checkbox" class="btn-check" id="btncheck4" name="cat-group-chips" value="Sport" autocomplete="off" checked>
             <label class="group-chips" for="btncheck4">Sport</label>
-            <input type="checkbox" class="btn-check" id="btncheck5" name="cat-group-chips" autocomplete="off" checked>
+            <input type="checkbox" class="btn-check" id="btncheck5" name="cat-group-chips" value="Travel" autocomplete="off" checked>
             <label class="group-chips" for="btncheck5">Travel</label>
-            <input type="checkbox" class="btn-check" id="btncheck6" name="cat-group-chips" autocomplete="off" checked>
-            <label class="group-chips" for="btncheck6">Talk</label>
+            <input type="checkbox" class="btn-check" id="btncheck6" name="cat-group-chips" value="Other" autocomplete="off" checked>
+            <label class="group-chips" for="btncheck6">Other</label>
         </div>
         <hr>
         <h5 class="mb-3">Location</h5>
 <!--        <div class="mb-1" style="color:#8c8c8c;font-size: 14px">Search</div>-->
 
 <!--        <div class="input-group mb-3">-->
-        <input type="search"  class="form-control mb-3" placeholder="Search Places..." name="keyword">
+<!--        <input type="search"  class="form-control mb-3" placeholder="Search Places..." name="keyword">-->
 <!--        <button class="btn btn-sm btn-outline-secondary" type="submit">-->
 <!--        </button>-->
 <!--        </div>-->
+        <div id="location-search-bar" class="mb-3"></div>
         <div class="mb-1" style="color:#8c8c8c;font-size: 14px">Distance</div>
-        <label for="distance-range" class="form-label mb-0" style="font-size: 14px"><span id="distance-range-value" style="margin-right: 0.5rem" onmouseover="innerHTML=document.getElementById('distance-range').value">50</span>Miles</label>
-        <input type="range" class="form-range" min="0" max="100" id="distance-range" value="50" oninput="document.getElementById('distance-range-value').innerHTML=value">
-        <div class="mb-1" style="color:#8c8c8c;font-size: 14px">City</div>
-        <select class="form-select form-select-sm mb-2">
-            <option selected>Choose the cities</option>
-            <option value="1">Cardiff</option>
-            <option value="2">London</option>
-            <option value="3">BathSpa</option>
-        </select>
+        <label for="distance-range" class="form-label mb-0" style="font-size: 14px"><span id="distance-range-value" style="margin-right: 0.5rem"></span>Kilometers</label>
+        <input type="range" class="form-range" min="1" max="100" id="distance-range" value="50">
+<!--        <div class="mb-1" style="color:#8c8c8c;font-size: 14px">City</div>-->
+<!--        <select class="form-select form-select-sm mb-2">-->
+<!--            <option selected>Choose the cities</option>-->
+<!--            <option value="1">Cardiff</option>-->
+<!--            <option value="2">London</option>-->
+<!--            <option value="3">BathSpa</option>-->
+<!--        </select>-->
         <hr>
         <h5 class="mb-3">Other</h5>
         <div class="form-check form-switch">
@@ -96,5 +100,6 @@
 <!--<script src="../../static/js/map.js"></script>-->
 <script type="text/javascript" th:src="@{/js/L.Control.Sidebar.js}"></script>
 <script type="text/javascript" th:src="@{/js/map.js}"></script>
+
 </body>
 </html>

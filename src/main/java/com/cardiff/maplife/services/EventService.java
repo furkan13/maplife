@@ -35,5 +35,7 @@ public interface EventService {
 
     public void deleteAll();
 
+    public List<Event> searchResults(String key,Timestamp serverTime);
+
 
 }
