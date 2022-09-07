@@ -20,6 +20,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
         String realUploadPath="src/main/resources/static/image";
         uploadPath = uploadPath.replace("image", realUploadPath);
         System.out.println(uploadPath);
-        registry.addResourceHandler("/image/**").addResourceLocations("file:/"+ uploadPath + "/");
+        registry.addResourceHandler("/image/**").addResourceLocations("file://"+ uploadPath + "/");
     }
 }
