@@ -41,6 +41,12 @@ const main = async function(){
 		room_exit(roomObj);
 	});
 	$("#partycheck").click(function(){ participant_video(roomObj);});
+	$("#start_streaming").click(function(){
+		let answer = window.confirm("Stream in current room?");
+		if(answer){
+			window.location.href = '../streaming?room='+roomName; //Go to streaming page
+		}
+	})
 	await video_room();
 	await following_list();
 	if(roomObj.VideoRoom["title"] == null){ //Server doesn't have the event entry of this roomname
