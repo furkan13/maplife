@@ -30,17 +30,18 @@
                         <input type="button" class="btn btn-sm btn-outline-secondary" value="Edit Profile" th:if="${loggedUsername==username}">
                     </div>
                 </a>
-                <div class="editBtn">
-                    <input id="followBtn" type="button" class="btn btn-sm btn-outline-secondary" th:value="${followToggle}" th:if="${loggedUsername!=username}">
+                <div class="editBtn" th:if="${loggedUsername!=null && loggedUsername!=username}">
+                    <input id="followBtn" type="button" class="btn btn-sm btn-outline-secondary" th:value="${followToggle}" >
                 </div>
-                </div>
+                <a th:href="@{/authform}" th:if="${loggedUsername==null}" type="button" class="btn btn-sm btn-outline-secondary">Follow</a>
+            </div>
             <div class="dom-3">
                 <div class="userInfo-block">
-                    <label class="userInfo-label" th:text="${following}"></label>
+                    <label class="userInfo-label" th:text="${searchUserFollowing}"></label>
                     <label class="userInfo-label">Following</label>
                 </div>
                 <div class="userInfo-block">
-                    <label class="userInfo-label" th:text="${follower}"></label>
+                    <label class="userInfo-label" th:text="${searchUserFollower}"></label>
                     <label class="userInfo-label">Followers</label>
                 </div>
                 <div class="userInfo-block">
@@ -55,7 +56,7 @@
     </div>
     <div class="upcoming-event-body">
         <div class="user-Event">
-            <div class="user-Event-body" th:each="upcomingEvent:${upcomingEventList}" >
+            <a th:href="'/streaming?room='+${upcomingEvent.title}" class="user-Event-body" th:each="upcomingEvent:${upcomingEventList}" >
                 <div class="upcoming-event-image" th:style="'background:url(' + @{${'../../../'+upcomingEvent.photosImagePath}} + ');'">
                 </div>
                 <div>
@@ -66,7 +67,7 @@
                         <label th:text="${upcomingEvent.getEvent_dis()}"></label>
                     </div>
                 </div>
-            </div>
+            </a>
         </div>
         <div class="user-information">
             <div class="user-bio">
