@@ -5,17 +5,21 @@
     /*flex-direction: column;*/
 }
 
-.main_card {
-    padding: 15px;
-    /*margin:10px;*/
-    /*float: left;*/
-}
-#left_display{
-    width:70%;
-}
-#right_option{
-    width:30%;
-}
+/*.main_card {*/
+/*    padding: 15px;*/
+/*    !*margin:10px;*!*/
+/*    !*float: left;*!*/
+/*}*/
+/*#left_display{*/
+/*  width: 60%;*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*  align-items: flex-start;*/
+/*  height: 100%;*/
+/*}*/
+/*#right_option{*/
+/*    width:40%;*/
+/*}*/
 
 /* The switch - the box around the slider */
 .switch {
@@ -79,43 +83,39 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
-#messages {
-  background-color:#232323;
-  padding:10px;
-  height:100%;
-  width:800px;
-  margin:0 auto;
-  overflow-y:auto;
+.hostDetailControl{
+  width: 100%;
+  gap: 1rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
 }
-
-#messages p {
-  margin:5px 0;
-  padding:0;
+.hostIcon{
+  cursor: pointer;
 }
-
-.info {
-  margin:5px 0;
-  font-style:italic;
+.hostIcon img{
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
 }
-
-.message-container {
-  margin:5px 0;
-  color:#fff;
+.hostName{
+  text-decoration: none;
+  color: black;
 }
-
-.message-container .username {
-  display:inline-block;
-  margin-right:5px;
-  font-weight:bold;
-  color:#849091;
+.cohost-stream > div{
+  width: 30%;
+  margin: 20px 20px 0 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
 }
-
-.me, .username.me {
-  font-weight:bold;
-  color:cyan;
-}
-
-.message-container .username.me {
-  display:inline-block;
-  margin-right:5px;
-}
+/*#stream > :first-child > :last-child{*/
+/*  width: 100%;*/
+/*  gap: 1rem;*/
+/*  display: flex;*/
+/*  flex-direction: row;*/
+/*  align-items: center;*/
+/*  justify-content: flex-start;*/
+/*}*/

@@ -9,32 +9,41 @@
     <script type="module" src="js/LivePlayer/twilio-live-player.js"></script>
     <script src="https://sdk.twilio.com/js/video/releases/2.17.1/twilio-video.min.js"></script>
     <script src="https://media.twiliocdn.com/sdk/js/conversations/v2.1/twilio-conversations.min.js"></script>
+    <link th:href= "@{/css/stream.css}" rel="stylesheet" />
     <link th:href= "@{/css/live.css}" rel="stylesheet" />
+
     <title>Live</title>
 </head>
 <body th:replace="navigator/bars::common-body(~{::#live-page},~{},~{::script})">
     <div id="live-page">
             <main id="panel">
-                <div class="row">
-                    <section id="left_display" class="main_card">
-                        <button id="partycheck">Reload video</button>
-
-                        <div id="stream"></div>
-
-                    </section>
-                    <aside id="right_option" class="main_card" >
-                        <button id="setting">Setting</button>
-                        <button id="exit_room">Exit</button>
-                        <div id="viewer_number" class="counter">0 views</div>
-                        <div id="streamer_number" class="counter">0 streamers</div>
-
-                        <div id="chat">
-                            <div id="messages"></div>
-                            <input id="chat-input" type="text" placeholder="say anything" autofocus/>
-                        </div>
-                    </aside>
+                <div class="hostAndCohost">
+                    <div class="stream-row">
+                        <section id="left_display" class="main_card">
+                            <div class="left-display-control">
+                                <div id="stream" class="steam-window"></div>
+                            </div>
+                        </section>
+                        <aside id="right_option" class="main_card" >
+                            <div id="chat">
+                                <div id="messages"></div>
+                                <input id="chat-input" type="text" placeholder="say anything" autofocus/>
+                            </div>
+                            <div class="right-option-container">
+                                <div class="right-option-button-control">
+                                    <button id="partycheck" class="partyCheck btn btn-sm btn-outline-secondary">Reload video</button>
+                                    <button id="setting" class="btn btn-sm btn-outline-secondary">Setting</button>
+                                    <button id="exit_room" class="btn btn-sm btn-outline-secondary">Exit</button>
+                                </div>
+                                <div class="right-option-viewerDetail">
+                                    <div id="viewer_number" class="counter">0 views</div>
+                                    <div id="streamer_number" class="counter">0 streamers</div>
+                                </div>
+                            </div>
+                        </aside>
+                    </div>
+                    <section id="bottom_other_stream" class="cohost-stream"></section>
                 </div>
-                <section id="bottom_other_stream" ></section>
             </main>
     </div>
 <script type="text/javascript" th:src="@{/js/live.js}"></script>

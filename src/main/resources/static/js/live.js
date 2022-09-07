@@ -87,6 +87,9 @@ const room_join = async function(roomObj){
         roomObj.room = room;
 		room.on("participantDisconnected", participant=>{
 			if($("#"+participant.identity).length > 0){
+				if(participant.identity == roomObj.VideoRoom.user.username){
+					$("#stream_audio").remove();
+				}
 				stream_update(false);
 				$("#"+participant.identity).remove();
 			}
@@ -254,17 +257,22 @@ function getTargetUser(username){//Get each host User object for the icons
 const userBlockBuild = async function(username){ //Build the div(icon,username and follow btn) for each user
 	//Append link to user's profile and subscribe button 
 	let user_div = $("<div></div>");
+	user_div.attr("class", "hostDetailControl");
 	//Obtain user's User object by calling api (get user by username)
 	await getTargetUser(username);
 	//Add user icon in the div
-	let icon_wrap = $("<a></a>");
-	icon_wrap.attr("class","profile-user-icon");
-	icon_wrap.attr("href", "/profile/"+username);
+	let icon_wrap = $("<div></div>");
+	icon_wrap.attr("class","hostIcon");
+	icon_wrap.click(function(){
+		window.location.href = "../profile/"+username;
+	})
+
 	let icon = $("<img></img>");
-	icon.attr("class","profile-user-image");
+	icon.attr("class","");
 	icon.attr("src", "/image/"+host_user.icon);
 	icon_wrap.append(icon);
 	let user_link = $("<a>"+ username+"</a>");
+	user_link.attr("class", "hostName");
 	user_link.attr("href", "/profile/"+username);
 	let sub_btn_wrap = $("<div></div>");
 	sub_btn_wrap.attr("class", "editBtn");
@@ -358,14 +366,17 @@ function createVideoCard(participant,track){
 	video_window.data("userid", participant.sid);
 	let video_target = track.attach();
 	// video_target.play();
-	video_window.append(video_target);//Add video in the div
+
 	//Need to subscribe the video before posting it on panel!!!
-	
+	let video_wrap = $("<div></div>");
+	video_wrap.append(video_target)
+	video_window.append(video_wrap);//Add video in the div
 	create_cohost_function(participant,video_window.first());
 
 	//need to play the video/audio
 	//Attaching it to user interface
-	if(participant.identity == roomObj.VideoRoom.user.username){ 
+	if(participant.identity == roomObj.VideoRoom.user.username){
+		video_wrap.attr("class","host-video-container");
 		//Shown in main stream as that is host 
 		if(participant.audioTracks){
 			let audio_related = create_main_audio(participant);
@@ -374,7 +385,7 @@ function createVideoCard(participant,track){
 		$("#stream").prepend(video_window);
 	}
 	else{ //Other cohost 
-		
+		video_wrap.attr("class","cohost-video-container");
 		$("#bottom_other_stream").append(video_window);;
 	}
 	userBlockBuild(participant.identity).then((block)=>{video_window.append(block);})
@@ -387,12 +398,12 @@ function stream_switch(source){//Swap the source to main stream panel
 	if(source.parent().attr("id") == "stream"){//Do not switch if the clicked div is in stream(main)
 		return; 
 	}
-	let main_display = $("#stream")[0].firstChild; //Switch to buttom_other_stream
-	let side_display = source.parent(); //Switch to main stream, cache.parent() = div with user id
+	let main_display = $($("#stream")[0].firstChild); //Switch to buttom_other_stream
+	let side_display = source; //Switch to main stream, cache.parent() = div with user id
 	
 
-	let main_id = $("#stream")[0].firstChild.data("userid"); //Get twilio participant sid to retrieve the audio track
-	let main_name = $("#stream")[0].firstChild.data("username");
+	let main_id = $($("#stream")[0].firstChild).data("userid"); //Get twilio participant sid to retrieve the audio track
+	let main_name = $($("#stream")[0].firstChild).data("username");
 	let source_id = source.data("userid"); //Get twilio participant sid to retrieve the audio track
 	let source_name = source.data("username");
 	console.log(main_id);
@@ -434,9 +445,13 @@ function stream_switch(source){//Swap the source to main stream panel
 	
 	let clone_main = main_display.clone();
 	let clone_side = side_display.clone();
-	
-	main_display.replaceWith(clone_side);
-	side_display.replaceWith(clone_main);
+	//append side to stream
+	//then append main to side
+	// main_display.replaceWith(clone_side);
+	// side_display.replaceWith(clone_main);
+	$("#bottom_other_stream").prepend(main_display);
+	$("#stream").prepend(side_display);
+
 }
 const GetConversation = async function(){
 	await chatObj.client.getConversationByUniqueName(roomObj.VideoRoom["title"]) //Fix forbidden problem first
@@ -521,7 +536,7 @@ $(document).ready(function(){
 $(document).click(function(){
 	//play video and audio
 	let video_list = $("video");
-	let audio_list = $("video");
+	let audio_list = $("audio");
 	for(let i = 0; i < video_list.length; i++ ){
 		video_list[i].play();
 	}

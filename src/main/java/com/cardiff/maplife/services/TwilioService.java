@@ -58,7 +58,7 @@ public class TwilioService {
         Room room = Room.creator()
 //                .setStatusCallback(URI.create("http://example.org"))
                 .setType(Room.RoomType.GO) //Testing with free rtc service
-                .setStatusCallback(URI.create("https://8b35-131-251-33-213.eu.ngrok.io/roomStatus"))
+                .setStatusCallback(URI.create("https://18.168.158.246/roomStatus"))
                 .setStatusCallbackMethod(HttpMethod.POST)
                 .setUniqueName(event.getTitle())
                 .setEmptyRoomTimeout(15)//15 minutes timeout

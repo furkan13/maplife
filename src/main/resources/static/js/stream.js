@@ -424,13 +424,13 @@ function create_cohost_function(participant){
 	hide_kick_btn.click(function(){hide_kick(hide_kick_btn)});
 	//Clickable div, call switching function if click
 	//Create a div overlay to ease deleting it 
-	let cache = $("<div></div>");
-	cache.data("username", participant.identity);
-	cache.data("userid", participant.sid);
-	// cache.click(function(){stream_switch(cache)});
-	cache.append(hide_kick_btn);
+	// let cache = $("<div></div>");
+	// cache.data("username", participant.identity);
+	// cache.data("userid", participant.sid);
+	// // cache.click(function(){stream_switch(cache)});
+	// cache.append(hide_kick_btn);
 	
-	return cache;
+	return hide_kick_btn;
 }
 function participant_video_on_connect(roomObj){ //function for on connect 
 	roomObj.room.on('participantConnected', participant => {
@@ -462,12 +462,15 @@ const participant_video = async function(roomObj){ //Show all the video of parti
 	//Create whole object here, then append to stream div
 	let video_window = $("<div></div>");//Div for video; //Storage for each video element;
 	video_window.attr("id", userJson.username);
+	let video_wrap = $("<div></div>");
+
 	// Host show their video as main as default
 	roomObj.room.localParticipant.tracks.forEach(publication => { 
 
 		if(publication.kind == "video"){ //video element, add audio control on it
-			video_window.prepend(publication.track.attach());
-			
+
+			video_wrap.append(publication.track.attach())
+			video_window.prepend(video_wrap);
 		}
 		if(publication.kind == "audio"){ //Audio element, put in different container
 			// Should mute in default to prevent echo
@@ -480,10 +483,12 @@ const participant_video = async function(roomObj){ //Show all the video of parti
 	//Localtrack appending
 	//If host: append in main panel, if cohost: append in bottom stream
 	
-	if(roomObj.VideoRoom.user.id == userJson.userId ){ 
+	if(roomObj.VideoRoom.user.id == userJson.userId ){
+		video_wrap.attr("class","host-video-container");
 		$("#stream").prepend(video_window);
 	}
 	else{
+		video_wrap.attr("class","cohost-video-container");
 		$("#stream_audio").remove();//remove the audio from local user
 		let cache = create_cohost_function(roomObj.room.localParticipant);
 		video_window.append(cache);
@@ -525,17 +530,21 @@ function createVideoCard(participant,track){
 	video_window.attr("id", participant.identity);
 	video_window.data("userid", participant.sid);
 	let video_target = track.attach();
-	video_window.append(video_target);//Add video in the div
+	let video_wrap = $("<div></div>");
+	video_wrap.append(video_target)
+	video_window.append(video_wrap);//Add video in the div
 	//Attaching it to user interface
 	if(participant.identity == roomObj.VideoRoom.user.username){ 
-		//Shown in main stream as that is host 
+		//Shown in main stream as that is host
+		video_wrap.attr("class","host-video-container");
 		if(participant.audioTracks){
 			let audio_related = create_main_audio(participant);
 			audio_related.then((reply)=>{$("#stream").append(reply);})
 		}
 		$("#stream").prepend(video_window);
 	}
-	else{ //Other cohost 
+	else{ //Other cohost
+		video_wrap.attr("class","cohost-video-container");
 		let cache = create_cohost_function(participant);
 		video_window.append(cache);
 		$("#bottom_other_stream").append(video_window);;
@@ -632,9 +641,14 @@ function hide_kick(source){//host: expand to ask confirm kicking, cohost: ask co
 			},
 			Cancel: function() {
 				//find the participant with name == target_username
-				console.log(roomObj.room.participants.get(target_userid))
-				$("#"+target_username).append(create_cohost_function(roomObj.room.participants.get(target_userid)))
-				
+				try {
+					console.log(roomObj.room.participants.get(target_userid))
+					$("#" + target_username).append(create_cohost_function(roomObj.room.participants.get(target_userid)))
+				}
+				catch(e){
+					$("#" + target_username).append(create_cohost_function(roomObj.room.localParticipant));
+
+				}
 				$( this ).dialog( "close" );
 				//create back the hide button
 			}
