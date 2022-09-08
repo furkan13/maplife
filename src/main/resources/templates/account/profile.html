@@ -30,17 +30,18 @@
                         <input type="button" class="btn btn-sm btn-outline-secondary" value="Edit Profile" th:if="${loggedUsername==username}">
                     </div>
                 </a>
-                <div class="editBtn">
-                    <input id="followBtn" type="button" class="btn btn-sm btn-outline-secondary" th:value="${followToggle}" th:if="${loggedUsername!=username}">
+                <div class="editBtn" th:if="${loggedUsername!=null && loggedUsername!=username}">
+                    <input id="followBtn" type="button" class="btn btn-sm btn-outline-secondary" th:value="${followToggle}" >
                 </div>
-                </div>
+                <a th:href="@{/authform}" th:if="${loggedUsername==null}" type="button" class="btn btn-sm btn-outline-secondary">Follow</a>
+            </div>
             <div class="dom-3">
                 <div class="userInfo-block">
-                    <label class="userInfo-label" th:text="${following}"></label>
+                    <label class="userInfo-label" th:text="${searchUserFollowing}"></label>
                     <label class="userInfo-label">Following</label>
                 </div>
                 <div class="userInfo-block">
-                    <label class="userInfo-label" th:text="${follower}"></label>
+                    <label class="userInfo-label" th:text="${searchUserFollower}"></label>
                     <label class="userInfo-label">Followers</label>
                 </div>
                 <div class="userInfo-block">
@@ -48,22 +49,50 @@
                     <label class="userInfo-label">Total views</label>
                 </div>
             </div>
-            </div>
+        </div>
     </div>
-    <div class="upcoming-event-header">
-        <label>Upcoming Events</label>
-    </div>
-    <div class="upcoming-event-body">
-        <div class="user-Event">
-            <div class="user-Event-body" th:each="upcomingEvent:${upcomingEventList}" >
-                <div class="upcoming-event-image" th:style="'background:url(' + @{${'../../../'+upcomingEvent.photosImagePath}} + ');'">
+    <div class="combineEventAndUser">
+        <div class="Event-container">
+            <div class="event-container">
+                <div class="upcoming-event-header">
+                    <label>Upcoming Events</label>
                 </div>
-                <div>
-                    <div class="upcomingEvent-label profile-title-font">
-                        <label th:text="${upcomingEvent.getTitle()}" ></label>
+                <div class="upcoming-event-body">
+                    <div class="user-Event">
+                        <div class="user-Event-body" th:each="upcomingEvent:${upcomingEventList}" >
+                            <div class="upcoming-event-image" th:style="'background:url(' + @{${'../../../'+upcomingEvent.photosImagePath}} + ');'">
+                            </div>
+                            <div class="upcoming-event-details">
+                                <div class="profile-title-font upcomingEvent-title">
+                                    <label  th:text="${upcomingEvent.getTitle()}" ></label>
+                                    <a class="btn btn-sm btn-outline-secondary" th:href="'/live?room='+${upcomingEvent.getTitle()}" th:if="${loggedUsername==username}">Start Streaming</a>
+                                </div>
+                                <div class="upcomingEvent-label upcomingEvent-description">
+                                    <label th:text="${upcomingEvent.getEvent_dis()}"></label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="upcomingEvent-label">
-                        <label th:text="${upcomingEvent.getEvent_dis()}"></label>
+                </div>
+            </div>
+            <div class="event-container">
+                <div class="upcoming-event-header">
+                    <label>Steaming Events</label>
+                </div>
+                <div class="upcoming-event-body">
+                    <div class="user-Event">
+                        <a class="user-Event-body linkToLivePage" th:href="'/live?room='+${streamingEvent.getTitle()}" th:each="streamingEvent:${streamingEventList}" >
+                            <div class="upcoming-event-image" th:style="'background:url(' + @{${'../../../'+streamingEvent.photosImagePath}} + ');'">
+                            </div>
+                            <div class="upcoming-event-details">
+                                <div class="profile-title-font upcomingEvent-title">
+                                    <label  th:text="${streamingEvent.getTitle()}" ></label>
+                                </div>
+                                <div class="upcomingEvent-label upcomingEvent-description">
+                                    <label th:text="${streamingEvent.getEvent_dis()}"></label>
+                                </div>
+                            </div>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -87,11 +116,10 @@
                     <iframe th:src="${video}">
                     </iframe>
                 </div>
-
             </div>
         </div>
-
     </div>
+
 
 </div>
 <script type="text/javascript" th:inline="javascript" th:src="@{/js/profile.js}"></script>

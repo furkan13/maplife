@@ -24,6 +24,11 @@ public interface EventService {
     public Event findByName(String name);
 
     public List<Event> finduserCustom(Timestamp serverTime, String username);
+
+    public List<Event> finduserCustomNow(String username);
+
+    public List<Event> finduserCustomUpcoming(Timestamp serverTime, String username);
+
     public Event save(Event event);
 
     public void deleteById(long eventId);

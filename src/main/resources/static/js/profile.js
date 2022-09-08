@@ -51,4 +51,8 @@ const toggleFollow = async function(e){
     }
 }
 
+const goToLivePage=function (){
+    window.location=""
+}
+
 followBtn.addEventListener("click",toggleFollow)
