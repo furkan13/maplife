@@ -18,7 +18,7 @@
 
     <div class="section_nearby">
         <div class="headline">
-            <h2 > NEARBY </h2>
+            <h2 > UPCOMING </h2>
         </div>
 
     </div>
@@ -38,8 +38,8 @@
                             <h3 class="card__title" th:text="${event.title}"></h3>
                             <span class="card__status" th:text="${event.event_date}" ></span>
                             <div>
-                                <form action="#"  >
-                                    <input type="submit" value="Join Event" class="accept_button" />
+                                <form action="#" th:action="@{/profile/{username}(username=${event.user.getUsername()})}" >
+                                    <input type="submit" value="See Event Details" class="accept_button" />
                                 </form>
 
                             </div>
