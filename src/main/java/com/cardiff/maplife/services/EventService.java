@@ -39,5 +39,7 @@ public interface EventService {
 
     public  List<Event> searchUpcoming();
 
+    public  List<Event> findLive();
+
 
 }

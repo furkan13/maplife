@@ -39,7 +39,7 @@ public class ExplorerController {
 
         Timestamp datetime = new Timestamp(System.currentTimeMillis());
 
-        List<Event> liveList=eventservice.findCustom(datetime);
+        List<Event> liveList=eventservice.findLive();
         if(liveList.size()>3)                                          // check if there are more than 3 events
         {
             liveList.subList(3, liveList.size()).clear();             // remove all the other events from the list after index 3 so that only three events will be shown in page

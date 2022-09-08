@@ -97,6 +97,14 @@ public class EventServiceImplementation implements EventService {
         return eventRepository.searchUpcoming();
     }
 
+    @Override
+    public List<Event> findLive()
+    {
+
+
+        return eventRepository.findLive();
+    }
+
 
 
 

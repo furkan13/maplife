@@ -53,6 +53,13 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Query(value = "select u from Event u where u.live=false ")
     List<Event> searchUpcoming();
 
+    @Modifying
+    @Transactional
+    @Query("select u from Event u where u.live=true")
+    List<Event> findLive();
+
+
+
 
 
 }
