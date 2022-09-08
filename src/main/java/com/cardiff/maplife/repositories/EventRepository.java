@@ -26,10 +26,21 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     @Transactional
     @Query("select u from Event u where (u.live=true or u.event_date > (:serverTime)) and u.user.username =(:username)")
     List<Event> finduserCustom(Timestamp serverTime, String username);
+
     @Modifying
     @Transactional
     @Query("select u from Event u where u.live=true or u.event_date > (:serverTime)")
     List<Event> findCustom(Timestamp serverTime);
+
+    @Modifying
+    @Transactional
+    @Query("select u from Event u where (u.live=true) and u.user.username =(:username)")
+    List<Event> finduserCustomNow(String username);
+
+    @Modifying
+    @Transactional
+    @Query("select u from Event u where (u.event_date > (:serverTime)) and u.user.username =(:username)")
+    List<Event> finduserCustomUpcoming(Timestamp serverTime, String username);
 
 
     @Modifying
