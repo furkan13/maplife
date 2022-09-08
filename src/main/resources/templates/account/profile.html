@@ -60,7 +60,7 @@
                 <div class="upcoming-event-body">
                     <div class="user-Event">
                         <div class="user-Event-body" th:each="upcomingEvent:${upcomingEventList}" >
-                            <div class="upcoming-event-image" th:style="'background:url(' + @{${'../../../'+upcomingEvent.photosImagePath}} + ');'">
+                            <div class="upcoming-event-image" th:style="'background:url(' + @{${'../../..'+upcomingEvent.photosImagePath}} + ');'">
                             </div>
                             <div class="upcoming-event-details">
                                 <div class="profile-title-font upcomingEvent-title">
@@ -82,7 +82,7 @@
                 <div class="upcoming-event-body">
                     <div class="user-Event">
                         <a class="user-Event-body linkToLivePage" th:href="'/live?room='+${streamingEvent.getTitle()}" th:each="streamingEvent:${streamingEventList}" >
-                            <div class="upcoming-event-image" th:style="'background:url(' + @{${'../../../'+streamingEvent.photosImagePath}} + ');'">
+                            <div class="upcoming-event-image" th:style="'background:url(' + @{${'../../..'+streamingEvent.photosImagePath}} + ');'">
                             </div>
                             <div class="upcoming-event-details">
                                 <div class="profile-title-font upcomingEvent-title">

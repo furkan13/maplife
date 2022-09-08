@@ -2,8 +2,12 @@
 
 
 
-#addevents-page> .content {
-    padding: 7rem 0; }
+/*#addevents-page> .content {
+    padding: 7rem 0; }*/
+
+#addevents-page{
+    padding:50px 0 0 70px
+}
 
 #addevents-page .heading {
     font-size: 2.5rem;
