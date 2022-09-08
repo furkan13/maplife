@@ -88,7 +88,8 @@ public class MainController {
 
         //get upcoming event
         Timestamp datetime = new Timestamp(System.currentTimeMillis());
-        List<Event> upcomingEventList = eventService.finduserCustom(datetime, username);
+        List<Event> upcomingEventList = eventService.finduserCustomUpcoming(datetime, username);
+        List<Event> streamingEventList = eventService.finduserCustomNow(username);
         Set<User> searchUserFollowingUserSet = searchUser.getFollowingUserSet();
         Set<User> searchUserFollowerUserSet = searchUser.getFollowerUserSet();
 
@@ -100,6 +101,8 @@ public class MainController {
         modelAndView.addObject("userIcon",searchUser.getIcon());
         modelAndView.addObject("user_coins",searchUser.getCoin());
         modelAndView.addObject("upcomingEventList",upcomingEventList);
+        modelAndView.addObject("streamingEventList",streamingEventList);
+
         modelAndView.addObject("searchUserFollower",searchUserFollowerUserSet.size());
         modelAndView.addObject("searchUserFollowing",searchUserFollowingUserSet.size());
         return modelAndView;
