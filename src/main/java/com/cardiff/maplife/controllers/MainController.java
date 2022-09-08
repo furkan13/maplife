@@ -66,38 +66,42 @@ public class MainController {
     public ModelAndView getProfile(ModelAndView modelAndView, @PathVariable String username) {
         //get searchUser profile details
         User searchUser = (User) userService.loadUserByUsername(username);
-        String loggedUsername = userService.getAuthentication();
-        //check whether logged user followed the search user or not.
-        User gotUser = userService.findUserByUsername(loggedUsername);
-        Set<User> followingUserSet = gotUser.getFollowingUserSet();
-        Set<User> followerUserSet=gotUser.getFollowerUserSet();
-        modelAndView.addObject("followToggle","Follow");
-        for (User followedUser : followingUserSet) {
-            if(username.equals(followedUser.getUsername())){
-                modelAndView.addObject("followedUsername",followedUser.getUsername());
-                modelAndView.addObject("followToggle","Followed");
-                break;
+        String loggedUsername = null;
+        loggedUsername = userService.getAuthentication();
+        if (loggedUsername!=null){
+            //check whether logged user followed the search user or not.
+            User gotUser = userService.findUserByUsername(loggedUsername);
+            Set<User> followingUserSet = gotUser.getFollowingUserSet();
+            Set<User> followerUserSet=gotUser.getFollowerUserSet();
+            modelAndView.addObject("followToggle","Follow");
+            for (User followedUser : followingUserSet) {
+                if(username.equals(followedUser.getUsername())){
+                    modelAndView.addObject("followedUsername",followedUser.getUsername());
+                    modelAndView.addObject("followToggle","Followed");
+                    break;
+                }
             }
+            modelAndView.addObject("follower",followerUserSet.size());
+            modelAndView.addObject("following",followingUserSet.size());
+            modelAndView.addObject("loggedUsername",loggedUsername);
         }
+
         //get upcoming event
         Timestamp datetime = new Timestamp(System.currentTimeMillis());
-        List<Event> upcomingEventList = eventService.finduserCustomUpcoming(datetime, username);
-        List<Event> streamingEventList = eventService.finduserCustomNow(username);
-
+        List<Event> upcomingEventList = eventService.finduserCustom(datetime, username);
+        Set<User> searchUserFollowingUserSet = searchUser.getFollowingUserSet();
+        Set<User> searchUserFollowerUserSet = searchUser.getFollowerUserSet();
 
         modelAndView.setViewName("account/profile");
-        modelAndView.addObject("loggedUsername",loggedUsername);
         modelAndView.addObject("username", username);
         modelAndView.addObject("video",searchUser.getVideo());
         modelAndView.addObject("total_view",searchUser.getViews());
         modelAndView.addObject("bio",searchUser.getBio());
         modelAndView.addObject("userIcon",searchUser.getIcon());
         modelAndView.addObject("user_coins",searchUser.getCoin());
-        modelAndView.addObject("following",followingUserSet.size());
-        modelAndView.addObject("follower",followerUserSet.size());
         modelAndView.addObject("upcomingEventList",upcomingEventList);
-        modelAndView.addObject("streamingEventList",streamingEventList);
-
+        modelAndView.addObject("searchUserFollower",searchUserFollowerUserSet.size());
+        modelAndView.addObject("searchUserFollowing",searchUserFollowingUserSet.size());
         return modelAndView;
     }
 

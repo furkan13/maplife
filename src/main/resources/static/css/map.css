@@ -119,3 +119,7 @@ body{
     background-color: transparent!important;
 }
 
+.leaflet-container a{
+    color: unset!important;
+    text-decoration: none!important;
+}

@@ -138,7 +138,7 @@
                 </div>
                 <div class="sub-avatar-container" th:if="${newEventList!=null}">
                     <div id="subscription-0" class="sub-avatar" th:each="newEventList : ${newEventList}">
-                        <a class="nav-link" th:href="@{/}">
+                        <a class="nav-link" th:href="'/live?room='+${newEventList.title}">
                             <div class="sub-avatar-icon">
                                 <img class="sub-avatar-icon" th:src="@{${'/image/'+newEventList.user.icon}}">
                             </div>
@@ -219,7 +219,7 @@
                     </ul>
                     <ul class="subscription-list navbar-nav" th:if="${newEventList!=null}">
                         <li id="subscription-detail-0" th:each="newEventList : ${newEventList}">
-                            <a class="nav-link nav-link-box" th:href="@{/}">
+                            <a class="nav-link nav-link-box" th:href="'/live?room='+${newEventList.title}">
                                 <div class="subscription-live">
                                     <div class="sub-avatar-icon">
                                         <img class="sub-avatar-icon" th:src="@{${'/image/'+newEventList.user.icon}}">
