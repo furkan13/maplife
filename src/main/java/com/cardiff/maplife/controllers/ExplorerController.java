@@ -40,6 +40,13 @@ public class ExplorerController {
         Timestamp datetime = new Timestamp(System.currentTimeMillis());
 
         List<Event> liveList=eventservice.findCustom(datetime);
+        if(liveList.size()>3)                                          // check if there are more than 3 events
+        {
+            liveList.subList(3, liveList.size()).clear();             // remove all the other events from the list after index 3 so that only three events will be shown in page
+        }
+
+
+
         model.addAttribute("liveList",liveList);
 
 
@@ -52,16 +59,16 @@ public class ExplorerController {
     public String showNearBy(Model model) {
 
 
-        List <Event> eventList=eventservice.findAll();
-        model.addAttribute("eventList",eventList);
+        List <Event> upComingList=eventservice.searchUpcoming();
+        model.addAttribute("eventList",upComingList);
         return "Explore/nearby";
     }
     @GetMapping("/trending")                                         //method for showing all the trending events in different page
     public String showTrending(Model model) {
 
-
-        List <Event> eventList=eventservice.findAll();
-        model.addAttribute("eventList",eventList);
+        Timestamp datetime = new Timestamp(System.currentTimeMillis());
+        List<Event> liveList=eventservice.findCustom(datetime);
+        model.addAttribute("eventList",liveList);
         return "Explore/trending";
     }
 
