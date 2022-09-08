@@ -18,7 +18,7 @@
 
   <div class="section_nearby">
     <div class="headline">
-      <h2 > NEARBY </h2>
+      <h2 > UPCOMING </h2>
     </div>
 
   </div>
@@ -62,10 +62,36 @@
 
   <div class="section_Trending">
     <div class="headline">
-      <h2 > TRENDING </h2>
+      <h2 > LIVE </h2>
     </div>
 
   </div>
+  <ul class="cards">
+
+    <li th:each="event : ${liveList}">
+      <a href="" class="card">
+        <!--<img th:src="${event.image}" class="card__image" alt="" />-->
+        <img th:src="${event.PhotosImagePath}" class="card__image" alt="" />
+        <div class="card__overlay">
+          <div class="card__header">
+
+            <div class="card__header-text">
+              <h3 class="card__title" th:text="${event.title}"></h3>
+              <span class="card__status" th:text="${event.event_date}" ></span>
+              <div>
+                <form action="#" th:action="@{/profile/{username}(username=${event.user.getUsername()})}"  >
+                  <input type="submit" value="Show Profile" class="accept_button" />
+                </form>
+
+              </div>
+            </div>
+          </div>
+          <p class="card__description" th:text="${event.event_dis}"></p>
+        </div>
+      </a>
+    </li>
+
+  </ul>
 
 
 </div>

@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 
@@ -35,6 +36,11 @@ public class ExplorerController {
         {
             upComingList.subList(3, upComingList.size()).clear();             // remove all the other events from the list after index 3 so that only three events will be shown in page
         }
+
+        Timestamp datetime = new Timestamp(System.currentTimeMillis());
+
+        List<Event> liveList=eventservice.findCustom(datetime);
+        model.addAttribute("liveList",liveList);
 
 
 
