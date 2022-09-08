@@ -127,7 +127,12 @@ public class MainController {
         return new ModelAndView("redirect:/search?key="+key);
     }
 
+    @PostMapping("/live")
+    public ModelAndView joinEvent(ModelAndView modelAndView, Model model,@RequestParam("room")String key)
 
+    {
+        return new ModelAndView("redirect:/live?room="+key);
+    }
 
 
 
