@@ -92,7 +92,7 @@ const getEvents = async function () {
             //define the custom icon for hosts
             let myIcon = L.divIcon({className:'custom-div-icon',iconAnchor: [25, 25],popupAnchor: [2, -28]});
             //custom the popup and icon for hosts
-            popupContent = `<a href="${roomLink}"><div id="event-img-container" style="background-image: url('../../../${data[i].photosImagePath}')"></div><div id="event-title">${data[i].title}</div>
+            popupContent = `<a href="${roomLink}"><div id="event-img-container" style="background-image: url('../../..${data[i].photosImagePath}')"></div><div id="event-title">${data[i].title}</div>
                             <div id="host-name" class="event-text">${data[i].user.username}</div><div id="event-viewers" class="event-text">${data[i].user.views} viewers</div><div class="event-text">${time}</div></a>`
             myIcon.options.html = `<img id="custom-div-icon" class="custom-div-icon" src= "image/${data[i].user.icon}">`
             const marker = L.marker([data[i].latitude,data[i].longitude], {icon: myIcon}).bindPopup(popupContent,{closeButton:false})
