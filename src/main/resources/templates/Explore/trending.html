@@ -16,41 +16,39 @@
 <div id="trending-page"  >
 
 
-    <div class="section_nearby">
+    <div class="section_Trending">
         <div class="headline">
-            <h2 > TRENDING </h2>
+            <h2 > LIVE </h2>
         </div>
 
     </div>
+    <ul class="cards">
 
+        <li th:each="event : ${liveList}">
+            <a href="" class="card">
+                <!--<img th:src="${event.image}" class="card__image" alt="" />-->
+                <img th:src="${event.PhotosImagePath}" class="card__image" alt="" />
+                <div class="card__overlay">
+                    <div class="card__header">
 
+                        <div class="card__header-text">
+                            <h3 class="card__title" th:text="${event.title}"></h3>
+                            <span class="card__status" th:text="${event.event_date}" ></span>
+                            <div>
+                                <form action="#"  th:action="@{/live(room=${event.title})}"  >
+                                    <input type="submit" value="Join Event" class="accept_button" />
+                                </form>
 
-
-        <ul class="cards">
-            <li th:each="event : ${eventList}">
-                <a href="" class="card">
-                    <!--<img th:src="${event.image}" class="card__image" alt="" />-->
-                    <img th:src="@{${'/image/cat.png'}}" class="card__image" alt="" />
-                    <div class="card__overlay">
-                        <div class="card__header">
-
-                            <div class="card__header-text">
-                                <h3 class="card__title" th:text="${event.Event_title}"></h3>
-                                <span class="card__status" th:text="${event.Event_date}" ></span>
-                                <div>
-                                    <form action="#"  >
-                                        <input type="submit" value="Join Event" class="accept_button" />
-                                    </form>
-
-                                </div>
                             </div>
                         </div>
-                        <p class="card__description" th:text="${event.Event_dis}"></p>
                     </div>
-                </a>
-            </li>
+                    <p class="card__description" th:text="${event.event_dis}"></p>
+                </div>
+            </a>
+        </li>
 
-        </ul>
+    </ul>
+
 
 
 
