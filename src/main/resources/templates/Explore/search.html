@@ -37,10 +37,6 @@
                             <span class="card__status" th:text="${event.event_date}" ></span>
                             <div class="form_button">
 
-                                <form th:if="${event.isLive}" action="#" th:action="@{/streaming(room=${event.title})}" >
-
-                                    <input type="submit"  value="Join Event" class="accept_button" />
-                                </form>
                                 <form th:if="${event.isLive}" action="#" th:action="@{/live(room=${event.title})}" >
 
                                     <input type="submit" class="decline_button"  value="Watch Event"  />
