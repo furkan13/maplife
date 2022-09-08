@@ -57,7 +57,7 @@ public class TwilioService {
 //        System.out.println(event.getEvent_title());
         Room room = Room.creator()
 //                .setStatusCallback(URI.create("http://example.org"))
-                .setType(Room.RoomType.GO) //Testing with free rtc service
+                .setType(Room.RoomType.GROUP) //Testing with free rtc service
                 .setStatusCallback(URI.create("https://18.168.158.246/roomStatus"))
                 .setStatusCallbackMethod(HttpMethod.POST)
                 .setUniqueName(event.getTitle())
